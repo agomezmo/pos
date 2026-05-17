@@ -1,0 +1,49 @@
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import { authRouter } from './routes/auth';
+import { productsRouter } from './routes/products';
+import { categoriesRouter } from './routes/categories';
+import { salesRouter } from './routes/sales';
+import { customersRouter } from './routes/customers';
+import { usersRouter } from './routes/users';
+import { suppliersRouter } from './routes/suppliers';
+import { inventoryRouter } from './routes/inventory';
+import { reportsRouter } from './routes/reports';
+import { companyRouter } from './routes/company';
+import { errorHandler } from './middleware/errorHandler';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+app.use(helmet());
+app.use(cors());
+app.use(morgan('dev'));
+app.use(express.json());
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.use('/api/auth', authRouter);
+app.use('/api/products', productsRouter);
+app.use('/api/categories', categoriesRouter);
+app.use('/api/sales', salesRouter);
+app.use('/api/customers', customersRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/suppliers', suppliersRouter);
+app.use('/api/inventory', inventoryRouter);
+app.use('/api/reports', reportsRouter);
+app.use('/api/company', companyRouter);
+
+app.use(errorHandler);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+});
+
+export default app;
