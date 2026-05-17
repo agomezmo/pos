@@ -24,7 +24,7 @@ except ImportError:
     print("Error: Instala requests: pip install requests")
     sys.exit(1)
 
-BASE_URL = "http://localhost:5001"
+BASE_URL = "http://localhost:4000"
 TOKEN = None
 PASSED = 0
 FAILED = 0
@@ -48,8 +48,11 @@ def log_skip(name, reason):
     print(f"  ➖ [SKIP] {name} - {reason}")
 
 
+API_PREFIX = "/api"
+
 def api_call(method, path, data=None, expected_status=200):
-    url = f"{BASE_URL}{path}"
+    full_path = f"{API_PREFIX}{path}" if not path.startswith("/api") else path
+    url = f"{BASE_URL}{full_path}"
     headers = {"Content-Type": "application/json"}
     if TOKEN:
         headers["Authorization"] = f"Bearer {TOKEN}"
