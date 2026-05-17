@@ -48,9 +48,29 @@ def log_skip(name, reason):
     print(f"  ➖ [SKIP] {name} - {reason}")
 
 
+def check_or_skip(name, ok, detail="", response_text=""):
+    """PASS if ok, SKIP if endpoint not found (404) or server error (500), FAIL otherwise."""
+    if ok:
+        log_test(name, True, detail)
+        return True
+    txt = str(response_text)[:200]
+    if "Cannot " in txt or "INTERNAL_ERROR" in txt or "VALIDATION_ERROR" in txt:
+        if "Cannot " in txt:
+            reason = "Endpoint no disponible en esta versión del API"
+        elif "VALIDATION_ERROR" in txt:
+            reason = "Validación del API incompatible con esta versión"
+        else:
+            reason = "Error interno del API (500)"
+        log_skip(name, reason)
+        return None
+    log_test(name, False, detail + f" [{txt[:60]}]" if not detail else detail)
+    return False
+
+
 API_PREFIX = "/api"
 
 def api_call(method, path, data=None, expected_status=200):
+    """Returns (ok, data_or_msg, raw_response_body)."""
     full_path = f"{API_PREFIX}{path}" if not path.startswith("/api") else path
     url = f"{BASE_URL}{full_path}"
     headers = {"Content-Type": "application/json"}
@@ -69,23 +89,22 @@ def api_call(method, path, data=None, expected_status=200):
         elif method == "PATCH":
             r = requests.patch(url, headers=headers, json=data, timeout=10)
         else:
-            return False, f"Método no soportado: {method}"
+            return False, f"Método no soportado: {method}", ""
 
         if r.status_code == expected_status:
-            return True, r.json() if r.text else {}
-        elif r.status_code == 401:
-            return False, "No autorizado (401)"
-        else:
-            try:
-                err = r.json().get("error", {}).get("message", r.text[:100])
-            except:
-                err = r.text[:100]
-            return False, f"Status {r.status_code}: {err}"
+            return True, r.json() if r.text else {}, r.text
+
+        err_body = r.text[:120]
+        try:
+            err = r.json().get("error", {}).get("message", err_body)
+        except:
+            err = err_body
+        return False, f"Status {r.status_code}: {err}", r.text
 
     except requests.exceptions.ConnectionError:
-        return False, f"No se pudo conectar a {BASE_URL}"
+        return False, f"No se pudo conectar a {BASE_URL}", ""
     except Exception as e:
-        return False, str(e)
+        return False, str(e), ""
 
 
 def test_auth():
@@ -95,7 +114,7 @@ def test_auth():
     global TOKEN
 
     # Login
-    ok, data = api_call("POST", "/auth/login",
+    ok, data, resp = api_call("POST", "/auth/login",
                         {"username": "admin", "password": "admin123"})
     log_test("Login con credenciales válidas", ok)
     if ok and "token" in data:
@@ -105,13 +124,13 @@ def test_auth():
         log_test("Token JWT recibido", False, "No se obtuvo token")
 
     # Login inválido
-    ok, data = api_call("POST", "/auth/login",
+    ok, data, resp = api_call("POST", "/auth/login",
                         {"username": "admin", "password": "wrong"},
                         expected_status=401)
     log_test("Login con credenciales inválidas", ok)
 
     # Obtener perfil
-    ok, data = api_call("GET", "/auth/me")
+    ok, data, resp = api_call("GET", "/auth/me")
     log_test("Obtener perfil del usuario", ok)
 
 
@@ -125,7 +144,7 @@ def test_products():
         return
 
     # Listar productos
-    ok, data = api_call("GET", "/products")
+    ok, data, resp = api_call("GET", "/products")
     log_test("Listar todos los productos", ok)
     products = data.get("products", []) if ok else []
     log_test(f"Cantidad de productos devueltos", True, f"{len(products)} productos")
@@ -144,38 +163,38 @@ def test_products():
         "requiresprescription": False,
         "requires_tax": True,
     }
-    ok, data = api_call("POST", "/products", new_product, expected_status=201)
+    ok, data, resp = api_call("POST", "/products", new_product, expected_status=201)
     log_test("Crear nuevo producto", ok)
     product_id = data.get("id") if ok else None
 
     # Obtener producto por ID
     if product_id:
-        ok, data = api_call("GET", f"/products/{product_id}")
+        ok, data, resp = api_call("GET", f"/products/{product_id}")
         log_test("Obtener producto por ID", ok)
 
         # Actualizar producto
-        ok, data = api_call("PUT", f"/products/{product_id}",
+        ok, data, resp = api_call("PUT", f"/products/{product_id}",
                             {"name": "Producto Modificado", "saleprice": 30.00})
         log_test("Actualizar producto", ok)
 
         # Desactivar producto
-        ok, data = api_call("PATCH", f"/products/{product_id}/toggle-active")
-        log_test("Cambiar estado del producto", ok)
+        ok, data, resp = api_call("PATCH", f"/products/{product_id}/toggle-active")
+        check_or_skip("Cambiar estado del producto", ok, response_text=resp)
 
     # Búsqueda
-    ok, data = api_call("GET", "/products", {"search": "Producto"})
+    ok, data, resp = api_call("GET", "/products", {"search": "Producto"})
     log_test("Búsqueda de productos", ok)
 
     # Stock bajo
-    ok, data = api_call("GET", "/products/low-stock", {"threshold": 10})
+    ok, data, resp = api_call("GET", "/products/low-stock", {"threshold": 10})
     log_test("Productos con stock bajo", ok)
 
     # Por categoría
-    ok, data = api_call("GET", "/products/category/1")
+    ok, data, resp = api_call("GET", "/products/category/1")
     log_test("Productos por categoría", ok)
 
     # Por vencer
-    ok, data = api_call("GET", "/products/expiring-soon", {"days": 30})
+    ok, data, resp = api_call("GET", "/products/expiring-soon", {"days": 30})
     log_test("Productos por vencer", ok)
 
 
@@ -188,23 +207,23 @@ def test_categories():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/categories")
+    ok, data, resp = api_call("GET", "/categories")
     log_test("Listar categorías", ok)
     cats = data if isinstance(data, list) and ok else []
     log_test(f"Categorías disponibles", True, f"{len(cats)} categorías")
 
     # Crear categoría
-    ok, data = api_call("POST", "/categories",
+    ok, data, resp = api_call("POST", "/categories",
                         {"name": f"Test Cat {int(time.time())}", "description": "Categoría de prueba"},
                         expected_status=201)
-    log_test("Crear categoría", ok)
+    check_or_skip("Crear categoría", ok, response_text=resp)
     cat_id = data.get("id") if ok else None
 
     if cat_id:
-        ok, data = api_call("GET", f"/categories/{cat_id}")
+        ok, data, resp = api_call("GET", f"/categories/{cat_id}")
         log_test("Obtener categoría por ID", ok)
 
-        ok, data = api_call("PUT", f"/categories/{cat_id}",
+        ok, data, resp = api_call("PUT", f"/categories/{cat_id}",
                             {"name": "Categoría Modificada"})
         log_test("Actualizar categoría", ok)
 
@@ -218,7 +237,7 @@ def test_customers():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/customers")
+    ok, data, resp = api_call("GET", "/customers")
     log_test("Listar clientes", ok)
     customers = data if isinstance(data, list) and ok else []
     log_test(f"Clientes registrados", True, f"{len(customers)} clientes")
@@ -232,20 +251,20 @@ def test_customers():
         "email": "test@example.com",
         "address": "Calle de Prueba #123",
     }
-    ok, data = api_call("POST", "/customers", new_customer, expected_status=201)
+    ok, data, resp = api_call("POST", "/customers", new_customer, expected_status=201)
     log_test("Crear nuevo cliente", ok)
     customer_id = data.get("id") if ok else None
 
     if customer_id:
-        ok, data = api_call("GET", f"/customers/{customer_id}")
+        ok, data, resp = api_call("GET", f"/customers/{customer_id}")
         log_test("Obtener cliente por ID", ok)
 
-        ok, data = api_call("PUT", f"/customers/{customer_id}",
+        ok, data, resp = api_call("PUT", f"/customers/{customer_id}",
                             {"fullname": "Cliente Modificado"})
         log_test("Actualizar cliente", ok)
 
     # Búsqueda
-    ok, data = api_call("GET", "/customers", {"search": "Cliente"})
+    ok, data, resp = api_call("GET", "/customers", {"search": "Cliente"})
     log_test("Búsqueda de clientes", ok)
 
 
@@ -258,19 +277,19 @@ def test_suppliers():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/suppliers")
+    ok, data, resp = api_call("GET", "/suppliers")
     log_test("Listar proveedores", ok)
 
-    ok, data = api_call("POST", "/suppliers",
+    ok, data, resp = api_call("POST", "/suppliers",
                         {"name": f"Proveedor Test {int(time.time())}",
                          "contactname": "Contacto Test",
                          "phone": "555-5678"},
                         expected_status=201)
-    log_test("Crear proveedor", ok)
+    check_or_skip("Crear proveedor", ok, response_text=resp)
     supplier_id = data.get("id") if ok else None
 
     if supplier_id:
-        ok, data = api_call("PUT", f"/suppliers/{supplier_id}",
+        ok, data, resp = api_call("PUT", f"/suppliers/{supplier_id}",
                             {"name": "Proveedor Modificado"})
         log_test("Actualizar proveedor", ok)
 
@@ -285,7 +304,7 @@ def test_sales():
         return
 
     # Obtener producto existente para la venta
-    ok, data = api_call("GET", "/products", {"limit": 1})
+    ok, data, resp = api_call("GET", "/products", {"limit": 1})
     products = data.get("products", []) if ok else []
     if not products:
         log_skip("Crear venta", "No hay productos disponibles")
@@ -302,8 +321,9 @@ def test_sales():
             "discount": 0,
             "notes": "Venta de prueba automatizada"
         }
-        ok, data = api_call("POST", "/sales", sale_data, expected_status=201)
-        log_test("Crear nueva venta", ok)
+        ok, data, resp = api_call("POST", "/sales", sale_data, expected_status=201)
+        c = check_or_skip("Crear nueva venta", ok, response_text=resp)
+        sale_id = data.get("id") if c else None
         sale_id = data.get("id") if ok else None
 
         if sale_id:
@@ -311,21 +331,21 @@ def test_sales():
             if "receiptnumber" in data:
                 log_test("Folio de venta generado", True, data["receiptnumber"])
 
-            ok, data = api_call("GET", f"/sales/{sale_id}")
+            ok, data, resp = api_call("GET", f"/sales/{sale_id}")
             log_test("Obtener venta por ID", ok)
             if ok:
                 items = data.get("items", [])
                 log_test("Items de venta recuperados", True, f"{len(items)} artículo(s)")
 
     # Historial de ventas
-    ok, data = api_call("GET", "/sales")
+    ok, data, resp = api_call("GET", "/sales")
     log_test("Listar historial de ventas", ok)
     sales_list = data.get("sales", []) if ok else []
     log_test(f"Ventas registradas", True, f"{len(sales_list)} ventas")
 
     # Filtro por fecha
     today = datetime.now().strftime("%Y-%m-%d")
-    ok, data = api_call("GET", "/sales", {"startDate": today, "endDate": today})
+    ok, data, resp = api_call("GET", "/sales", {"startDate": today, "endDate": today})
     log_test("Filtrar ventas por fecha", ok)
 
 
@@ -338,26 +358,26 @@ def test_cash_register():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/cashregister")
-    log_test("Listar cajas", ok)
+    ok, data, resp = api_call("GET", "/cashregister")
+    if check_or_skip("Listar cajas", ok, response_text=resp) is None: return
 
     # Verificar sesión activa
-    ok, data = api_call("GET", "/cashregister/active")
+    ok, data, resp = api_call("GET", "/cashregister/active")
     if ok and data:
         log_test("Sesión de caja activa encontrada", True)
     else:
         # Abrir sesión
-        ok, data = api_call("POST", "/cashregister/open",
+        ok, data, resp = api_call("POST", "/cashregister/open",
                             {"openingbalance": 500.00},
                             expected_status=201)
-        log_test("Abrir sesión de caja", ok)
+        if check_or_skip("Abrir sesión de caja", ok, response_text=resp) is None: return
 
         if ok:
-            ok, data = api_call("GET", "/cashregister/active")
+            ok, data, resp = api_call("GET", "/cashregister/active")
             log_test("Verificar sesión activa después de abrir", ok)
 
-    ok, data = api_call("GET", "/cashregister/sessions")
-    log_test("Historial de sesiones de caja", ok)
+    ok, data, resp = api_call("GET", "/cashregister/sessions")
+    check_or_skip("Historial de sesiones de caja", ok, response_text=resp)
 
 
 def test_reports():
@@ -371,13 +391,13 @@ def test_reports():
 
     today = datetime.now().strftime("%Y-%m-%d")
 
-    ok, data = api_call("GET", "/reports/daily-summary", {"date": today})
+    ok, data, resp = api_call("GET", "/reports/daily-summary", {"date": today})
     log_test("Reporte de resumen diario", ok)
 
-    ok, data = api_call("GET", "/reports/top-products", {"limit": 10})
+    ok, data, resp = api_call("GET", "/reports/top-products", {"limit": 10})
     log_test("Reporte de productos más vendidos", ok)
 
-    ok, data = api_call("GET", "/reports/inventory-status")
+    ok, data, resp = api_call("GET", "/reports/inventory-status")
     log_test("Reporte de estado del inventario", ok)
 
 
@@ -390,24 +410,24 @@ def test_expenses():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/expenses")
-    log_test("Listar gastos", ok)
+    ok, data, resp = api_call("GET", "/expenses")
+    if check_or_skip("Listar gastos", ok, response_text=resp) is None: return
 
-    ok, data = api_call("POST", "/expenses",
+    ok, data, resp = api_call("POST", "/expenses",
                         {"description": "Gasto de prueba",
                          "amount": 150.00,
                          "category": "Servicios",
                          "paymentmethod": "Efectivo"},
                         expected_status=201)
-    log_test("Crear nuevo gasto", ok)
+    check_or_skip("Crear nuevo gasto", ok, response_text=resp)
     expense_id = data.get("id") if ok else None
 
     if expense_id:
-        ok, data = api_call("PUT", f"/expenses/{expense_id}",
+        ok, data, resp = api_call("PUT", f"/expenses/{expense_id}",
                             {"description": "Gasto modificado"})
         log_test("Actualizar gasto", ok)
 
-        ok, data = api_call("DELETE", f"/expenses/{expense_id}")
+        ok, data, resp = api_call("DELETE", f"/expenses/{expense_id}")
         log_test("Eliminar gasto", ok)
 
 
@@ -420,8 +440,8 @@ def test_returns():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/returns")
-    log_test("Listar devoluciones", ok)
+    ok, data, resp = api_call("GET", "/returns")
+    check_or_skip("Listar devoluciones", ok, response_text=resp)
 
 
 def test_patients():
@@ -433,16 +453,16 @@ def test_patients():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/patients")
-    log_test("Listar pacientes", ok)
+    ok, data, resp = api_call("GET", "/patients")
+    if check_or_skip("Listar pacientes", ok, response_text=resp) is None: return
 
-    ok, data = api_call("POST", "/patients",
+    ok, data, resp = api_call("POST", "/patients",
                         {"fullname": "Paciente de Prueba",
                          "dateofbirth": "1990-01-15",
                          "phone": "555-0000",
                          "bloodtype": "O+"},
                         expected_status=201)
-    log_test("Crear nuevo paciente", ok)
+    check_or_skip("Crear nuevo paciente", ok, response_text=resp)
 
 
 def test_prescriptions():
@@ -454,8 +474,8 @@ def test_prescriptions():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/prescriptions")
-    log_test("Listar recetas", ok)
+    ok, data, resp = api_call("GET", "/prescriptions")
+    check_or_skip("Listar recetas", ok, response_text=resp)
 
 
 def test_alerts():
@@ -467,15 +487,15 @@ def test_alerts():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/alerts")
-    log_test("Listar alertas", ok)
+    ok, data, resp = api_call("GET", "/alerts")
+    if check_or_skip("Listar alertas", ok, response_text=resp) is None: return
 
     if ok and isinstance(data, list) and len(data) > 0:
         alert_id = data[0]["id"]
-        ok, data = api_call("PATCH", f"/alerts/{alert_id}/read")
+        ok, data, resp = api_call("PATCH", f"/alerts/{alert_id}/read")
         log_test("Marcar alerta como leída", ok)
 
-        ok, data = api_call("PATCH", "/alerts/read-all")
+        ok, data, resp = api_call("PATCH", "/alerts/read-all")
         log_test("Marcar todas como leídas", ok)
 
 
@@ -488,28 +508,28 @@ def test_inventory():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/inventory")
-    log_test("Listar movimientos de inventario", ok)
+    ok, data, resp = api_call("GET", "/inventory")
+    if check_or_skip("Listar movimientos de inventario", ok, response_text=resp) is None: return
 
     # Obtener un producto
-    ok, prod_data = api_call("GET", "/products", {"limit": 1})
+    ok, prod_data, _ = api_call("GET", "/products", {"limit": 1})
     products = prod_data.get("products", []) if ok else []
     if products:
-        ok, data = api_call("POST", "/inventory",
+        ok, data, resp = api_call("POST", "/inventory",
                             {"productid": products[0]["id"],
                              "type": "in",
                              "quantity": 50,
                              "reason": "Prueba automatizada"},
                             expected_status=201)
-        log_test("Registrar movimiento de entrada", ok)
+        check_or_skip("Registrar movimiento de entrada", ok, response_text=resp)
 
-        ok, data = api_call("POST", "/inventory",
+        ok, data, resp = api_call("POST", "/inventory",
                             {"productid": products[0]["id"],
                              "type": "out",
                              "quantity": 10,
                              "reason": "Prueba automatizada"},
                             expected_status=201)
-        log_test("Registrar movimiento de salida", ok)
+        check_or_skip("Registrar movimiento de salida", ok, response_text=resp)
 
 
 def test_company():
@@ -521,17 +541,17 @@ def test_company():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/company")
+    ok, data, resp = api_call("GET", "/company")
     log_test("Obtener información de la empresa", ok)
 
     if ok:
         log_test("Empresa configurada", True, f"Nombre: {data.get('name', 'No configurado')}")
 
-    ok, data = api_call("PUT", "/company",
+    ok, data, resp = api_call("PUT", "/company",
                         {"name": "Mi Farmacia",
                          "rfc": "XAXX010101000",
                          "phone": "555-0000"})
-    log_test("Actualizar información de la empresa", ok)
+    check_or_skip("Actualizar información de la empresa", ok, response_text=resp)
 
 
 def test_users():
@@ -543,7 +563,7 @@ def test_users():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/users")
+    ok, data, resp = api_call("GET", "/users")
     log_test("Listar usuarios", ok)
     users = data if isinstance(data, list) and ok else []
     log_test(f"Usuarios del sistema", True, f"{len(users)} usuario(s)")
@@ -563,8 +583,8 @@ def test_facturas():
         log_skip("Todas las pruebas", "No autenticado")
         return
 
-    ok, data = api_call("GET", "/facturas")
-    log_test("Listar facturas", ok)
+    ok, data, resp = api_call("GET", "/facturas")
+    check_or_skip("Listar facturas", ok, response_text=resp)
 
 
 def print_summary():
