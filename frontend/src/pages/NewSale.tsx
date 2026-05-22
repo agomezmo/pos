@@ -93,17 +93,18 @@ export default function NewSale() {
       if (existing) {
         return prev.map(item =>
           item.productid === product.id
-            ? { ...item, quantity: item.quantity + 1, subtotal: (item.quantity + 1) * item.unitprice }
+            ? { ...item, quantity: item.quantity + 1, subtotal: (item.quantity + 1) * Number(item.unitprice) }
             : item
         );
       }
+      const price = Number(product.saleprice);
       return [...prev, {
         productid: product.id,
         code: product.code,
         name: product.name,
         quantity: 1,
-        unitprice: product.saleprice,
-        subtotal: product.saleprice,
+        unitprice: price,
+        subtotal: price,
         requiresprescription: product.requiresprescription,
       }];
     });
@@ -131,7 +132,7 @@ export default function NewSale() {
     }
     setCart(prev => prev.map(item =>
       item.productid === productId
-        ? { ...item, quantity: qty, subtotal: qty * item.unitprice }
+        ? { ...item, quantity: qty, subtotal: qty * Number(item.unitprice) }
         : item
     ));
   };
@@ -427,14 +428,14 @@ export default function NewSale() {
           {/* Resumen y pago */}
           <div className="checkout-section">
             <div className="totals">
-              <div className="total-row"><span>Subtotal:</span><span>${subtotal.toFixed(2)}</span></div>
-              <div className="total-row"><span>IVA (16%):</span><span>${tax.toFixed(2)}</span></div>
+              <div className="total-row"><span>Subtotal:</span><span>${Number(subtotal).toFixed(2)}</span></div>
+              <div className="total-row"><span>IVA (16%):</span><span>${Number(tax).toFixed(2)}</span></div>
               <div className="total-row">
                 <span>Descuento:</span>
                 <input type="number" value={discount} min="0" step="0.01"
                   onChange={e => setDiscount(parseFloat(e.target.value) || 0)} />
               </div>
-              <div className="total-row total-final"><span>Total:</span><span>${total.toFixed(2)}</span></div>
+              <div className="total-row total-final"><span>Total:</span><span>${Number(total).toFixed(2)}</span></div>
             </div>
 
             <div className="payment-section">
@@ -454,7 +455,7 @@ export default function NewSale() {
                   <input type="number" value={amountReceived} min="0" step="0.01"
                     onChange={e => setAmountReceived(parseFloat(e.target.value) || 0)} />
                   {amountReceived > 0 && (
-                    <div className="change-display">Cambio: ${change.toFixed(2)}</div>
+                    <div className="change-display">Cambio: ${Number(change).toFixed(2)}</div>
                   )}
                 </div>
               )}
@@ -471,7 +472,7 @@ export default function NewSale() {
               onClick={handleCheckout}
               disabled={loading || cart.length === 0}
             >
-              {loading ? 'Procesando...' : `Cobrar $${total.toFixed(2)}`}
+              {loading ? 'Procesando...' : `Cobrar $${Number(total).toFixed(2)}`}
             </button>
           </div>
         </div>
