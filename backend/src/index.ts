@@ -13,6 +13,9 @@ import { suppliersRouter } from './routes/suppliers';
 import { inventoryRouter } from './routes/inventory';
 import { reportsRouter } from './routes/reports';
 import { companyRouter } from './routes/company';
+import { returnsRouter } from './routes/returns';
+import { expensesRouter } from './routes/expenses';
+import { facturasRouter } from './routes/facturas';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -39,6 +42,9 @@ app.use('/api/suppliers', suppliersRouter);
 app.use('/api/inventory', inventoryRouter);
 app.use('/api/reports', reportsRouter);
 app.use('/api/company', companyRouter);
+app.use('/api/returns', returnsRouter);
+app.use('/api/expenses', expensesRouter);
+app.use('/api/facturas', facturasRouter);
 
 app.use(errorHandler);
 

@@ -172,7 +172,7 @@ export default function NewSale() {
         const companyRes = await companyApi.get();
         setCompanyData(companyRes.data);
       } catch {
-        setCompanyData({ name: 'Mi Empresa', address: '', phone: '', codigopostal: '' });
+        setCompanyData({ name: 'Mi Empresa', address: '', phone: '', codigopostal: '', rfc: '', email: '', receiptfooter: '' });
       }
 
       setSuccess(true);
@@ -215,9 +215,11 @@ export default function NewSale() {
         </style></head><body>
         <div class="header">
           <h2>${companyData?.name || 'Mi Empresa'}</h2>
+          ${companyData?.rfc ? `<p>RFC: ${companyData.rfc}</p>` : ''}
           ${companyData?.address ? `<p>${companyData.address}</p>` : ''}
           ${companyData?.phone ? `<p>Tel: ${companyData.phone}</p>` : ''}
           ${companyData?.codigopostal ? `<p>CP: ${companyData.codigopostal}</p>` : ''}
+          ${companyData?.email ? `<p>${companyData.email}</p>` : ''}
           <p>Folio: ${sale?.receiptnumber || sale?.id || ''}</p>
           <p>${new Date().toLocaleString()}</p>
         </div>
@@ -233,6 +235,7 @@ export default function NewSale() {
         </table>
         <div class="footer">
           <p>¡Gracias por su compra!</p>
+          ${companyData?.receiptfooter ? `<p>${companyData.receiptfooter}</p>` : ''}
           <p>${sale?.paymentmethod || paymentMethod} - Recibí: $${Number(sale?.amountreceived || amountReceived).toFixed(2)} ${sale?.amountreceived || amountReceived > 0 ? 'Cambio: $' + Number((sale?.amountreceived || amountReceived) - ticketTotal).toFixed(2) : ''}</p>
         </div>
         </body></html>
@@ -251,9 +254,11 @@ export default function NewSale() {
 
           <div className="ticket-preview" style={{margin: '1rem auto', maxWidth: '400px', border: '1px solid #ccc', padding: '1rem', fontFamily: 'monospace', fontSize: '12px', textAlign: 'center'}}>
             <h3 style={{margin: '0 0 5px'}}>{companyData?.name || 'Mi Empresa'}</h3>
+            {companyData?.rfc && <p style={{margin: '2px 0'}}>RFC: {companyData.rfc}</p>}
             {companyData?.address && <p style={{margin: '2px 0'}}>{companyData.address}</p>}
             {companyData?.phone && <p style={{margin: '2px 0'}}>Tel: {companyData.phone}</p>}
             {companyData?.codigopostal && <p style={{margin: '2px 0'}}>CP: {companyData.codigopostal}</p>}
+            {companyData?.email && <p style={{margin: '2px 0'}}>{companyData.email}</p>}
             <hr style={{margin: '8px 0'}} />
             <table style={{width: '100%', borderCollapse: 'collapse', textAlign: 'left'}}>
               <thead>

@@ -26,7 +26,7 @@ companyRouter.get('/', authenticate, async (_req: Request, res: Response, next: 
 
 companyRouter.put('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, rfc, address, phone, email, codigopostal, logo_url } = req.body;
+    const { name, rfc, address, phone, email, codigopostal, logo_url, receiptfooter } = req.body;
     const existing = await pool.query('SELECT id FROM companyinfo LIMIT 1');
 
     if (existing.rows.length > 0) {
@@ -34,16 +34,16 @@ companyRouter.put('/', authenticate, async (req: Request, res: Response, next: N
         `UPDATE companyinfo SET name = COALESCE($1, name), rfc = COALESCE($2, rfc),
          address = COALESCE($3, address), phone = COALESCE($4, phone),
          email = COALESCE($5, email), codigopostal = COALESCE($6, codigopostal),
-         logourl = COALESCE($7, logourl)
-         WHERE id = $8 RETURNING *`,
-        [name, rfc, address, phone, email, codigopostal, logo_url, existing.rows[0].id]
+         logourl = COALESCE($7, logourl), receiptfooter = COALESCE($8, receiptfooter)
+         WHERE id = $9 RETURNING *`,
+        [name, rfc, address, phone, email, codigopostal, logo_url, receiptfooter, existing.rows[0].id]
       );
       res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        `INSERT INTO companyinfo (name, rfc, address, phone, email, codigopostal, logourl)
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-        [name, rfc, address, phone, email, codigopostal, logo_url]
+        `INSERT INTO companyinfo (name, rfc, address, phone, email, codigopostal, logourl, receiptfooter)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+        [name, rfc, address, phone, email, codigopostal, logo_url, receiptfooter]
       );
       res.status(201).json(result.rows[0]);
     }

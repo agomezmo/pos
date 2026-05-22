@@ -5,7 +5,7 @@ export default function Company() {
   const [company, setCompany] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: '', rfc: '', address: '', phone: '', email: '', codigopostal: '', logo_url: '' });
+  const [form, setForm] = useState({ name: '', rfc: '', address: '', phone: '', email: '', codigopostal: '', logo_url: '', receiptfooter: '' });
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function Company() {
       .then(res => {
         const c = res.data;
         setCompany(c);
-        setForm({ name: c.name || '', rfc: c.rfc || '', address: c.address || '', phone: c.phone || '', email: c.email || '', codigopostal: c.codigopostal || '', logo_url: c.logourl || '' });
+        setForm({ name: c.name || '', rfc: c.rfc || '', address: c.address || '', phone: c.phone || '', email: c.email || '', codigopostal: c.codigopostal || '', logo_url: c.logourl || '', receiptfooter: c.receiptfooter || '' });
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -28,7 +28,8 @@ export default function Company() {
       setCompany(res.data);
       setSuccess('Datos guardados correctamente');
     } catch (err: any) {
-      alert(err.response?.data?.error?.message || 'Error al guardar');
+      const msg = err.response?.data?.error?.message || err.message || 'Error de conexión al servidor';
+      alert(`Error al guardar: ${msg}`);
     } finally {
       setSaving(false);
     }
@@ -76,6 +77,11 @@ export default function Company() {
           <div className="form-group">
             <label>URL del Logo</label>
             <input value={form.logo_url} onChange={e => setForm({...form, logo_url: e.target.value})} placeholder="https://..." />
+          </div>
+          <div className="form-group">
+            <label>Pie de Ticket</label>
+            <textarea value={form.receiptfooter} onChange={e => setForm({...form, receiptfooter: e.target.value})}
+              placeholder="Mensaje que aparecerá al pie del ticket" rows={2} />
           </div>
           <button type="submit" className="btn-primary" disabled={saving}>
             {saving ? 'Guardando...' : 'Guardar Cambios'}
