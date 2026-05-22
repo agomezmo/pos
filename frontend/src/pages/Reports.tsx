@@ -3,7 +3,10 @@ import { reportsApi, expensesApi } from '../services/api';
 import api from '../services/api';
 
 export default function Reports() {
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const today = new Date().toISOString().split('T')[0];
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(today);
+  const [dateError, setDateError] = useState('');
   const [summary, setSummary] = useState<any>(null);
   const [topProducts, setTopProducts] = useState<any[]>([]);
   const [invStatus, setInvStatus] = useState<any>(null);
@@ -17,27 +20,39 @@ export default function Reports() {
     { id: 'gastos', label: 'Gastos' },
   ];
 
+  const validateDates = (start: string, end: string) => {
+    if (start && end && start > end) {
+      setDateError('La fecha inicial debe ser menor o igual a la fecha final');
+      return false;
+    }
+    setDateError('');
+    return true;
+  };
+
   useEffect(() => {
-    reportsApi.getDailySummary(date).then(r => setSummary(r.data)).catch(() => {});
-    reportsApi.getTopProducts({ limit: 15, startDate: date }).then(r => setTopProducts(r.data || [])).catch(() => {});
+    if (!validateDates(startDate, endDate)) return;
+    reportsApi.getDailySummary({ startDate, endDate }).then(r => setSummary(r.data)).catch(() => {});
+    reportsApi.getTopProducts({ limit: 15, startDate, endDate }).then(r => setTopProducts(r.data || [])).catch(() => {});
     reportsApi.getInventoryStatus().then(r => setInvStatus(r.data)).catch(() => {});
-    expensesApi.getAll({ limit: 50 }).then(r => setExpenses(Array.isArray(r.data) ? r.data : [])).catch(() => {});
-  }, [date]);
+    expensesApi.getAll({ limit: 50, startdate: startDate, enddate: endDate }).then(r => setExpenses(Array.isArray(r.data) ? r.data : [])).catch(() => {});
+  }, [startDate, endDate]);
 
   const totalExpenses = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
   const netIncome = summary ? (Number(summary.total_revenue) - totalExpenses) : 0;
-
-  /* Quick chart using CSS bars */
   const maxQty = Math.max(...topProducts.map(p => Number(p.total_quantity)), 1);
 
   return (
     <div className="page">
       <div className="page-header">
         <h1>Reportes</h1>
-        <div className="search-bar" style={{ margin: 0 }}>
-          <label>Fecha:</label>
-          <input type="date" value={date} onChange={e => setDate(e.target.value)}
+        <div className="search-bar" style={{ margin: 0, gap: '0.5rem', flexWrap: 'wrap' }}>
+          <label>Desde:</label>
+          <input type="date" value={startDate} onChange={e => { setStartDate(e.target.value); validateDates(e.target.value, endDate); }}
             style={{ minWidth: 'auto', flex: 'none' }} />
+          <label>Hasta:</label>
+          <input type="date" value={endDate} onChange={e => { setEndDate(e.target.value); validateDates(startDate, e.target.value); }}
+            style={{ minWidth: 'auto', flex: 'none' }} />
+          {dateError && <span style={{ color: 'var(--danger)', fontSize: '0.85rem' }}>{dateError}</span>}
         </div>
       </div>
 
@@ -86,7 +101,6 @@ export default function Reports() {
             )}
           </div>
 
-          {/* Bar chart - Ventas por hora simulated */}
           <div className="card">
             <h2>Productos Más Vendidos</h2>
             <div className="bar-chart">
@@ -126,7 +140,7 @@ export default function Reports() {
                   <td><strong>${Number(p.total_revenue).toFixed(2)}</strong></td>
                 </tr>
               ))}
-              {topProducts.length === 0 && <tr><td colSpan={5} className="empty">Sin datos para esta fecha</td></tr>}
+              {topProducts.length === 0 && <tr><td colSpan={5} className="empty">Sin datos para este período</td></tr>}
             </tbody>
           </table>
         </div>
@@ -174,7 +188,6 @@ export default function Reports() {
               </div>
             )}
           </div>
-
           <div className="card">
             <h2>Listado de Gastos</h2>
             <table className="table">

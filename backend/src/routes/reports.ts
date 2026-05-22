@@ -6,7 +6,16 @@ export const reportsRouter = Router();
 
 reportsRouter.get('/daily-summary', authenticate, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { date } = req.query;
+    const { date, startDate, endDate } = req.query;
+    if (startDate && endDate) {
+      const result = await pool.query(`
+        SELECT COUNT(*)::int as total_sales, COALESCE(SUM(total), 0) as total_revenue,
+               COALESCE(SUM(tax), 0) as total_tax, COALESCE(SUM(discount), 0) as total_discounts,
+               COUNT(DISTINCT customerid) as unique_customers
+        FROM sales WHERE DATE(createdat) >= $1 AND DATE(createdat) <= $2 AND paymentstatus = 'Completed'
+      `, [startDate, endDate]);
+      return res.json(result.rows[0]);
+    }
     const targetDate = date || new Date().toISOString().split('T')[0];
     const result = await pool.query(`
       SELECT COUNT(*)::int as total_sales, COALESCE(SUM(total), 0) as total_revenue,

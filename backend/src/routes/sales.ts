@@ -56,7 +56,7 @@ salesRouter.get('/:id', authenticate, async (req: Request, res: Response, next: 
 salesRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
   const client = await pool.connect();
   try {
-    const { customerid, items, paymentmethod, amountreceived, discount = 0, notes } = req.body;
+    const { customerid, items, paymentmethod, amountreceived, discount = 0, notes, cashregistersessionid } = req.body;
     if (!items?.length) throw new AppError('Items are required', 400, 'VALIDATION_ERROR');
 
     await client.query('BEGIN');
@@ -85,9 +85,9 @@ salesRouter.post('/', authenticate, async (req: Request, res: Response, next: Ne
     const total = subtotal + tax - discount;
 
     const saleResult = await client.query(
-      `INSERT INTO sales (receiptnumber, userid, customerid, subtotal, tax, discount, total, paymentmethod, paymentstatus, notes, amountreceived, change)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Completed', $9, $10, $11) RETURNING *`,
-      [receiptNumber, req.user!.userId, customerid || null, subtotal, tax, discount, total, paymentmethod || 'Efectivo', notes, amountreceived || 0, (amountreceived || 0) - total]
+      `INSERT INTO sales (receiptnumber, userid, customerid, subtotal, tax, discount, total, paymentmethod, paymentstatus, notes, amountreceived, change, cashregistersessionid)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Completed', $9, $10, $11, $12) RETURNING *`,
+      [receiptNumber, req.user!.userId, customerid || null, subtotal, tax, discount, total, paymentmethod || 'Efectivo', notes, amountreceived || 0, (amountreceived || 0) - total, cashregistersessionid || null]
     );
     const saleId = saleResult.rows[0].id;
 

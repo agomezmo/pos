@@ -16,6 +16,7 @@ import { companyRouter } from './routes/company';
 import { returnsRouter } from './routes/returns';
 import { expensesRouter } from './routes/expenses';
 import { facturasRouter } from './routes/facturas';
+import { cashRegisterRouter } from './routes/cashregister';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -45,6 +46,7 @@ app.use('/api/company', companyRouter);
 app.use('/api/returns', returnsRouter);
 app.use('/api/expenses', expensesRouter);
 app.use('/api/facturas', facturasRouter);
+app.use('/api/cashregister', cashRegisterRouter);
 
 app.use(errorHandler);
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { productsApi, customersApi, salesApi, companyApi } from '../services/api';
+import { productsApi, customersApi, salesApi, companyApi, cashRegisterApi } from '../services/api';
 
 interface CartItem {
   productid: number;
@@ -33,6 +33,8 @@ export default function NewSale() {
   const [success, setSuccess] = useState(false);
   const [saleData, setSaleData] = useState<any>(null);
   const [companyData, setCompanyData] = useState<any>(null);
+  const [cashSession, setCashSession] = useState<any>(null);
+  const [noSession, setNoSession] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const barcodeInput = useRef<HTMLInputElement>(null);
   const barcodeTimerRef = useRef<ReturnType<typeof setTimeout>>();
@@ -54,6 +56,9 @@ export default function NewSale() {
       setShowResults(true);
     }).catch(() => {});
     companyApi.get().then(res => setCompanyData(res.data)).catch(() => {});
+    cashRegisterApi.getActiveSession()
+      .then(res => { setCashSession(res.data); setNoSession(false); })
+      .catch(() => { setCashSession(null); setNoSession(true); });
   }, []);
 
   useEffect(() => {
@@ -151,6 +156,7 @@ export default function NewSale() {
 
   const handleCheckout = async () => {
     if (cart.length === 0) { setError('Agrega productos al carrito'); return; }
+    if (!cashSession) { setError('No hay una sesión de caja abierta. Abre la caja antes de cobrar.'); return; }
     setLoading(true);
     setError('');
     try {
@@ -165,6 +171,7 @@ export default function NewSale() {
         amountreceived: amountReceived,
         discount,
         notes,
+        cashregistersessionid: cashSession?.id,
       });
       setSaleData(saleRes.data);
 
@@ -307,6 +314,13 @@ export default function NewSale() {
           ← Historial
         </button>
       </div>
+
+      {noSession && (
+        <div className="alert alert-warning" style={{ marginBottom: '1rem', padding: '0.75rem 1rem', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>⚠️ No hay una sesión de caja abierta. Debes abrir la caja para poder registrar ventas.</span>
+          <button className="btn-primary btn-sm" onClick={() => navigate('/cashregister')} style={{ padding: '0.4rem 0.75rem' }}>Abrir Caja</button>
+        </div>
+      )}
 
       <div className="pos-layout">
         <div className="pos-left">
@@ -465,6 +479,12 @@ export default function NewSale() {
                   <option value="Cheque">Cheque</option>
                   <option value="Credito">Crédito</option>
                 </select>
+                {(paymentMethod === 'Tarjeta' || paymentMethod === 'Transferencia') && (
+                  <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.3rem', background: '#e8f4fd', padding: '0.5rem', borderRadius: '4px' }}>
+                    💡 Sugerencia: Confirma el pago en la terminal antes de finalizar.
+                    Puedes registrar el comprobante en las notas de la venta para referencia futura.
+                  </div>
+                )}
               </div>
               {paymentMethod === 'Efectivo' && (
                 <div className="form-group">

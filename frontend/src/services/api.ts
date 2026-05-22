@@ -154,7 +154,10 @@ export const settingsApi = {
 
 /* Reports */
 export const reportsApi = {
-  getDailySummary: (date?: string) => api.get('/reports/daily-summary', { params: { date } }),
+  getDailySummary: (dateOrParams?: any) => {
+    if (typeof dateOrParams === 'string') return api.get('/reports/daily-summary', { params: { date: dateOrParams } });
+    return api.get('/reports/daily-summary', { params: dateOrParams || {} });
+  },
   getTopProducts: (params?: any) => api.get('/reports/top-products', { params }),
   getInventoryStatus: () => api.get('/reports/inventory-status'),
   getSalesByCategory: (params?: any) => api.get('/reports/sales-by-category', { params }),

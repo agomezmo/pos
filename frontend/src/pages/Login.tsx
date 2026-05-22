@@ -15,7 +15,11 @@ export default function Login() {
     try {
       await login(username, password);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Error al iniciar sesión');
+      if (!err.response) {
+        setError('No se puede conectar con el servidor. Verifica que el sistema esté encendido.');
+      } else {
+        setError(err.response?.data?.error?.message || 'Error al iniciar sesión');
+      }
     } finally {
       setLoading(false);
     }
