@@ -162,6 +162,11 @@ export const reportsApi = {
   getHourlySales: (params?: any) => api.get('/reports/hourly-sales', { params }),
   getMonthlySales: (months?: number) => api.get('/reports/monthly-sales', { params: { months } }),
   getMonthlyExpenses: (months?: number) => api.get('/reports/monthly-expenses', { params: { months } }),
+  getPaymentMethods: (params?: any) => api.get('/reports/payment-methods', { params }),
+  getTopCustomers: (params?: any) => api.get('/reports/top-customers', { params }),
+  getProfitMargin: (params?: any) => api.get('/reports/profit-margin', { params }),
+  getReturnRate: (months?: number) => api.get('/reports/return-rate', { params: { months } }),
+  getDayOfWeek: (params?: any) => api.get('/reports/day-of-week', { params }),
 };
 
 /* CFDI Facturas */
