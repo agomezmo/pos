@@ -1,0 +1,148 @@
+code,name,description,category_id,purchase_price,sale_price,stock,min_stock,unit,requires_prescription,requires_tax,expiration_date
+ANA-001,Paracetamol 500mg,Analgésico y antitérmico caja x 20 tabletas,1,8.50,18.00,200,50,pza,false,true,2027-08-15
+ANA-002,Ibuprofeno 400mg,Antiinflamatorio no esteroideo caja x 30 tabletas,1,12.00,25.00,150,30,pza,false,true,2027-06-20
+ANA-003,Naproxeno 550mg,Antiinflamatorio caja x 20 tabletas,1,15.00,32.00,100,20,pza,false,true,2027-04-10
+ANA-004,Ketorolaco 10mg,Analgésico oral caja x 10 tabletas,1,18.00,38.00,120,25,pza,true,true,2026-12-30
+ANA-005,Diclofenaco 75mg,Antiinflamatorio caja x 15 tabletas,1,10.00,22.00,180,40,pza,false,true,2027-03-15
+ANA-006,Meloxicam 15mg,Antiinflamatorio caja x 10 tabletas,1,22.00,45.00,80,15,pza,true,true,2027-05-20
+ANA-007,Metamizol 500mg,Analgésico caja x 10 tabletas,1,7.00,16.00,250,50,pza,false,true,2027-09-01
+ANA-008,Acetaminofén 650mg,Analgésico caja x 24 tabletas,1,9.00,20.00,300,60,pza,false,true,2027-07-10
+ANA-009,Piroxicam 20mg,Cápsulas antiinflamatorias caja x 14,1,14.00,30.00,90,20,pza,true,true,2026-11-30
+ANA-010,Cetirizina 10mg,Antihistamínico caja x 20 tabletas,1,11.00,24.00,160,35,pza,false,true,2027-10-15
+ANT-001,Amoxicilina 500mg,Antibiótico caja x 24 cápsulas,2,25.00,55.00,200,40,pza,true,true,2027-12-20
+ANT-002,Amoxicilina + Ác. Clavulánico 875mg,Antibiótico caja x 14 tabletas,2,45.00,95.00,120,25,pza,true,true,2027-11-15
+ANT-003,Azitromicina 500mg,Antibiótico caja x 6 tabletas,2,35.00,75.00,180,30,pza,true,true,2028-01-10
+ANT-004,Ciprofloxacino 500mg,Antibiótico caja x 14 tabletas,2,20.00,45.00,150,30,pza,true,true,2027-10-05
+ANT-005,Levofloxacino 500mg,Antibiótico caja x 10 tabletas,2,40.00,85.00,100,20,pza,true,true,2027-09-25
+ANT-006,Cefalexina 500mg,Antibiótico caja x 24 cápsulas,2,22.00,48.00,140,30,pza,true,true,2027-08-30
+ANT-007,Nitrofurantoína 100mg,Antibiótico urinario caja x 20 cápsulas,2,18.00,40.00,90,20,pza,true,true,2027-07-15
+ANT-008,Clindamicina 300mg,Antibiótico caja x 24 cápsulas,2,30.00,65.00,110,25,pza,true,true,2027-06-20
+ANT-009,Metronidazol 500mg,Antibiótico caja x 20 tabletas,2,12.00,28.00,200,40,pza,true,true,2027-05-10
+ANT-010,Trimetoprima/Sulfametoxazol 800mg,Antibiótico caja x 20 tabletas,2,15.00,33.00,160,35,pza,true,true,2027-04-15
+ANT-011,Doxiciclina 100mg,Antibiótico caja x 20 cápsulas,2,28.00,60.00,130,25,pza,true,true,2028-02-10
+ANT-012,Eritromicina 500mg,Antibiótico caja x 20 tabletas,2,32.00,68.00,100,20,pza,true,true,2027-11-20
+ANT-013,Ceftriaxona 1g,Antibiótico inyectable frasco ámpula,2,55.00,120.00,80,15,pza,true,true,2027-09-10
+ANT-014,Cloranfenicol 500mg,Antibiótico caja x 20 cápsulas,2,20.00,44.00,70,15,pza,true,true,2026-10-30
+ANT-015,Rifampicina 300mg,Antibiótico caja x 30 cápsulas,2,48.00,100.00,60,10,pza,true,true,2027-08-05
+VIT-001,Vitamina C 1000mg,Suplemento efervescente caja x 30 tabletas,3,15.00,32.00,250,50,pza,false,true,2028-03-20
+VIT-002,Complejo B,Suplemento B1-B6-B12 caja x 30 tabletas,3,18.00,38.00,200,40,pza,false,true,2028-01-15
+VIT-003,Vitamina D3 2000UI,Suplemento caja x 60 cápsulas,3,22.00,48.00,180,35,pza,false,true,2028-06-10
+VIT-004,Multivitamínico Completo,Suplemento diario caja x 60 tabletas,3,35.00,72.00,150,30,pza,false,true,2028-04-05
+VIT-005,Calcio + Vitamina D3,Suplemento óseo caja x 30 tabletas,3,20.00,42.00,170,35,pza,false,true,2028-02-28
+VIT-006,Omega 3 1000mg,Ácidos grasos caja x 60 cápsulas,3,28.00,58.00,140,30,pza,false,true,2028-05-15
+VIT-007, Magnesio 500mg,Suplemento mineral caja x 30 tabletas,3,14.00,30.00,190,40,pza,false,true,2028-03-01
+VIT-008, Zinc 50mg,Suplemento mineral caja x 50 tabletas,3,12.00,26.00,160,35,pza,false,true,2028-07-20
+VIT-009,Hierro 100mg,Suplemento de hierro caja x 30 tabletas,3,16.00,34.00,130,25,pza,false,true,2027-12-10
+VIT-010,Coenzima Q10 100mg,Suplemento antioxidante caja x 30 cápsulas,3,45.00,95.00,80,15,pza,false,true,2028-04-30
+CUI-001,Shampoo Medicado Anticaspa,Shampoo tratamiento 200ml,4,25.00,55.00,100,20,pza,false,true,2028-01-10
+CUI-002,Crema Corporal Humectante,Crema hidratante 400ml,4,18.00,38.00,120,25,pza,false,true,2027-11-15
+CUI-003,Protector Solar FPS 50,Protector solar 200ml,4,35.00,75.00,90,20,pza,false,true,2027-08-20
+CUI-004,Pasta Dental Blanqueadora,Pasta dental 120ml,4,8.00,18.00,200,40,pza,false,true,2028-05-10
+CUI-005,Enjuague Bucal Antibacteriano,Enjuague bucal 500ml,4,12.00,26.00,150,30,pza,false,true,2028-03-15
+CUI-006,Desodorante Roll-On 48h,Desodorante antitranspirante 50ml,4,10.00,22.00,180,35,pza,false,true,2027-10-05
+CUI-007,Jabón Antibacterial Líquido,Jabón líquido 500ml,4,14.00,30.00,160,30,pza,false,true,2028-02-20
+CUI-008,Toallitas Húmedas Desechables,Toallitas húmedas paquete x 100,4,9.00,20.00,220,45,pza,false,true,2028-06-30
+CUI-009,Cepillo Dental Suave,Cepillo dental cerdas suaves,4,7.00,16.00,250,50,pza,false,true,2028-12-01
+CUI-010,Crema de Afeitar, Crema para rasurar 200ml,4,11.00,24.00,140,30,pza,false,true,2028-04-10
+RES-001,Salbutamol 100mcg Inhalador,Inhalador para asma 200 dosis,5,40.00,85.00,100,20,pza,true,true,2027-09-15
+RES-002,Loratadina 10mg,Antihistamínico caja x 20 tabletas,5,14.00,30.00,180,35,pza,false,true,2027-11-20
+RES-003,Fluticasona 50mcg Inhalador,Inhalador de corticosteroides 120 dosis,5,55.00,115.00,80,15,pza,true,true,2027-07-10
+RES-004,Budesonida 200mcg,Inhalador para asma 200 dosis,5,60.00,125.00,70,15,pza,true,true,2027-05-25
+RES-005,Desloratadina 5mg,Antihistamínico caja x 20 tabletas,5,22.00,48.00,130,25,pza,false,true,2027-10-30
+RES-006,Beclometasona 250mcg,Inhalador dosis medida,5,50.00,105.00,60,10,pza,true,true,2027-04-15
+RES-007,Fexofenadina 120mg,Antihistamínico caja x 15 tabletas,5,20.00,44.00,140,30,pza,false,true,2028-01-20
+RES-008,Oxígeno Medicinal Tanque,Tanque de oxígeno portátil 680L,5,350.00,750.00,20,5,pza,true,true,2029-01-01
+RES-009,Mascarilla N95,Caja x 10 mascarillas KN95,5,15.00,35.00,300,60,pza,false,true,2028-09-15
+RES-010,Jarabe para la Tos 120ml,Jarabe antitusivo expectorante,5,12.00,28.00,200,40,pza,false,true,2027-06-20
+GAS-001,Omeprazol 20mg,Protector gástrico caja x 28 cápsulas,6,18.00,38.00,250,50,pza,false,true,2027-10-10
+GAS-002,Ranitidina 150mg,Antihistamínico H2 caja x 20 tabletas,6,10.00,22.00,180,35,pza,false,true,2027-08-05
+GAS-003,Pantoprazol 40mg,Protector gástrico caja x 14 tabletas,6,25.00,52.00,140,30,pza,false,true,2027-09-20
+GAS-004,Domperidona 10mg,Antiemético caja x 30 tabletas,6,15.00,32.00,160,35,pza,false,true,2027-11-30
+GAS-005,Hioscina 10mg,Antiespasmódico caja x 20 tabletas,6,12.00,26.00,170,35,pza,false,true,2027-07-15
+GAS-006,Carbon Activado 250mg,Antidiarreico caja x 30 cápsulas,6,8.00,18.00,200,40,pza,false,true,2028-02-28
+GAS-007,Ursodiol 300mg,Ácido biliar caja x 30 cápsulas,6,45.00,95.00,60,10,pza,true,true,2027-05-10
+GAS-008,Loperamida 2mg,Antidiarreico caja x 12 tabletas,6,7.00,16.00,220,45,pza,false,true,2027-12-20
+GAS-009,Bismuto 262mg,Antiácido caja x 100 tabletas,6,14.00,30.00,150,30,pza,false,true,2028-03-15
+GAS-010,Metoclopramida 10mg,Antiemético caja x 30 tabletas,6,9.00,20.00,180,35,pza,false,true,2027-06-10
+CAR-001,Losartán 50mg,Antihipertensivo caja x 30 tabletas,7,16.00,35.00,200,40,pza,false,true,2027-11-20
+CAR-002,Enalapril 10mg,Antihipertensivo caja x 30 tabletas,7,14.00,30.00,180,35,pza,false,true,2027-10-15
+CAR-003,Amlodipino 5mg,Antihipertensivo bloqueador cálcico caja x 30,7,18.00,38.00,190,40,pza,false,true,2027-12-10
+CAR-004,Atenolol 50mg,Beta-bloqueador caja x 30 tabletas,7,12.00,26.00,160,30,pza,false,true,2027-09-05
+CAR-005,Meteormin 850mg,Antidiabético oral caja x 30 tabletas,7,15.00,32.00,200,40,pza,false,true,2027-08-20
+CAR-006,Atorvastatina 20mg,Hipolipemiante caja x 30 tabletas,7,22.00,48.00,140,30,pza,false,true,2027-11-15
+CAR-007,Digoxina 0.25mg,Cardiotónico caja x 30 tabletas,7,20.00,44.00,80,15,pza,true,true,2027-05-30
+CAR-008,Furosemida 40mg,Diurético caja x 30 tabletas,7,8.00,18.00,220,45,pza,false,true,2027-07-25
+CAR-009,Espironolactona 25mg,Diurético ahorrador K+ caja x 30,7,16.00,35.00,130,25,pza,false,true,2027-06-10
+CAR-010,Carvedilol 25mg,Beta-bloqueador caja x 30 tabletas,7,28.00,58.00,100,20,pza,false,true,2027-09-30
+CAR-011,Glibenclamida 5mg,Antidiabético caja x 30 tabletas,7,10.00,22.00,170,35,pza,false,true,2027-10-20
+CAR-012,Insulina NPH 100UI,Insulina humana frasco 10ml,7,80.00,170.00,60,10,pza,true,true,2027-04-15
+CAR-013,Clopidogrel 75mg,Antiplaquetario caja x 28 tabletas,7,35.00,75.00,120,25,pza,false,true,2027-12-30
+CAR-014,Warfarina 5mg,Anticoagulante oral caja x 30 tabletas,7,18.00,40.00,90,20,pza,true,true,2027-08-05
+CAR-015,Hidroclorotiazida 25mg,Diurético tiazídico caja x 30 tabletas,7,8.00,18.00,200,40,pza,false,true,2027-07-20
+NER-001,Diazepam 10mg,Ansiolítico caja x 20 tabletas,8,12.00,28.00,150,30,pza,true,true,2027-06-15
+NER-002,Clonazepam 2mg,Ansiolítico caja x 30 tabletas,8,15.00,33.00,140,30,pza,true,true,2027-05-20
+NER-003,Alprazolam 0.5mg,Ansiolítico caja x 30 tabletas,8,14.00,32.00,160,35,pza,true,true,2027-04-10
+NER-004,Fluoxetina 20mg,Antidepresivo ISRS caja x 28 cápsulas,8,18.00,38.00,130,25,pza,false,true,2027-08-30
+NER-005,Sertralina 50mg,Antidepresivo ISRS caja x 28 tabletas,8,20.00,42.00,120,25,pza,false,true,2027-09-15
+NER-006,Gabapentina 300mg,Anticonvulsivante caja x 30 cápsulas,8,22.00,48.00,110,20,pza,false,true,2027-10-10
+NER-007,Carbamazepina 200mg,Anticonvulsivante caja x 30 tabletas,8,16.00,35.00,100,20,pza,true,true,2027-07-05
+NER-008,Ácido Valproico 500mg,Anticonvulsivante caja x 30 tabletas,8,25.00,55.00,90,20,pza,true,true,2027-06-20
+NER-009,Pregabalina 75mg,Antineurálgico caja x 28 cápsulas,8,35.00,75.00,100,20,pza,false,true,2027-11-25
+NER-010,Risperidona 2mg,Antipsicótico caja x 30 tabletas,8,30.00,65.00,80,15,pza,true,true,2027-05-10
+NER-011,Tramadol 50mg,Analgésico opioide caja x 20 cápsulas,8,20.00,45.00,100,20,pza,true,true,2027-08-15
+NER-012,Amitriptilina 25mg,Antidepresivo tricíclico caja x 30 tabletas,8,10.00,22.00,140,30,pza,false,true,2027-09-20
+NER-013,Biperideno 2mg,Antiparkinsoniano caja x 30 tabletas,8,14.00,30.00,90,20,pza,true,true,2027-04-25
+NER-014,Topiramato 100mg,Anticonvulsivante caja x 60 tabletas,8,40.00,85.00,70,15,pza,false,true,2027-10-30
+NER-015,Venlafaxina 75mg,Antidepresivo IRSN caja x 28 cápsulas,8,32.00,68.00,110,25,pza,false,true,2027-12-15
+DER-001,Clotrimazol Crema 1%,Antifúngico tópico tubo 40g,9,8.00,18.00,200,40,pza,false,true,2028-01-20
+DER-002,Hidrocortisona Crema 1%,Antiinflamatorio tópico tubo 30g,9,10.00,22.00,180,35,pza,false,true,2027-11-15
+DER-003,Miconazol Crema 2%,Antifúngico tópico tubo 30g,9,12.00,26.00,150,30,pza,false,true,2027-10-10
+DER-004,Betametasona Crema 0.05%,Corticoide tópico tubo 40g,9,18.00,38.00,130,25,pza,false,true,2027-09-05
+DER-005,Ácido Fusídico Crema 2%,Antibiótico tópico tubo 30g,9,20.00,42.00,120,25,pza,false,true,2027-08-20
+DER-006,Tretinoína Crema 0.05%,Antiacné tópico tubo 30g,9,22.00,48.00,100,20,pza,false,true,2027-07-15
+DER-007,Lidocaína Gel 2%,Anestésico local tubo 30g,9,15.00,32.00,140,30,pza,false,true,2027-12-20
+DER-008,Calamina Loción 120ml,Locción antipruriginosa,9,7.00,16.00,180,35,pza,false,true,2028-02-28
+DER-009,Pomada de Sulfato de Cobre 5%,Cicatrizante tópico tubo 50g,9,9.00,20.00,160,30,pza,false,true,2028-03-15
+DER-010,Aloe Vera Gel Puro 100%,Gel humectante natural 250ml,9,13.00,28.00,200,40,pza,false,true,2028-05-10
+VAR-001,Alcohol Etílico 70%,Alcohol antiséptico 500ml,4,5.00,12.00,300,60,pza,false,true,2028-12-01
+VAR-002,Agua Oxigenada 10 Vol.,Peróxido de hidrógeno 250ml,4,4.00,10.00,250,50,pza,false,true,2028-06-15
+VAR-003,Gasas Estériles 10x10cm,Paquete con 25 gasas individuales,4,6.00,14.00,300,60,pza,false,true,2029-01-01
+VAR-004,Vendas Elásticas 5cm,Venda elástica 5cm x 5m,4,5.00,12.00,280,55,pza,false,true,2028-10-20
+VAR-005,Curitas Caja x 100,Apósitos adhesivos surtidos caja,4,8.00,18.00,350,70,pza,false,true,2029-03-15
+VAR-006,Termómetro Digital,Termómetro digital oral/axilar,4,25.00,55.00,80,15,pza,false,true,2030-01-01
+VAR-007,Tensiómetro Digital de Brazo,Monitor de presión arterial automático,4,200.00,450.00,30,10,pza,false,true,2030-06-01
+VAR-008,Guantes de Látex Caja x 100,Guantes de exploración estériles,4,15.00,35.00,200,40,pza,false,true,2029-05-30
+VAR-009,Jeringas 5ml Caja x 10,Jeringas desechables con aguja,4,4.00,10.00,400,80,pza,true,true,2028-08-15
+VAR-010,Bolsa de Agua Caliente,Bolsa térmica de caucho 2L,4,12.00,28.00,100,20,pza,false,true,2030-12-01
+VAR-011,Algodón Hidrófilo 100g,Bolsa de algodón puro 100g,4,6.00,14.00,250,50,pza,false,true,2028-11-10
+VAR-012,Venda Adhesiva 2.5cm,Esparadrapo rollo 2.5cm x 5m,4,4.00,10.00,300,60,pza,false,true,2028-09-20
+VAR-013,Apósito Transparente 10x15cm,Apósito adhesivo estéril 10x15cm,4,7.00,16.00,200,40,pza,false,true,2029-02-28
+VAR-014,Tijeras de Enfermería,Tijeras acero inoxidable 14cm,4,18.00,40.00,60,10,pza,false,true,2030-01-01
+VAR-015,Bajalenguas Caja x 500,Bajalenguas de madera estériles,4,5.00,12.00,180,35,pza,false,true,2029-06-15
+MED-001,Paracetamol Infantil 100mg/ml,Gotas orales frasco 30ml,1,10.00,22.00,150,30,pza,false,true,2027-09-10
+MED-002,Ibuprofeno Infantil 100mg/ml,Suspensión oral frasco 60ml,1,14.00,30.00,140,30,pza,false,true,2027-07-25
+MED-003,Amoxicilina Infantil 250mg/5ml,Suspensión oral frasco 75ml,2,18.00,40.00,120,25,pza,true,true,2027-05-15
+MED-004,Azitromicina Infantil 200mg/5ml,Suspensión oral frasco 30ml,2,30.00,65.00,100,20,pza,true,true,2027-04-30
+MED-005,Sales de Rehidratación Oral,Caja x 10 sobres de electrolitos,6,6.00,14.00,300,60,pza,false,true,2028-07-20
+MED-006,Lactobacillus Casei 5x10^9,Probiótico oral caja x 12 sobres,6,22.00,48.00,120,25,pza,false,true,2027-10-10
+MED-007,Nistatina Suspensión 100000UI/ml,Suspensión oral antifúngica 30ml,2,12.00,26.00,100,20,pza,true,true,2027-08-15
+MED-008,Prednisolona 5mg,Corticoide oral caja x 20 tabletas,7,16.00,35.00,130,25,pza,true,true,2027-06-10
+MED-009,Methylprednisolona 4mg,Corticoide oral caja x 20 tabletas,7,20.00,42.00,110,20,pza,true,true,2027-07-20
+MED-010,Dexametasona 8mg,Corticoide inyectable ampolla 2ml,7,8.00,18.00,200,40,pza,true,true,2027-05-05
+OFE-001,Toallita Sanitaria Caja x 20,Toallas sanitarias femeninas,4,6.00,14.00,250,50,pza,false,false,2028-10-30
+OFE-002,Tampón Caja x 16,Tampones femeninos,4,7.00,16.00,200,40,pza,false,false,2028-09-15
+OFE-003,Preservativos Caja x 12,Preservativos lubricados,4,8.00,20.00,300,60,pza,false,false,2029-12-31
+OFE-004,Prueba de Embarazo Casera,Prueba rápida de embarazo 1 pieza,4,5.00,14.00,180,35,pza,false,true,2029-06-30
+OFE-005,Anticonceptivo Oral 28 tabletas,Anticonceptivo hormonal caja,8,25.00,55.00,90,20,pza,true,true,2027-08-20
+OFE-006,Suero Fisiológico 500ml,Solución salina estéril,4,4.00,10.00,300,60,pza,false,true,2028-11-15
+OFE-007,Solución Ringer Lactato 500ml,Solución electrolítica estéril,4,6.00,14.00,150,30,pza,false,true,2028-10-20
+COL-001,Vendajes en Spray 200ml,Spray protector impermeable,9,12.00,26.00,120,25,pza,false,true,2028-03-10
+COL-002,Parche para Callicidas Caja x 12,Parches medicados para callos,9,8.00,18.00,100,20,pza,false,true,2027-12-05
+COL-003,Repelente de Insectos Spray 120ml,Repelente contra mosquitos,9,15.00,32.00,160,30,pza,false,true,2028-05-20
+COL-004,Bolsa Térmica Reutilizable,Compresa fría/caliente reusable,4,10.00,22.00,90,20,pza,false,true,2030-06-01
+COL-005,Inhalador Vick VapoRub 50g,Ungüento tópico descongestionante,5,8.00,18.00,200,40,pza,false,true,2028-01-10
+COL-006,Spray Nasal Agua de Mar 100ml,Solución de lavado nasal,5,10.00,22.00,150,30,pza,false,true,2028-04-15
+COL-007,Colirio Lágrimas Artificiales 15ml,Lubricante ocular gotas,9,7.00,16.00,180,35,pza,false,true,2027-11-30
+COL-008,Pomada para Hemorroides 30g,Tratamiento tópico hemorroidal,9,14.00,30.00,100,20,pza,false,true,2027-10-15
+COL-009,Crema para Quemaduras 50g,Tratamiento tópico para quemaduras,9,11.00,24.00,130,25,pza,false,true,2028-02-20
+COL-010,Paracetamol 1g Efervescente,Caja x 20 tabletas efervescentes,1,12.00,28.00,170,35,pza,false,true,2027-10-30

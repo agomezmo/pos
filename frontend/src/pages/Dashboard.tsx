@@ -4,6 +4,39 @@ import { useAuth } from '../context/AuthContext';
 import { reportsApi, alertsApi } from '../services/api';
 import api from '../services/api';
 
+function BarChart({ data, labelKey, valueKey, color, title, format }: {
+  data: any[]; labelKey: string; valueKey: string; color: string; title: string; format?: (v: number) => string;
+}) {
+  if (!data.length) return <div className="card"><h2>{title}</h2><p style={{ color: 'var(--gray-400)', padding: '1rem 0' }}>Sin datos</p></div>;
+  const max = Math.max(...data.map(d => Number(d[valueKey])), 1);
+  const pad = data.length < 6 ? 30 : 10;
+  return (
+    <div className="card">
+      <h2>{title}</h2>
+      <svg width="100%" height="180" viewBox={`0 0 ${data.length * (40 + pad) + 40} 160`} style={{ overflow: 'visible' }}>
+        {data.map((d, i) => {
+          const v = Number(d[valueKey]);
+          const h = (v / max) * 120;
+          const x = i * (40 + pad) + 20;
+          const y = 140 - h;
+          const label = d[labelKey]?.toString().length > 5 ? d[labelKey]?.toString().slice(0, 5) : (d[labelKey] || '');
+          return (
+            <g key={i}>
+              <rect x={x} y={y} width={30} height={h} rx={4} fill={color} opacity={0.85}>
+                <title>{`${d[labelKey]}: ${format ? format(v) : v}`}</title>
+              </rect>
+              <text x={x + 15} y={154} textAnchor="middle" fontSize={10} fill="var(--gray-500)">{label}</text>
+              <text x={x + 15} y={y - 4} textAnchor="middle" fontSize={9} fill="var(--gray-600)">
+                {format ? format(v) : v}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -11,6 +44,10 @@ export default function Dashboard() {
   const [invStatus, setInvStatus] = useState<any>(null);
   const [alerts, setAlerts] = useState<any[]>([]);
   const [recentSales, setRecentSales] = useState<any[]>([]);
+  const [monthlySales, setMonthlySales] = useState<any[]>([]);
+  const [monthlyExpenses, setMonthlyExpenses] = useState<any[]>([]);
+  const [lowStock, setLowStock] = useState<any[]>([]);
+  const [expiringProducts, setExpiringProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -22,6 +59,23 @@ export default function Dashboard() {
     }).catch(() => {});
     api.get('/sales', { params: { limit: 5 } })
       .then(r => setRecentSales(r.data?.sales || []))
+      .catch(() => {});
+    reportsApi.getMonthlySales(6).then(r => {
+      const d = Array.isArray(r.data) ? r.data.reverse() : [];
+      setMonthlySales(d.map((m: any) => ({ label: `${String(m.month).padStart(2, '0')}/${m.year}`, ...m })));
+    }).catch(() => {});
+    reportsApi.getMonthlyExpenses(6).then(r => {
+      const d = Array.isArray(r.data) ? r.data.reverse() : [];
+      setMonthlyExpenses(d.map((m: any) => ({ label: `${String(m.month).padStart(2, '0')}/${m.year}`, ...m })));
+    }).catch(() => {});
+    api.get('/products', { params: { limit: 200 } })
+      .then(r => {
+        const prods: any[] = r.data?.products || r.data || [];
+        setLowStock(prods.filter((p: any) => p.stock <= p.minstock).slice(0, 5));
+        const now = new Date();
+        const thirtyDays = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        setExpiringProducts(prods.filter((p: any) => p.expiry_date && new Date(p.expiry_date) <= thirtyDays).slice(0, 5));
+      })
       .catch(() => {});
   }, []);
 
@@ -69,6 +123,54 @@ export default function Dashboard() {
               <p>{invStatus.out_of_stock_count > 0 ? `${invStatus.out_of_stock_count} agotados` : 'Todo en stock'}</p>
             </div>
           </>
+        )}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        <BarChart
+          data={monthlySales}
+          labelKey="label" valueKey="revenue"
+          color="var(--success)" title="📈 Ventas Mensuales"
+          format={v => `$${Number(v).toFixed(0)}`}
+        />
+        <BarChart
+          data={monthlyExpenses}
+          labelKey="label" valueKey="total"
+          color="var(--danger)" title="📉 Gastos Mensuales"
+          format={v => `$${Number(v).toFixed(0)}`}
+        />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        {lowStock.length > 0 && (
+          <div className="card card-danger">
+            <h2>⚠️ Stock Bajo</h2>
+            {lowStock.map((p: any) => (
+              <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid var(--gray-100)' }}>
+                <span><strong>{p.name}</strong></span>
+                <span style={{ color: 'var(--danger)' }}>{p.stock} / {p.minstock} {p.unit}</span>
+              </div>
+            ))}
+            <button className="btn-sm" style={{ marginTop: '0.5rem' }} onClick={() => navigate('/products?filter=low_stock')}>
+              Ver todos
+            </button>
+          </div>
+        )}
+        {expiringProducts.length > 0 && (
+          <div className="card card-warning">
+            <h2>⏰ Próximos a Caducar</h2>
+            {expiringProducts.map((p: any) => (
+              <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid var(--gray-100)' }}>
+                <span><strong>{p.name}</strong></span>
+                <span style={{ color: 'var(--warning)' }}>
+                  {p.expiry_date ? new Date(p.expiry_date).toLocaleDateString() : ''}
+                </span>
+              </div>
+            ))}
+            <button className="btn-sm" style={{ marginTop: '0.5rem' }} onClick={() => navigate('/products?filter=expiring')}>
+              Ver todos
+            </button>
+          </div>
         )}
       </div>
 

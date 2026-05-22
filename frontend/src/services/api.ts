@@ -160,6 +160,8 @@ export const reportsApi = {
   getSalesByCategory: (params?: any) => api.get('/reports/sales-by-category', { params }),
   getMonthlyComparison: (params?: any) => api.get('/reports/monthly-comparison', { params }),
   getHourlySales: (params?: any) => api.get('/reports/hourly-sales', { params }),
+  getMonthlySales: (months?: number) => api.get('/reports/monthly-sales', { params: { months } }),
+  getMonthlyExpenses: (months?: number) => api.get('/reports/monthly-expenses', { params: { months } }),
 };
 
 /* CFDI Facturas */

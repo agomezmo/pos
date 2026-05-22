@@ -62,8 +62,8 @@ salesRouter.post('/', authenticate, async (req: Request, res: Response, next: Ne
     await client.query('BEGIN');
 
     const receiptResult = await client.query(
-      `SELECT COALESCE(MAX(CAST(SUBSTRING(receiptnumber FROM 'FAC-(\\\\d+)') AS INTEGER)), 0) + 1 as next
-       FROM sales WHERE receiptnumber LIKE 'FAC-%'`
+      `SELECT COALESCE(MAX(CAST(SUBSTRING(receiptnumber FROM 'FAC-[0-9]+-([0-9]+)$') AS INTEGER)), 0) + 1 as next
+       FROM sales WHERE receiptnumber LIKE 'FAC-%' AND receiptnumber ~ 'FAC-[0-9]+-[0-9]+$'`
     );
     const nextNum = String(receiptResult.rows[0].next).padStart(4, '0');
     const receiptNumber = `FAC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${nextNum}`;

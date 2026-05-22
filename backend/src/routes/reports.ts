@@ -51,6 +51,49 @@ reportsRouter.get('/top-products', authenticate, async (req: Request, res: Respo
   }
 });
 
+reportsRouter.get('/monthly-sales', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const months = parseInt(req.query.months as string) || 6;
+    const result = await pool.query(`
+      SELECT
+        EXTRACT(YEAR FROM createdat)::int as year,
+        EXTRACT(MONTH FROM createdat)::int as month,
+        COUNT(*)::int as count,
+        COALESCE(SUM(total), 0) as revenue,
+        COALESCE(SUM(tax), 0) as tax,
+        COALESCE(SUM(discount), 0) as discounts
+      FROM sales
+      WHERE paymentstatus = 'Completed'
+        AND createdat >= date_trunc('month', CURRENT_DATE) - ($1 || ' months')::interval
+      GROUP BY year, month
+      ORDER BY year DESC, month DESC
+    `, [months]);
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+reportsRouter.get('/monthly-expenses', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const months = parseInt(req.query.months as string) || 6;
+    const result = await pool.query(`
+      SELECT
+        EXTRACT(YEAR FROM date)::int as year,
+        EXTRACT(MONTH FROM date)::int as month,
+        COUNT(*)::int as count,
+        COALESCE(SUM(amount), 0) as total
+      FROM expenses
+      WHERE date >= date_trunc('month', CURRENT_DATE) - ($1 || ' months')::interval
+      GROUP BY year, month
+      ORDER BY year DESC, month DESC
+    `, [months]);
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
 reportsRouter.get('/inventory-status', authenticate, async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await pool.query(`
