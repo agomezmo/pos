@@ -35,6 +35,7 @@ export default function NewSale() {
   const [companyData, setCompanyData] = useState<any>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const barcodeInput = useRef<HTMLInputElement>(null);
+  const barcodeTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const [barcode, setBarcode] = useState('');
 
   const subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
@@ -116,7 +117,8 @@ export default function NewSale() {
     if (!barcode.trim()) return;
     const q = barcode.trim().toLowerCase();
     const product = allProducts.find(p =>
-      p.barcode && p.barcode.toLowerCase() === q
+      (p.barcode && p.barcode.toLowerCase() === q) ||
+      (p.code && p.code.toLowerCase() === q)
     );
     if (product) {
       addToCart(product);
@@ -124,6 +126,16 @@ export default function NewSale() {
       barcodeInput.current?.focus();
     }
   };
+
+  // Auto-submit barcode when scanner sends digits rapidly (no Enter key)
+  useEffect(() => {
+    if (barcode.length < 8) return;
+    if (barcodeTimerRef.current) clearTimeout(barcodeTimerRef.current);
+    barcodeTimerRef.current = setTimeout(() => {
+      handleBarcode();
+    }, 150);
+    return () => { if (barcodeTimerRef.current) clearTimeout(barcodeTimerRef.current); };
+  }, [barcode]);
 
   const updateQuantity = (productId: number, qty: number) => {
     if (qty <= 0) {

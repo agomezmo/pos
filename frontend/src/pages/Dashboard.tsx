@@ -37,6 +37,41 @@ function BarChart({ data, labelKey, valueKey, color, title, format }: {
   );
 }
 
+function TopProductsChart({ data }: { data: any[] }) {
+  if (!data.length) return <div className="card"><h2>🏆 Productos Más Vendidos</h2><p style={{ color: 'var(--gray-400)', padding: '1rem 0' }}>Sin datos de ventas</p></div>;
+  const maxQty = Math.max(...data.map(d => Number(d.total_quantity)), 1);
+  const maxRevenue = Math.max(...data.map(d => Number(d.total_revenue)), 1);
+  const barHeight = 32;
+  const gap = 8;
+  const totalHeight = data.length * (barHeight + gap) + 20;
+  const labelWidth = 140;
+  const chartWidth = 400;
+
+  return (
+    <div className="card" style={{ position: 'relative' }}>
+      <h2>🏆 Productos Más Vendidos</h2>
+      <svg width="100%" height={totalHeight} viewBox={`0 0 ${labelWidth + chartWidth + 80} ${totalHeight}`} style={{ overflow: 'visible' }}>
+        {data.map((d, i) => {
+          const qty = Number(d.total_quantity);
+          const revenue = Number(d.total_revenue);
+          const barW = (qty / maxQty) * chartWidth;
+          const y = i * (barHeight + gap) + 10;
+          const name = d.name?.length > 22 ? d.name.slice(0, 20) + '...' : (d.name || '');
+          return (
+            <g key={d.id || i}>
+              <text x={0} y={y + barHeight / 2 + 4} fontSize={11} fill="var(--gray-600)" textAnchor="end">{name}</text>
+              <rect x={labelWidth + 4} y={y} width={Math.max(barW, 6)} height={barHeight} rx={4} fill="var(--primary)" opacity={0.85}>
+                <title>{`${d.name}\nCantidad: ${qty}\nTotal: $${revenue.toFixed(2)}`}</title>
+              </rect>
+              <text x={labelWidth + 8} y={y + barHeight / 2 + 4} fontSize={11} fill="#fff" fontWeight="bold">{qty}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -48,6 +83,7 @@ export default function Dashboard() {
   const [monthlyExpenses, setMonthlyExpenses] = useState<any[]>([]);
   const [lowStock, setLowStock] = useState<any[]>([]);
   const [expiringProducts, setExpiringProducts] = useState<any[]>([]);
+  const [topProducts, setTopProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -76,6 +112,9 @@ export default function Dashboard() {
         const thirtyDays = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
         setExpiringProducts(prods.filter((p: any) => p.expiry_date && new Date(p.expiry_date) <= thirtyDays).slice(0, 5));
       })
+      .catch(() => {});
+    reportsApi.getTopProducts({ limit: 10 })
+      .then(r => setTopProducts(Array.isArray(r.data) ? r.data : []))
       .catch(() => {});
   }, []);
 
@@ -140,6 +179,12 @@ export default function Dashboard() {
           format={v => `$${Number(v).toFixed(0)}`}
         />
       </div>
+
+      {topProducts.length > 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <TopProductsChart data={topProducts} />
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
         {lowStock.length > 0 && (
