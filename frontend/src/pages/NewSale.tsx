@@ -25,7 +25,7 @@ export default function NewSale() {
   const [customerResults, setCustomerResults] = useState<Customer[]>([]);
   const [showCustomerSearch, setShowCustomerSearch] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('Efectivo');
-  const [amountReceived, setAmountReceived] = useState(0);
+  const [amountReceived, setAmountReceived] = useState('');
   const [discount, setDiscount] = useState(0);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,8 @@ export default function NewSale() {
   const subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
   const tax = cart.reduce((sum, item) => sum + (item.subtotal * 0.16), 0);
   const total = subtotal + tax - discount;
-  const change = Math.max(0, amountReceived - total);
+  const receivedNum = parseFloat(amountReceived) || 0;
+  const change = Math.max(0, receivedNum - total);
 
   const [allProducts, setAllProducts] = useState<any[]>([]);
 
@@ -168,7 +169,7 @@ export default function NewSale() {
           unitprice: item.unitprice,
         })),
         paymentmethod: paymentMethod,
-        amountreceived: amountReceived,
+        amountreceived: receivedNum,
         discount,
         notes,
         cashregistersessionid: cashSession?.id,
@@ -189,6 +190,20 @@ export default function NewSale() {
       setLoading(false);
     }
   };
+
+  // F2 keyboard shortcut to execute purchase
+  const checkoutRef = useRef(handleCheckout);
+  checkoutRef.current = handleCheckout;
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'F2') {
+        e.preventDefault();
+        checkoutRef.current();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   if (success) {
     const sale = saleData?.sale || saleData;
@@ -243,7 +258,7 @@ export default function NewSale() {
         <div class="footer">
           <p>¡Gracias por su compra!</p>
           ${companyData?.receiptfooter ? `<p>${companyData.receiptfooter}</p>` : ''}
-          <p>${sale?.paymentmethod || paymentMethod} - Recibí: $${Number(sale?.amountreceived || amountReceived).toFixed(2)} ${sale?.amountreceived || amountReceived > 0 ? 'Cambio: $' + Number((sale?.amountreceived || amountReceived) - ticketTotal).toFixed(2) : ''}</p>
+          <p>${sale?.paymentmethod || paymentMethod} - Recibí: $${Number(sale?.amountreceived || receivedNum).toFixed(2)} ${sale?.amountreceived || receivedNum > 0 ? 'Cambio: $' + Number((sale?.amountreceived || receivedNum) - ticketTotal).toFixed(2) : ''}</p>
         </div>
         </body></html>
       `);
@@ -490,8 +505,8 @@ export default function NewSale() {
                 <div className="form-group">
                   <label>Recibí</label>
                   <input type="number" value={amountReceived} min="0" step="0.01"
-                    onChange={e => setAmountReceived(parseFloat(e.target.value) || 0)} />
-                  {amountReceived > 0 && (
+                    onChange={e => setAmountReceived(e.target.value)} />
+                  {receivedNum > 0 && (
                     <div className="change-display">Cambio: ${Number(change).toFixed(2)}</div>
                   )}
                 </div>

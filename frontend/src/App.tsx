@@ -15,6 +15,7 @@ import Expenses from './pages/Expenses';
 import Patients from './pages/Patients';
 import Prescriptions from './pages/Prescriptions';
 import Alerts from './pages/Alerts';
+import Appointments from './pages/Appointments';
 import Inventory from './pages/Inventory';
 import Company from './pages/Company';
 import Users from './pages/Users';
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="patients" element={<Patients />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="alerts" element={<Alerts />} />
+        <Route path="appointments" element={<Appointments />} />
         <Route path="inventory" element={<Inventory />} />
         <Route path="company" element={<Company />} />
         <Route path="users" element={<Users />} />

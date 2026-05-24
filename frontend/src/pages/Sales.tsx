@@ -7,6 +7,7 @@ export default function Sales() {
   const [detail, setDetail] = useState<any>(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [dateError, setDateError] = useState('');
 
   const fetchSales = async () => {
     try {
@@ -21,7 +22,15 @@ export default function Sales() {
 
   useEffect(() => { fetchSales(); }, []);
 
-  const searchByDate = () => { setLoading(true); fetchSales(); };
+  const searchByDate = () => {
+    if (startDate && endDate && startDate > endDate) {
+      setDateError('La fecha "Desde" no puede ser mayor a "Hasta"');
+      return;
+    }
+    setDateError('');
+    setLoading(true);
+    fetchSales();
+  };
 
   const viewDetail = async (id: number) => {
     try {
@@ -39,10 +48,11 @@ export default function Sales() {
       </div>
       <div className="search-bar">
         <label>Desde:</label>
-        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+        <input type="date" value={startDate} onChange={e => { setStartDate(e.target.value); setDateError(''); }} />
         <label>Hasta:</label>
-        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+        <input type="date" value={endDate} onChange={e => { setEndDate(e.target.value); setDateError(''); }} />
         <button className="btn-primary" onClick={searchByDate}>Filtrar</button>
+        {dateError && <span className="error-message" style={{ marginLeft: '1rem', color: '#dc3545', fontSize: '0.85rem' }}>{dateError}</span>}
       </div>
       <div className="table-container">
         <table className="table">
@@ -61,7 +71,10 @@ export default function Sales() {
                 <td>${Number(s.tax).toFixed(2)}</td>
                 <td><strong>${Number(s.total).toFixed(2)}</strong></td>
                 <td>{s.paymentmethod}</td>
-                <td>{new Date(s.createdat).toLocaleDateString()}</td>
+                <td style={{ whiteSpace: 'nowrap' }}>
+                  <div>{new Date(s.createdat).toLocaleDateString()}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#888' }}>{new Date(s.createdat).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                </td>
                 <td><button className="btn-sm" onClick={() => viewDetail(s.id)}>Ver</button></td>
               </tr>
             ))}

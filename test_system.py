@@ -138,6 +138,25 @@ def test_products():
         return True, detail
     test("Productos", "Stock bajo", low_stock_ok)
 
+    def read_by_id_ok():
+        if not test.product_ids: return False, "no hay producto creado"
+        pid = test.product_ids[-1]
+        resp = api("GET", f"/products/{pid}")
+        ok = resp.get("id") == pid
+        return ok, f"id={pid}, name={resp.get('name','?')}" if ok else str(resp.get("error",{}))
+    test("Productos", "Leer producto por ID", read_by_id_ok)
+
+    def soft_delete_ok():
+        if not test.product_ids: return False, "no hay producto creado"
+        pid = test.product_ids[-1]
+        resp = api("DELETE", f"/products/{pid}")
+        ok = resp.get("message") or resp.get("id")
+        # Verify it's deactivated
+        resp2 = api("GET", f"/products/{pid}")
+        is_inactive = resp2.get("isactive") == False
+        return ok and is_inactive, f"id={pid} desactivado" if ok else str(resp.get("error",{}))
+    test("Productos", "Eliminar (desactivar) producto", soft_delete_ok)
+
 def test_customers():
     def list_ok():
         resp = api("GET", "/customers")
@@ -165,6 +184,23 @@ def test_customers():
         resp = api("POST", "/customers", data)
         if resp.get("id"): test.customer_ids.append(resp.get("id"))
     print(f"    {PASS} {len([t for t in test.customer_ids])} clientes generados")
+
+    def read_by_id_ok():
+        if not test.customer_ids: return False, "no hay cliente creado"
+        cid = test.customer_ids[-1]
+        resp = api("GET", f"/customers/{cid}")
+        ok = resp.get("id") == cid
+        return ok, f"id={cid}, name={resp.get('fullname','?')}" if ok else str(resp.get("error",{}))
+    test("Clientes", "Leer cliente por ID", read_by_id_ok)
+
+    def update_ok():
+        if not test.customer_ids: return False, "no hay cliente creado"
+        cid = test.customer_ids[-1]
+        new_name = rand_name()
+        resp = api("PUT", f"/customers/{cid}", {"fullname": new_name})
+        ok = resp.get("id") == cid and resp.get("fullname") == new_name
+        return ok, f"id={cid} renombrado a {new_name}" if ok else str(resp.get("error",{}))
+    test("Clientes", "Actualizar cliente", update_ok)
 
 def test_patients():
     if not test.customer_ids:
@@ -221,6 +257,14 @@ def test_prescriptions():
                 "doctorname": f"Dr. {rand_name()}", "doctorlicense": f"LIC{random.randint(10000,99999)}",
                 "diagnosis": "Diagnóstico de prueba", "issueddate": rand_date(-30, 0), "expirydate": rand_date(30, 180)})
         if resp.get("id"): test.prescription_ids.append(resp.get("id"))
+
+    def read_by_id_ok():
+        if not test.prescription_ids: return False, "no hay receta creada"
+        prid = test.prescription_ids[-1]
+        resp = api("GET", f"/prescriptions/{prid}")
+        ok = resp.get("id") == prid
+        return ok, f"id={prid}, doctor={resp.get('doctorname','?')}" if ok else str(resp.get("error",{}))
+    test("Recetas", "Leer receta por ID", read_by_id_ok)
 
 def test_cashregister():
     def open_ok():
@@ -346,6 +390,44 @@ def test_expenses():
         ok = resp.get("id") is not None
         return ok, f"id={resp.get('id')} ${data['amount']}" if ok else str(resp.get("error",{}))
     test("Gastos", "Crear gasto", create_ok)
+
+def test_appointments():
+    def list_ok():
+        resp = api("GET", "/appointments")
+        items = resp.get("appointments", [])
+        ok = isinstance(items, list)
+        return ok, f"{len(items)} citas"
+    test("Citas Médicas", "Listar citas", list_ok)
+
+    def create_ok():
+        resp = api("GET", "/patients")
+        pts = resp if isinstance(resp, list) else []
+        if not pts: return False, "no hay pacientes"
+        pid = pts[0]["id"]
+        data = {"patientid": pid, "userid": 1,
+                "appointmentdate": "2026-06-15T10:30:00",
+                "notes": "Cita de prueba generada por test suite"}
+        resp = api("POST", "/appointments", data)
+        ok = resp.get("id") is not None
+        return ok, f"id={resp.get('id')}" if ok else str(resp.get("error",{}))
+    test("Citas Médicas", "Crear cita", create_ok)
+
+def test_alerts():
+    def alerts_ok():
+        resp = api("GET", "/alerts")
+        ok = resp.get("counts") is not None or isinstance(resp, list)
+        counts = resp.get("counts", {})
+        detail = f"low_stock={counts.get('low_stock',0)}, expiry={counts.get('expiry',0)}"
+        return ok, detail
+    test("Alertas", "Obtener alertas con conteos", alerts_ok)
+
+    def low_stock_count():
+        resp = api("GET", "/alerts")
+        counts = resp.get("counts", {})
+        low = counts.get("low_stock", 0)
+        ok = low >= 0
+        return ok, f"{low} productos con stock bajo"
+    test("Alertas", "Conteo de stock bajo", low_stock_count)
 
 def test_csv_import():
     print(f"\n  {PASS} Simulación de importación CSV:")
@@ -488,6 +570,8 @@ if __name__ == "__main__":
         ("Ventas", [test_sales]),
         ("Reportes", [test_reports]),
         ("Gastos", [test_expenses]),
+        ("Citas Médicas", [test_appointments]),
+        ("Alertas", [test_alerts]),
         ("CSV", [test_csv_import]),
     ]
 

@@ -4,13 +4,19 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Alerts() {
   const [alerts, setAlerts] = useState<any[]>([]);
+  const [counts, setCounts] = useState({ low_stock: 0, expiry: 0 });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const fetchAlerts = async () => {
     try {
       const res = await alertsApi.getAll();
-      setAlerts(Array.isArray(res.data) ? res.data : []);
+      if (res.data.alerts) {
+        setAlerts(Array.isArray(res.data.alerts) ? res.data.alerts : []);
+        setCounts(res.data.counts || { low_stock: 0, expiry: 0 });
+      } else {
+        setAlerts(Array.isArray(res.data) ? res.data : []);
+      }
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
   };
@@ -65,11 +71,11 @@ export default function Alerts() {
       <div className="dashboard-grid" style={{marginBottom:'1.5rem'}}>
         <div className="dashboard-card" onClick={() => navigate('/products?filter=low_stock')}>
           <h3>📦 Stock Bajo</h3>
-          <p className="stat-number">{alerts.filter(a => a.type === 'low_stock' && !a.isread).length}</p>
+          <p className="stat-number">{counts.low_stock}</p>
         </div>
         <div className="dashboard-card" onClick={() => navigate('/products?filter=expiring')}>
           <h3>⏰ Por Vencer</h3>
-          <p className="stat-number">{alerts.filter(a => a.type === 'expiry' && !a.isread).length}</p>
+          <p className="stat-number">{counts.expiry}</p>
         </div>
       </div>
 

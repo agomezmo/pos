@@ -30,7 +30,7 @@ export default function Layout() {
             onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">🛒</span> Nueva Venta
           </NavLink>
-          <NavLink to="/sales" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+          <NavLink to="/sales" end className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
             onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">📋</span> Historial Ventas
           </NavLink>
@@ -81,6 +81,12 @@ export default function Layout() {
           <NavLink to="/prescriptions" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
             onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">📝</span> Recetas
+          </NavLink>
+
+          <div className="nav-section">CONSULTORIO</div>
+          <NavLink to="/appointments" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+            onClick={() => setSidebarOpen(false)}>
+            <span className="nav-icon">📅</span> Citas Médicas
           </NavLink>
 
           <div className="nav-section">ADMINISTRACIÓN</div>

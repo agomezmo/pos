@@ -126,6 +126,15 @@ export const alertsApi = {
   markAllAsRead: () => api.patch('/alerts/read-all'),
 };
 
+/* Appointments */
+export const appointmentsApi = {
+  getAll: (params?: any) => api.get('/appointments', { params }),
+  getById: (id: number) => api.get(`/appointments/${id}`),
+  create: (data: any) => api.post('/appointments', data),
+  update: (id: number, data: any) => api.put(`/appointments/${id}`, data),
+  delete: (id: number) => api.delete(`/appointments/${id}`),
+};
+
 /* Inventory */
 export const inventoryApi = {
   getAll: (params?: any) => api.get('/inventory', { params }),
