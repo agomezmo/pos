@@ -37,7 +37,7 @@ reportsRouter.get('/top-products', authenticate, async (req: Request, res: Respo
       JOIN sales s ON si.saleid = s.id
       WHERE s.paymentstatus = 'Completed'
         AND ($1::date IS NULL OR s.createdat >= $1::date)
-        AND ($2::date IS NULL OR s.createdat <= $2::date)
+        AND ($2::date IS NULL OR s.createdat < ($2::date + interval '1 day'))
       GROUP BY p.id, p.name, p.code, p.purchaseprice
       ORDER BY total_quantity DESC LIMIT $3
     `, [startDate || null, endDate || null, parseInt(limit as string)]);
@@ -102,7 +102,7 @@ reportsRouter.get('/sales-by-category', authenticate, async (req: Request, res: 
       JOIN sales s ON si.saleid = s.id
       WHERE s.paymentstatus = 'Completed'
         AND ($1::date IS NULL OR s.createdat >= $1::date)
-        AND ($2::date IS NULL OR s.createdat <= $2::date)
+        AND ($2::date IS NULL OR s.createdat < ($2::date + interval '1 day'))
       GROUP BY cat.id, cat.name
       ORDER BY revenue DESC
     `, [startDate || null, endDate || null]);
@@ -120,7 +120,7 @@ reportsRouter.get('/hourly-sales', authenticate, async (req: Request, res: Respo
       FROM sales
       WHERE paymentstatus = 'Completed'
         AND ($1::date IS NULL OR createdat >= $1::date)
-        AND ($2::date IS NULL OR createdat <= $2::date)
+        AND ($2::date IS NULL OR createdat < ($2::date + interval '1 day'))
       GROUP BY hour ORDER BY hour
     `, [startDate || null, endDate || null]);
     res.json(result.rows);
@@ -151,7 +151,7 @@ reportsRouter.get('/payment-methods', authenticate, async (req: Request, res: Re
       FROM sales s
       WHERE s.paymentstatus = 'Completed'
         AND ($1::date IS NULL OR s.createdat >= $1::date)
-        AND ($2::date IS NULL OR s.createdat <= $2::date)
+        AND ($2::date IS NULL OR s.createdat < ($2::date + interval '1 day'))
       GROUP BY s.paymentmethod ORDER BY total DESC
     `, [startDate || null, endDate || null]);
     res.json(result.rows);
@@ -167,7 +167,7 @@ reportsRouter.get('/top-customers', authenticate, async (req: Request, res: Resp
       FROM sales s JOIN customers c ON s.customerid = c.id
       WHERE s.paymentstatus = 'Completed'
         AND ($1::date IS NULL OR s.createdat >= $1::date)
-        AND ($2::date IS NULL OR s.createdat <= $2::date)
+        AND ($2::date IS NULL OR s.createdat < ($2::date + interval '1 day'))
       GROUP BY c.id, c.fullname, c.rfc
       ORDER BY total_spent DESC LIMIT $3
     `, [startDate || null, endDate || null, parseInt(limit as string)]);
@@ -192,7 +192,7 @@ reportsRouter.get('/profit-margin', authenticate, async (req: Request, res: Resp
       WHERE s.paymentstatus = 'Completed'
         AND p.purchaseprice > 0
         AND ($1::date IS NULL OR s.createdat >= $1::date)
-        AND ($2::date IS NULL OR s.createdat <= $2::date)
+        AND ($2::date IS NULL OR s.createdat < ($2::date + interval '1 day'))
       GROUP BY p.id, p.name, p.code, p.purchaseprice, p.saleprice
       ORDER BY gross_profit DESC LIMIT $3
     `, [startDate || null, endDate || null, parseInt(limit as string)]);
@@ -232,7 +232,7 @@ reportsRouter.get('/day-of-week', authenticate, async (req: Request, res: Respon
       FROM sales
       WHERE paymentstatus = 'Completed'
         AND ($1::date IS NULL OR createdat >= $1::date)
-        AND ($2::date IS NULL OR createdat <= $2::date)
+        AND ($2::date IS NULL OR createdat < ($2::date + interval '1 day'))
       GROUP BY dow ORDER BY dow
     `, [startDate || null, endDate || null]);
     const mapped = result.rows.map((r: any) => ({ ...r, day_name: days[r.dow] || '' }));

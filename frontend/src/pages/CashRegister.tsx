@@ -8,7 +8,7 @@ export default function CashRegister() {
   const [showOpenModal, setShowOpenModal] = useState(false);
   const [showCloseModal, setShowCloseModal] = useState(false);
   const [openingBalance, setOpeningBalance] = useState(0);
-  const [closingData, setClosingData] = useState({ closingbalance: 0, notes: '' });
+  const [closingData, setClosingData] = useState({ closingamount: 0, notes: '' });
   const [error, setError] = useState('');
 
   const fetchData = async () => {
@@ -39,11 +39,11 @@ export default function CashRegister() {
   };
 
   const closeSession = async () => {
-    if (closingData.closingbalance <= 0) { setError('El monto final debe ser mayor a 0'); return; }
+    if (closingData.closingamount <= 0) { setError('El monto final debe ser mayor a 0'); return; }
     try {
-      await cashRegisterApi.closeSession(closingData);
+      await cashRegisterApi.closeSession({ closingbalance: closingData.closingamount, notes: closingData.notes });
       setShowCloseModal(false);
-      setClosingData({ closingbalance: 0, notes: '' });
+      setClosingData({ closingamount: 0, notes: '' });
       setError('');
       fetchData();
     } catch (err: any) {
@@ -65,7 +65,7 @@ export default function CashRegister() {
             <div>
               <h2>Sesión Activa</h2>
               <p>Abierta: {new Date(activeSession.openingdate).toLocaleString()}</p>
-              <p>Saldo Inicial: ${Number(activeSession.openingbalance).toFixed(2)}</p>
+              <p>Saldo Inicial: ${Number(activeSession.openingamount || activeSession.openingbalance || 0).toFixed(2)}</p>
               {activeSession.total_sales > 0 && (
                 <>
                   <p>Ventas: {activeSession.total_sales} | Efectivo: ${Number(activeSession.total_cash || 0).toFixed(2)}</p>
@@ -107,8 +107,8 @@ export default function CashRegister() {
                   <td>{s.user_name}</td>
                   <td>{new Date(s.openingdate).toLocaleString()}</td>
                   <td>{s.closingdate ? new Date(s.closingdate).toLocaleString() : '-'}</td>
-                  <td>${Number(s.openingbalance).toFixed(2)}</td>
-                  <td>{s.closingbalance ? `$${Number(s.closingbalance).toFixed(2)}` : '-'}</td>
+                  <td>${Number(s.openingamount || s.openingbalance || 0).toFixed(2)}</td>
+                  <td>{s.closingamount || s.closingbalance ? `$${Number(s.closingamount || s.closingbalance).toFixed(2)}` : '-'}</td>
                   <td>{s.total_sales || 0}</td>
                   <td><span className={`badge badge-${s.status === 'Open' ? 'success' : 'secondary'}`}>{s.status}</span></td>
                 </tr>
@@ -144,8 +144,8 @@ export default function CashRegister() {
             {error && <div className="error-message">{error}</div>}
             <div className="form-group">
               <label>Monto Final *</label>
-              <input type="number" step="0.01" value={closingData.closingbalance}
-                onChange={e => setClosingData({...closingData, closingbalance: parseFloat(e.target.value) || 0})} autoFocus />
+              <input type="number" step="0.01" value={closingData.closingamount}
+                onChange={e => setClosingData({...closingData, closingamount: parseFloat(e.target.value) || 0})} autoFocus />
             </div>
             <div className="form-group">
               <label>Notas</label>
