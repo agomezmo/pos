@@ -158,6 +158,7 @@ CREATE TABLE public.expenses (
     amount numeric(18,2) NOT NULL,
     paymentmethod character varying(30),
     reference character varying(100),
+    notes text,
     userid integer,
     createdat timestamp without time zone DEFAULT now()
 );

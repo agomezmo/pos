@@ -54,10 +54,13 @@ export default function Products() {
     e.preventDefault();
     setError('');
     try {
+      const payload = { ...form };
+      if (payload.supplierid === '') payload.supplierid = null;
+      if (payload.categoryid === '') payload.categoryid = null;
       if (editId) {
-        await productsApi.update(editId, form);
+        await productsApi.update(editId, payload);
       } else {
-        await productsApi.create(form);
+        await productsApi.create(payload);
       }
       setShowModal(false);
       fetchProducts();

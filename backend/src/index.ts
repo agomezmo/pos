@@ -17,6 +17,8 @@ import { returnsRouter } from './routes/returns';
 import { expensesRouter } from './routes/expenses';
 import { facturasRouter } from './routes/facturas';
 import { cashRegisterRouter } from './routes/cashregister';
+import { patientsRouter } from './routes/patients';
+import { prescriptionsRouter } from './routes/prescriptions';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -47,6 +49,8 @@ app.use('/api/returns', returnsRouter);
 app.use('/api/expenses', expensesRouter);
 app.use('/api/facturas', facturasRouter);
 app.use('/api/cashregister', cashRegisterRouter);
+app.use('/api/patients', patientsRouter);
+app.use('/api/prescriptions', prescriptionsRouter);
 
 app.use(errorHandler);
 

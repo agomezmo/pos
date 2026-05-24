@@ -1187,4 +1187,22 @@ INSERT INTO factura_items (id, facturaid, saleitemid, productoid, cantidad, clav
   ('12', '6', '241', '78', '2.000000', '51101700', 'H87', 'Tableta', 'MEX078', 'Metoclopramida 10mg x10', '9.00', '0.00', '18.00', '16.00', '18.00', '2.88', '0.00', '0.00', '0.00', '2026-05-15 21:54:45.457816'),
   ('13', '7', '278', '70', '3.000000', '51101700', 'H87', 'Tableta', 'MEX070', 'Ambroxol 30mg x20', '8.00', '0.00', '24.00', '16.00', '24.00', '3.84', '0.00', '0.00', '0.00', '2026-05-15 22:15:09.439215'),
   ('14', '8', '297', '54', '4.000000', '51101700', 'H87', 'Tubo', 'MEX054', 'Pasta Dental 120ml', '9.00', '0.00', '36.00', '16.00', '36.00', '5.76', '0.00', '0.00', '0.00', '2026-05-15 23:15:42.845909'),
-  ('15', '8', '298', '61', '1.000000', '51101700', 'H87', 'Unidad', 'MEX061', 'Termómetro Digital', '15.00', '0.00', '15.00', '16.00', '15.00', '2.40', '0.00', '0.00', '0.00', '2026-05-15 23:15:42.846715');
+   ('15', '8', '298', '61', '1.000000', '51101700', 'H87', 'Unidad', 'MEX061', 'Termómetro Digital', '15.00', '0.00', '15.00', '16.00', '15.00', '2.40', '0.00', '0.00', '0.00', '2026-05-15 23:15:42.846715');
+
+-- Fix sequences after explicit ID inserts
+SELECT setval('products_id_seq', COALESCE((SELECT MAX(id) FROM products), 1));
+SELECT setval('categories_id_seq', COALESCE((SELECT MAX(id) FROM categories), 1));
+SELECT setval('customers_id_seq', COALESCE((SELECT MAX(id) FROM customers), 1));
+SELECT setval('suppliers_id_seq', COALESCE((SELECT MAX(id) FROM suppliers), 1));
+SELECT setval('users_id_seq', COALESCE((SELECT MAX(id) FROM users), 1));
+SELECT setval('sales_id_seq', COALESCE((SELECT MAX(id) FROM sales), 1));
+SELECT setval('saleitems_id_seq', COALESCE((SELECT MAX(id) FROM saleitems), 1));
+SELECT setval('payments_id_seq', COALESCE((SELECT MAX(id) FROM payments), 1));
+SELECT setval('inventorymovements_id_seq', COALESCE((SELECT MAX(id) FROM inventorymovements), 1));
+SELECT setval('facturas_id_seq', COALESCE((SELECT MAX(id) FROM facturas), 1));
+SELECT setval('factura_items_id_seq', COALESCE((SELECT MAX(id) FROM factura_items), 1));
+SELECT setval('expenses_id_seq', COALESCE((SELECT MAX(id) FROM expenses), 1));
+SELECT setval('patients_id_seq', COALESCE((SELECT MAX(id) FROM patients), 1));
+SELECT setval('prescriptions_id_seq', COALESCE((SELECT MAX(id) FROM prescriptions), 1));
+SELECT setval('prescriptionitems_id_seq', COALESCE((SELECT MAX(id) FROM prescriptionitems), 1));
+SELECT setval('companyinfo_id_seq', COALESCE((SELECT MAX(id) FROM companyinfo), 1));

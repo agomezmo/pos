@@ -38,23 +38,25 @@ function HBarChart({ data, labelKey, valueKey, valueLabel, title, color, format 
 }) {
   if (!data.length) return <div className="card"><h2>{title}</h2><p style={{ color: 'var(--gray-400)', padding: '1rem 0' }}>Sin datos</p></div>;
   const max = Math.max(...data.map(d => Number(d[valueKey])), 1);
-  const bh = 28; const gap = 6; const h = data.length * (bh + gap) + 20;
-  const lw = 130; const cw = 350;
+  const bh = 32; const gap = 8; const h = data.length * (bh + gap) + 20;
+  const lw = 200; const cw = 600;
   return (
     <div className="card"><h2>{title}</h2>
-      <svg width="100%" height={h} viewBox={`0 0 ${lw + cw + 80} ${h}`} style={{ overflow: 'visible' }}>
-        {data.map((d, i) => {
-          const v = Number(d[valueKey]); const bw = (v / max) * cw; const y = i * (bh + gap) + 10;
-          const name = (d[labelKey] || '').toString(); const short = name.length > 20 ? name.slice(0, 18) + '…' : name;
-          return (<g key={i}>
-            <text x={0} y={y + bh / 2 + 4} fontSize={11} fill="var(--gray-600)" textAnchor="end">{short}</text>
-            <rect x={lw + 4} y={y} width={Math.max(bw, 6)} height={bh} rx={4} fill={color} opacity={0.85}>
-              <title>{`${name}\n${valueLabel || valueKey}: ${format ? format(v) : v}`}</title>
-            </rect>
-            <text x={lw + 8} y={y + bh / 2 + 4} fontSize={11} fill="#fff" fontWeight="bold">{format ? format(v) : v}</text>
-          </g>);
-        })}
-      </svg>
+      <div style={{ overflowX: 'auto' }}>
+        <svg width="100%" height={h} viewBox={`0 0 ${lw + cw + 80} ${h}`} style={{ overflow: 'visible', minWidth: '500px' }}>
+          {data.map((d, i) => {
+            const v = Number(d[valueKey]); const bw = (v / max) * cw; const y = i * (bh + gap) + 10;
+            const name = (d[labelKey] || '').toString(); const short = name.length > 28 ? name.slice(0, 26) + '…' : name;
+            return (<g key={i}>
+              <text x={0} y={y + bh / 2 + 5} fontSize={13} fill="var(--gray-700)" textAnchor="end" fontWeight="500">{short}</text>
+              <rect x={lw + 4} y={y} width={Math.max(bw, 6)} height={bh} rx={4} fill={color} opacity={0.85}>
+                <title>{`${name}\n${valueLabel || valueKey}: ${format ? format(v) : v}`}</title>
+              </rect>
+              <text x={lw + 10} y={y + bh / 2 + 5} fontSize={12} fill="#fff" fontWeight="bold">{format ? format(v) : v}</text>
+            </g>);
+          })}
+        </svg>
+      </div>
     </div>
   );
 }
@@ -237,21 +239,37 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Fila 4: Categorías, Horas, Días, Métodos de pago */}
+      {/* Fila 4: Categorías (full width) */}
+      {salesByCategory.length > 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <HBarChart data={salesByCategory} labelKey="name" valueKey="revenue" title="📂 Ventas por Categoría" color="#8b5cf6" format={v => `$${Number(v).toFixed(0)}`} />
+        </div>
+      )}
+
+      {/* Fila 5: Horas y Días / Métodos */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-        <HBarChart data={salesByCategory} labelKey="name" valueKey="revenue" title="📂 Ventas por Categoría" color="#8b5cf6" format={v => `$${Number(v).toFixed(0)}`} />
         <BarChart data={hourlySales} labelKey="hour" valueKey="sale_count" title="⏰ Ventas por Hora" color="#06b6d4" format={v => String(v)} />
+        <BarChart data={dayOfWeek} labelKey="day_name" valueKey="revenue" title="📅 Ventas por Día" color="#f59e0b" format={v => `$${Number(v).toFixed(0)}`} />
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-        <BarChart data={dayOfWeek} labelKey="day_name" valueKey="revenue" title="📅 Ventas por Día" color="#f59e0b" format={v => `$${Number(v).toFixed(0)}`} />
         <PieChart data={paymentMethods} labelKey="paymentmethod" valueKey="total" title="💳 Métodos de Pago" format={v => `$${Number(v).toFixed(0)}`} />
       </div>
 
-      {/* Fila 5: Margen de ganancia y clientes frecuentes */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-        <HBarChart data={profitMargin} labelKey="name" valueKey="margin_pct" valueLabel="Margen %" title="💰 Margen de Ganancia" color="#10b981" format={v => `${v}%`} />
-        <HBarChart data={topCustomers} labelKey="fullname" valueKey="total_spent" title="👥 Clientes Frecuentes" color="#ec4899" format={v => `$${Number(v).toFixed(0)}`} />
-      </div>
+      {/* Fila 6: Margen de ganancia (full width) */}
+      {profitMargin.length > 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <HBarChart data={profitMargin} labelKey="name" valueKey="margin_pct" valueLabel="Margen %" title="💰 Margen de Ganancia" color="#10b981" format={v => `${v}%`} />
+        </div>
+      )}
+
+      {/* Fila 7: Clientes frecuentes (full width) */}
+      {topCustomers.length > 0 && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <HBarChart data={topCustomers} labelKey="fullname" valueKey="total_spent" title="👥 Clientes Frecuentes" color="#ec4899" format={v => `$${Number(v).toFixed(0)}`} />
+        </div>
+      )}
+
+      {/* Fila 8: Tasa de devolución */}
 
       {/* Fila 6: Tasa de devolución */}
       {returnRate.length > 0 && (

@@ -318,7 +318,7 @@ export default function NewSale() {
       {noSession && (
         <div className="alert alert-warning" style={{ marginBottom: '1rem', padding: '0.75rem 1rem', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>⚠️ No hay una sesión de caja abierta. Debes abrir la caja para poder registrar ventas.</span>
-          <button className="btn-primary btn-sm" onClick={() => navigate('/cashregister')} style={{ padding: '0.4rem 0.75rem' }}>Abrir Caja</button>
+          <button className="btn-primary btn-sm" onClick={() => navigate('/cash-register')} style={{ padding: '0.4rem 0.75rem' }}>Abrir Caja</button>
         </div>
       )}
 

@@ -115,7 +115,7 @@ productsRouter.post('/', authenticate, async (req: Request, res: Response, next:
     const result = await pool.query(
       `INSERT INTO products (code, barcode, name, description, categoryid, supplierid, purchaseprice, saleprice, stock, minstock, unit, requiresprescription, wholesale_price, expiry_date, requires_tax)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`,
-      [code, barcode, name, description, categoryid, supplierid, purchaseprice, saleprice, stock || 0, minstock || 0, unit, requiresprescription || false, wholesale_price, expiry_date, requires_tax]
+      [code, barcode, name, description, categoryid, supplierid === '' ? null : supplierid, purchaseprice, saleprice, stock || 0, minstock || 0, unit, requiresprescription || false, wholesale_price, expiry_date, requires_tax]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -133,8 +133,10 @@ productsRouter.put('/:id', authenticate, async (req: Request, res: Response, nex
 
     for (const field of fields) {
       if (req.body[field] !== undefined) {
+        let val = req.body[field];
+        if (val === '' && (field === 'supplierid' || field === 'categoryid')) val = null;
         setClauses.push(`${field} = $${idx++}`);
-        values.push(req.body[field]);
+        values.push(val);
       }
     }
 
