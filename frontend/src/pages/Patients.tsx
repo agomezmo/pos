@@ -1,5 +1,6 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { patientsApi, customersApi } from '../services/api';
+import CsvImportModal from '../components/CsvImportModal';
 
 export default function Patients() {
   const [patients, setPatients] = useState<any[]>([]);
@@ -9,6 +10,27 @@ export default function Patients() {
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState({ customerid: '', medicalhistory: '', allergies: '', bloodtype: '' });
   const [error, setError] = useState('');
+  const [showImport, setShowImport] = useState(false);
+
+  const handleCsvImport = async (rows: Record<string, string>[]) => {
+    let success = 0;
+    const errors: { row: number; message: string }[] = [];
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      try {
+        await patientsApi.create({
+          customerid: r.customer_id || r.customerid || '',
+          medicalhistory: r.medical_history || r.medicalhistory || '',
+          allergies: r.allergies || '',
+          bloodtype: r.blood_type || r.bloodtype || '',
+        });
+        success++;
+      } catch (err: any) {
+        errors.push({ row: i + 2, message: err.response?.data?.error?.message || err.message || 'Error' });
+      }
+    }
+    return { success, errors };
+  };
 
   const fetchPatients = async () => {
     try {
@@ -63,7 +85,10 @@ export default function Patients() {
     <div className="page">
       <div className="page-header">
         <h1>Pacientes</h1>
-        <button className="btn-primary" onClick={openCreate}>+ Nuevo Paciente</button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button className="btn-secondary" onClick={() => setShowImport(true)}>📥 Importar CSV</button>
+          <button className="btn-primary" onClick={openCreate}>+ Nuevo Paciente</button>
+        </div>
       </div>
       <div className="table-container">
         <table className="table">
@@ -126,6 +151,16 @@ export default function Patients() {
           </div>
         </div>
       )}
+      <CsvImportModal
+        show={showImport}
+        onClose={() => { setShowImport(false); fetchPatients(); }}
+        title="Pacientes"
+        sampleCsv="customer_id,blood_type,allergies,medical_history
+1,O+,Ninguna,Paciente con hipertension controlada
+2,A-,Penicilina,Paciente diabetico tipo 2
+3,AB+,Sulfa,Asma bronquial cronica"
+        onImport={handleCsvImport}
+      />
     </div>
   );
 }

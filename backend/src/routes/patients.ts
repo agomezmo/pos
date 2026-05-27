@@ -61,3 +61,12 @@ patientsRouter.put('/:id', authenticate, async (req: Request, res: Response, nex
     res.json(result.rows[0]);
   } catch (err) { next(err); }
 });
+
+patientsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('DELETE FROM patients WHERE id = $1 RETURNING id', [id]);
+    if (result.rows.length === 0) throw new AppError('Patient not found', 404);
+    res.json({ message: 'Patient deleted', id: Number(id) });
+  } catch (err) { next(err); }
+});

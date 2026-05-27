@@ -35,10 +35,24 @@ if [ "$RUNNING" -eq 10 ]; then
 else
     echo -e "${YELLOW}⚠️  Solo $RUNNING/10 contenedores corriendo${NC}"
     echo "   Ejecutando docker compose up..."
-    cd ~/proyectos/pos && docker compose up -d --remove-orphans
-    cd ~/proyectos/billar && docker compose up -d --remove-orphans
-    cd ~/proyectos/pos-ferreteria && docker compose up -d --remove-orphans
-    sleep 5
+
+    # POS Farmacia
+    cd ~/proyectos/pos && docker compose up -d --remove-orphans 2>/dev/null
+
+    # Billar AI
+    cd ~/proyectos/billar && docker compose up -d --remove-orphans 2>/dev/null
+
+    # POS Ferreteria (con recuperación si el DB falla por montaje)
+    cd ~/proyectos/pos-ferreteria
+    if ! docker compose up -d --remove-orphans 2>/tmp/verify-ferreteria.log; then
+        if grep -q "not a directory" /tmp/verify-ferreteria.log 2>/dev/null; then
+            echo -e "${YELLOW}   Reparando contenedor DB de Ferretería...${NC}"
+            docker rm -f pos_ferreteria_db 2>/dev/null
+            docker compose up -d --remove-orphans 2>&1
+        fi
+    fi
+    docker restart pos_ferreteria_api pos_ferreteria_auth_me 2>/dev/null
+    sleep 8
 fi
 
 # 4. Pruebas HTTP

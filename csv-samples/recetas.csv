@@ -1,0 +1,4 @@
+patient_id,doctor_name,doctor_license,diagnosis,issue_date,expiry_date,notes,medications
+38,Dr. Lopez,MED12345,Hipertension arterial,2026-05-01,2026-08-01,Tomar con alimentos,"90|1 tableta|C/12h|30 dias|60"
+39,Dr. Garcia,MED67890,Infeccion respiratoria,2026-05-15,2026-06-15,,"90|1 capsula|C/8h|7 dias|21;91|1 tableta|C/12h|5 dias|10"
+40,Dr. Hernandez,MED11111,Diabetes tipo 2,2026-05-20,2026-11-20,No suspender tratamiento,"92|1 tableta|C/12h|60 dias|120"

@@ -68,3 +68,28 @@ usersRouter.put('/:id/password', authenticate, authorize('Admin'), async (req: R
     next(err);
   }
 });
+
+usersRouter.get('/:id', authenticate, authorize('Admin'), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      `SELECT u.id, u.username, u.email, u.fullname, u.isactive, u.lastlogin, u.createdat, u.roleid, r.name as role
+       FROM users u JOIN roles r ON u.roleid = r.id WHERE u.id = $1`, [id]
+    );
+    if (result.rows.length === 0) throw new AppError('User not found', 404, 'NOT_FOUND');
+    res.json(result.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
+usersRouter.delete('/:id', authenticate, authorize('Admin'), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING id', [id]);
+    if (result.rows.length === 0) throw new AppError('User not found', 404, 'NOT_FOUND');
+    res.json({ message: 'User deleted', id: Number(id) });
+  } catch (err) {
+    next(err);
+  }
+});

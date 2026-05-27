@@ -119,7 +119,14 @@ salesRouter.post('/', authenticate, async (req: Request, res: Response, next: Ne
     const fullSale = await pool.query(
       `SELECT s.*, u.fullname as user_name FROM sales s JOIN users u ON s.userid = u.id WHERE s.id = $1`, [saleId]
     );
-    res.status(201).json(fullSale.rows[0]);
+    const saleItemsRes = await pool.query(
+      `SELECT si.*, p.name as product_name, p.code as product_code
+       FROM saleitems si JOIN products p ON si.productid = p.id WHERE si.saleid = $1`, [saleId]
+    );
+    const paymentsRes = await pool.query(
+      'SELECT * FROM payments WHERE saleid = $1', [saleId]
+    );
+    res.status(201).json({ ...fullSale.rows[0], items: saleItemsRes.rows, payments: paymentsRes.rows });
   } catch (err) {
     await client.query('ROLLBACK');
     next(err);

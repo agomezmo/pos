@@ -1,0 +1,6 @@
+code,name,description,category_id,supplier_id,purchase_price,sale_price,stock,min_stock,unit,wholesale_price,expiry_date,requires_prescription,requires_tax
+MED-001,Paracetamol 500mg,Analgesico y antipiretico,1,1,2.50,8.00,200,50,tbl,6.50,2027-06-30,FALSE,TRUE
+MED-002,Amoxicilina 500mg,Antibiotico de amplio espectro,2,1,15.00,35.00,100,20,caps,28.00,2026-12-31,TRUE,TRUE
+MED-003,Ibuprofeno 400mg,Antiinflamatorio no esteroideo,3,2,3.00,10.00,150,30,tbl,8.00,2027-03-15,FALSE,TRUE
+MED-004,Omeprazol 20mg,Inhibidor de bomba de protones,1,1,1.50,6.00,300,50,caps,4.50,2027-09-01,FALSE,TRUE
+MED-005,Losartan 50mg,Antihipertensivo,4,3,8.00,22.00,80,15,tbl,18.00,2026-08-20,TRUE,TRUE

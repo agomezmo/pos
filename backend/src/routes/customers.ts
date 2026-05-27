@@ -82,3 +82,14 @@ customersRouter.put('/:id', authenticate, async (req: Request, res: Response, ne
     next(err);
   }
 });
+
+customersRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('DELETE FROM customers WHERE id = $1 RETURNING id', [id]);
+    if (result.rows.length === 0) throw new AppError('Customer not found', 404, 'NOT_FOUND');
+    res.json({ message: 'Customer deleted', id: Number(id) });
+  } catch (err) {
+    next(err);
+  }
+});

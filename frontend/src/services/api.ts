@@ -62,6 +62,7 @@ export const customersApi = {
   getById: (id: number) => api.get(`/customers/${id}`),
   create: (data: any) => api.post('/customers', data),
   update: (id: number, data: any) => api.put(`/customers/${id}`, data),
+  delete: (id: number) => api.delete(`/customers/${id}`),
 };
 
 /* Suppliers */
@@ -70,6 +71,7 @@ export const suppliersApi = {
   getById: (id: number) => api.get(`/suppliers/${id}`),
   create: (data: any) => api.post('/suppliers', data),
   update: (id: number, data: any) => api.put(`/suppliers/${id}`, data),
+  delete: (id: number) => api.delete(`/suppliers/${id}`),
 };
 
 /* Sales */
@@ -93,6 +95,8 @@ export const returnsApi = {
   getAll: (params?: any) => api.get('/returns', { params }),
   getById: (id: number) => api.get(`/returns/${id}`),
   create: (data: any) => api.post('/returns', data),
+  update: (id: number, data: any) => api.put(`/returns/${id}`, data),
+  delete: (id: number) => api.delete(`/returns/${id}`),
 };
 
 /* Expenses */
@@ -110,6 +114,7 @@ export const patientsApi = {
   getById: (id: number) => api.get(`/patients/${id}`),
   create: (data: any) => api.post('/patients', data),
   update: (id: number, data: any) => api.put(`/patients/${id}`, data),
+  delete: (id: number) => api.delete(`/patients/${id}`),
 };
 
 /* Prescriptions */
@@ -117,6 +122,8 @@ export const prescriptionsApi = {
   getAll: (params?: any) => api.get('/prescriptions', { params }),
   getById: (id: number) => api.get(`/prescriptions/${id}`),
   create: (data: any) => api.post('/prescriptions', data),
+  update: (id: number, data: any) => api.put(`/prescriptions/${id}`, data),
+  delete: (id: number) => api.delete(`/prescriptions/${id}`),
 };
 
 /* Alerts */
@@ -150,9 +157,11 @@ export const companyApi = {
 /* Users */
 export const usersApi = {
   getAll: () => api.get('/users'),
+  getById: (id: number) => api.get(`/users/${id}`),
   create: (data: any) => api.post('/users', data),
   update: (id: number, data: any) => api.put(`/users/${id}`, data),
   updatePassword: (id: number, data: any) => api.put(`/users/${id}/password`, data),
+  delete: (id: number) => api.delete(`/users/${id}`),
 };
 
 /* Settings */

@@ -13,6 +13,9 @@ export default function Returns() {
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
   const [searching, setSearching] = useState(false);
+  const [showEdit, setShowEdit] = useState<any>(null);
+  const [editReason, setEditReason] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   const fetchReturns = async () => {
     try {
@@ -90,6 +93,34 @@ export default function Returns() {
     } catch (err) { console.error(err); }
   };
 
+  const openEdit = (ret: any) => {
+    setShowEdit(ret);
+    setEditReason(ret.reason);
+    setError('');
+  };
+
+  const handleEdit = async () => {
+    if (!editReason.trim()) { setError('El motivo es requerido'); return; }
+    try {
+      await returnsApi.update(showEdit.id, { reason: editReason.trim() });
+      setShowEdit(null);
+      setEditReason('');
+      fetchReturns();
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || 'Error al actualizar');
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await returnsApi.delete(id);
+      setDeleteConfirm(null);
+      fetchReturns();
+    } catch (err: any) {
+      setError(err.response?.data?.error?.message || 'Error al eliminar');
+    }
+  };
+
   const totalReturn = returnItems.reduce((s, i) => s + i.return_qty * Number(i.unitprice || 0), 0);
 
   if (loading) return <div className="page-loading">Cargando...</div>;
@@ -116,7 +147,13 @@ export default function Returns() {
                 <td>{r.reason}</td>
                 <td>${Number(r.total).toFixed(2)}</td>
                 <td>{new Date(r.createdat).toLocaleDateString()}</td>
-                <td><button className="btn-sm" onClick={() => viewDetail(r.id)}>Ver</button></td>
+                <td>
+                  <div style={{ display: 'flex', gap: '0.25rem' }}>
+                    <button className="btn-sm" onClick={() => viewDetail(r.id)}>Ver</button>
+                    <button className="btn-sm btn-secondary" onClick={() => openEdit(r)}>Editar</button>
+                    <button className="btn-sm btn-danger" onClick={() => setDeleteConfirm(r.id)}>Eliminar</button>
+                  </div>
+                </td>
               </tr>
             ))}
             {returns.length === 0 && <tr><td colSpan={7} className="empty">No hay devoluciones</td></tr>}
@@ -216,6 +253,40 @@ export default function Returns() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {showEdit && (
+        <div className="modal-overlay" onClick={() => { setShowEdit(null); setError(''); }}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h2>Editar Devolución #{showEdit.id}</h2>
+            {error && <div className="error-message">{error}</div>}
+            <div className="form-group">
+              <label>Motivo</label>
+              <textarea value={editReason} onChange={e => setEditReason(e.target.value)}
+                rows={3} required />
+            </div>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => { setShowEdit(null); setError(''); }}>Cancelar</button>
+              <button className="btn-primary" onClick={handleEdit}>Guardar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation */}
+      {deleteConfirm && (
+        <div className="modal-overlay" onClick={() => { setDeleteConfirm(null); setError(''); }}>
+          <div className="modal modal-sm" onClick={e => e.stopPropagation()}>
+            <h2>Confirmar Eliminación</h2>
+            <p>¿Eliminar devolución #{deleteConfirm}? Esta acción revertirá el stock de los artículos devueltos.</p>
+            {error && <div className="error-message">{error}</div>}
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => { setDeleteConfirm(null); setError(''); }}>Cancelar</button>
+              <button className="btn-danger" onClick={() => handleDelete(deleteConfirm)}>Eliminar</button>
+            </div>
           </div>
         </div>
       )}

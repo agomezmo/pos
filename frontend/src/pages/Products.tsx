@@ -1,5 +1,6 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { productsApi, categoriesApi, suppliersApi } from '../services/api';
+import CsvImportModal from '../components/CsvImportModal';
 
 interface Product {
   id: number; code: string; barcode: string; name: string; description: string;
@@ -21,6 +22,33 @@ export default function Products() {
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState<any>({});
   const [error, setError] = useState('');
+  const [showImport, setShowImport] = useState(false);
+
+  const handleCsvImport = async (rows: Record<string, string>[]) => {
+    let success = 0;
+    const errors: { row: number; message: string }[] = [];
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      try {
+        await productsApi.create({
+          code: r.code, barcode: r.barcode || '', name: r.name,
+          description: r.description || '', categoryid: r.category_id || r.categoryid || null,
+          supplierid: r.supplier_id || r.supplierid || null,
+          purchaseprice: parseFloat(r.purchase_price || r.purchaseprice) || 0,
+          saleprice: parseFloat(r.sale_price || r.saleprice) || 0,
+          stock: parseInt(r.stock) || 0, minstock: parseInt(r.min_stock || r.minstock) || 0,
+          unit: r.unit || 'pza', wholesale_price: parseFloat(r.wholesale_price || '0') || 0,
+          expiry_date: r.expiry_date || r.expirydate || '',
+          requiresprescription: (r.requires_prescription || '').toUpperCase() === 'TRUE',
+          requires_tax: (r.requires_tax || '').toUpperCase() !== 'FALSE',
+        });
+        success++;
+      } catch (err: any) {
+        errors.push({ row: i + 2, message: err.response?.data?.error?.message || err.message || 'Error' });
+      }
+    }
+    return { success, errors };
+  };
 
   const fetchProducts = async () => {
     try {
@@ -83,7 +111,10 @@ export default function Products() {
     <div className="page">
       <div className="page-header">
         <h1>Productos</h1>
-        <button className="btn-primary" onClick={openCreate}>+ Nuevo Producto</button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button className="btn-secondary" onClick={() => setShowImport(true)}>📥 Importar CSV</button>
+          <button className="btn-primary" onClick={openCreate}>+ Nuevo Producto</button>
+        </div>
       </div>
       <div className="search-bar">
         <input type="text" placeholder="Buscar por nombre, código o código de barras..." value={search} onChange={e => setSearch(e.target.value)} />
@@ -208,6 +239,18 @@ export default function Products() {
           </div>
         </div>
       )}
+      <CsvImportModal
+        show={showImport}
+        onClose={() => { setShowImport(false); fetchProducts(); }}
+        title="Productos"
+        sampleCsv="code,name,description,category_id,supplier_id,purchase_price,sale_price,stock,min_stock,unit,wholesale_price,expiry_date,requires_prescription,requires_tax
+MED-001,Paracetamol 500mg,Analgesico y antipiretico,1,1,2.50,8.00,200,50,tbl,6.50,2027-06-30,FALSE,TRUE
+MED-002,Amoxicilina 500mg,Antibiotico de amplio espectro,2,1,15.00,35.00,100,20,caps,28.00,2026-12-31,TRUE,TRUE
+MED-003,Ibuprofeno 400mg,Antiinflamatorio no esteroideo,3,2,3.00,10.00,150,30,tbl,8.00,2027-03-15,FALSE,TRUE
+MED-004,Omeprazol 20mg,Inhibidor de bomba de protones,1,1,1.50,6.00,300,50,caps,4.50,2027-09-01,FALSE,TRUE
+MED-005,Losartan 50mg,Antihipertensivo,4,3,8.00,22.00,80,15,tbl,18.00,2026-08-20,TRUE,TRUE"
+        onImport={handleCsvImport}
+      />
     </div>
   );
 }

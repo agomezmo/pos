@@ -75,3 +75,65 @@ prescriptionsRouter.post('/', authenticate, async (req: Request, res: Response, 
     client.release();
   }
 });
+
+prescriptionsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    const { patientid, doctorname, doctorlicense, diagnosis, notes, issueddate, expirydate, items } = req.body;
+    if (!doctorname) throw new AppError('doctorname is required', 400);
+
+    await client.query('BEGIN');
+
+    const rx = await client.query(
+      `UPDATE prescriptions SET patientid = COALESCE($1, patientid), doctorname = $2,
+       doctorlicense = COALESCE($3, doctorlicense), diagnosis = COALESCE($4, diagnosis),
+       notes = COALESCE($5, notes), issueddate = COALESCE($6, issueddate),
+       expirydate = COALESCE($7, expirydate) WHERE id = $8 RETURNING *`,
+      [patientid || null, doctorname, doctorlicense || null, diagnosis || null,
+       notes || null, issueddate || null, expirydate || null, id]
+    );
+    if (rx.rows.length === 0) throw new AppError('Prescription not found', 404);
+
+    if (items && Array.isArray(items)) {
+      await client.query('DELETE FROM prescriptionitems WHERE prescriptionid = $1', [id]);
+      for (const item of items) {
+        await client.query(
+          `INSERT INTO prescriptionitems (prescriptionid, productid, dosage, frequency, duration, notes)
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [id, item.productid, item.dosage || null, item.frequency || null, item.duration || null, item.notes || null]
+        );
+      }
+    }
+
+    await client.query('COMMIT');
+
+    const itemsResult = await pool.query(
+      'SELECT * FROM prescriptionitems WHERE prescriptionid = $1', [id]
+    );
+    res.json({ ...rx.rows[0], items: itemsResult.rows });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    next(err);
+  } finally {
+    client.release();
+  }
+});
+
+prescriptionsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    await client.query('BEGIN');
+    await client.query('DELETE FROM prescriptionitems WHERE prescriptionid = $1', [id]);
+    const result = await client.query('DELETE FROM prescriptions WHERE id = $1 RETURNING id', [id]);
+    if (result.rows.length === 0) throw new AppError('Prescription not found', 404);
+    await client.query('COMMIT');
+    res.json({ message: 'Prescription deleted', id: Number(id) });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    next(err);
+  } finally {
+    client.release();
+  }
+});

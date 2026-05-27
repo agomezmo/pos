@@ -82,3 +82,44 @@ returnsRouter.post('/', authenticate, async (req: Request, res: Response, next: 
     client.release();
   }
 });
+
+returnsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    if (!reason?.trim()) throw new AppError('reason is required', 400);
+    const result = await pool.query(
+      `UPDATE returns SET reason = $1 WHERE id = $2 RETURNING *`,
+      [reason.trim(), id]
+    );
+    if (result.rows.length === 0) throw new AppError('Return not found', 404);
+    res.json(result.rows[0]);
+  } catch (err) { next(err); }
+});
+
+returnsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+  const client = await pool.connect();
+  try {
+    const { id } = req.params;
+    const ret = await client.query('SELECT id FROM returns WHERE id = $1', [id]);
+    if (ret.rows.length === 0) throw new AppError('Return not found', 404);
+
+    await client.query('BEGIN');
+
+    const items = await client.query('SELECT productid, quantity FROM returnitems WHERE returnid = $1', [id]);
+    for (const item of items.rows) {
+      await client.query('UPDATE products SET stock = stock - $1 WHERE id = $2', [item.quantity, item.productid]);
+    }
+
+    await client.query('DELETE FROM returnitems WHERE returnid = $1', [id]);
+    await client.query('DELETE FROM returns WHERE id = $1', [id]);
+
+    await client.query('COMMIT');
+    res.json({ message: 'Return deleted', id: Number(id) });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    next(err);
+  } finally {
+    client.release();
+  }
+});

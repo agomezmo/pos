@@ -524,7 +524,7 @@ export default function NewSale() {
               onClick={handleCheckout}
               disabled={loading || cart.length === 0}
             >
-              {loading ? 'Procesando...' : `Cobrar $${Number(total).toFixed(2)}`}
+              {loading ? 'Procesando...' : <><kbd style={{background:'#eee',padding:'2px 6px',borderRadius:'4px',border:'1px solid #ccc',fontSize:'0.8em',marginRight:'4px'}}>F2</kbd> Cobrar ${Number(total).toFixed(2)}</>}
             </button>
           </div>
         </div>
