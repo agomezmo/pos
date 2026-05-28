@@ -35,7 +35,7 @@ export default function Patients() {
   const fetchPatients = async () => {
     try {
       const [patRes, custRes] = await Promise.all([
-        patientsApi.getAll(),
+        patientsApi.getAll().catch(() => ({ data: [] })),
         customersApi.getAll().catch(() => ({ data: [] })),
       ]);
       setPatients(Array.isArray(patRes.data) ? patRes.data : []);

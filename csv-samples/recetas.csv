@@ -1,4 +1,121 @@
 patient_id,doctor_name,doctor_license,diagnosis,issue_date,expiry_date,notes,medications
-38,Dr. Lopez,MED12345,Hipertension arterial,2026-05-01,2026-08-01,Tomar con alimentos,"90|1 tableta|C/12h|30 dias|60"
-39,Dr. Garcia,MED67890,Infeccion respiratoria,2026-05-15,2026-06-15,,"90|1 capsula|C/8h|7 dias|21;91|1 tableta|C/12h|5 dias|10"
-40,Dr. Hernandez,MED11111,Diabetes tipo 2,2026-05-20,2026-11-20,No suspender tratamiento,"92|1 tableta|C/12h|60 dias|120"
+3,Dra. Ramos Ortega,MED21166,Insomnio crónico,2026-01-08,2026-10-19,Tomar en ayunas,107|1 inhalación|C/12h|30 días|7
+15,Dra. Sánchez Castillo,MED35525,Gastritis crónica,2026-04-26,2026-07-03,,20|1 cápsula|C/4h|60 días|60;7|1 cucharada|C/12h|14 días|30;71|1 cápsula|Cada 8 horas|10 días|20
+45,Dr. Morales Reyes,MED62439,Osteoporosis,2026-03-23,2026-09-11,Tomar en ayunas,112|1 inhalación|C/24h|10 días|20;111|1 inhalación|C/8h|30 días|14
+78,Dra. Delgado Flores,MED33236,Gastritis crónica,2026-03-03,2026-12-18,,76|1 inhalación|C/4h|10 días|10;62|1 inhalación|C/4h|10 días|20;46|1 cucharada|Cada 8 horas|10 días|90
+65,Dra. García Hernández,MED59910,Diabetes tipo 2,2026-01-12,2026-10-13,Evitar alcohol,6|2 tabletas|C/12h|14 días|20;76|2 tabletas|Cada 12 horas|14 días|60;43|1 tableta|C/6h|60 días|10
+3,Dra. Ramos Ortega,MED59066,Infección urinaria,2026-02-11,2026-12-24,Tomar en ayunas,76|2 tabletas|C/4h|14 días|20;116|1 tableta|Cada 12 horas|7 días|20
+8,Dr. Pérez Rodríguez,MED44934,Artritis reumatoide,2026-05-23,2026-12-20,,26|1 cápsula|C/6h|10 días|90;2|1 tableta|C/12h|14 días|7;109|1 aplicación|C/12h|30 días|20
+42,Dra. García Hernández,MED28930,EPOC,2026-04-17,2026-12-01,,6|1 aplicación|C/8h|10 días|14
+79,Dr. López Martínez,MED64501,Gastritis crónica,2026-01-06,2026-10-12,Evitar alcohol,88|1 cápsula|Cada 12 horas|10 días|90
+56,Dr. Pérez Rodríguez,MED73602,Ansiedad generalizada,2026-02-26,2026-11-07,Tomar con alimentos,75|1 tableta|C/4h|7 días|60;108|1 cápsula|C/4h|60 días|60
+30,Dra. García Hernández,MED42753,Ansiedad generalizada,2026-05-13,2026-10-28,,77|1 cápsula|C/6h|60 días|10;111|2 tabletas|C/6h|30 días|60
+98,Dra. Ramos Ortega,MED45556,Osteoporosis,2026-04-04,2026-10-11,Tomar en ayunas,23|1 cucharada|C/24h|10 días|14;70|1 tableta|Cada 8 horas|10 días|60
+75,Dr. Morales Reyes,MED80239,Artritis reumatoide,2026-06-01,2026-10-24,Tomar con alimentos,38|1 cucharada|C/12h|14 días|60;5|1 tableta|C/6h|30 días|90;62|1 inhalación|C/8h|60 días|10
+4,Dr. Cruz Mendoza,MED32806,Amigdalitis bacteriana,2026-04-15,2026-07-09,No suspender tratamiento,82|1 cucharada|Cada 8 horas|60 días|14
+92,Dra. Sánchez Castillo,MED85232,Artritis reumatoide,2026-02-28,2026-09-05,,109|1 inhalación|C/8h|60 días|10;9|1 aplicación|C/4h|10 días|90
+99,Dra. Delgado Flores,MED71941,Dislipidemia,2026-06-22,2026-11-17,,80|1 tableta|Cada 12 horas|7 días|60
+55,Dr. López Martínez,MED45769,Hipertensión arterial,2026-01-01,2026-09-15,Tomar con alimentos,17|1 inhalación|C/24h|30 días|14
+8,Dra. Delgado Flores,MED47162,Insomnio crónico,2026-02-04,2026-12-08,Tomar en ayunas,86|1 cápsula|C/6h|10 días|14;97|1 cucharada|C/24h|14 días|14
+6,Dr. López Martínez,MED91208,Lumbalgia,2026-04-13,2026-12-11,,118|1 aplicación|Cada 8 horas|10 días|20
+58,Dr. Cruz Mendoza,MED32980,EPOC,2026-02-28,2026-11-15,,16|1 cucharada|C/6h|10 días|14;44|1 tableta|Cada 12 horas|10 días|90
+54,Dra. Delgado Flores,MED53996,Diabetes tipo 2,2026-04-11,2026-11-13,Tomar con alimentos,4|1 inhalación|C/4h|7 días|90
+79,Dr. López Martínez,MED33273,Cefalea tensional,2026-04-04,2026-08-22,,55|2 tabletas|C/4h|60 días|30
+2,Dr. Cruz Mendoza,MED15249,Artritis reumatoide,2026-02-10,2026-09-08,,61|1 inhalación|Cada 12 horas|10 días|30;115|1 aplicación|Cada 8 horas|7 días|20
+72,Dra. Delgado Flores,MED12808,Rinitis alérgica,2026-02-01,2026-07-12,,101|2 tabletas|C/4h|14 días|90
+86,Dra. García Hernández,MED44637,Amigdalitis bacteriana,2026-06-20,2026-10-14,,16|2 tabletas|Cada 8 horas|10 días|10;43|1 tableta|C/6h|60 días|90
+2,Dr. Morales Reyes,MED66381,Cefalea tensional,2026-06-14,2026-11-26,,64|1 aplicación|C/8h|60 días|20
+97,Dr. López Martínez,MED96595,Artritis reumatoide,2026-04-10,2026-10-20,Evitar alcohol,94|1 cucharada|Cada 8 horas|60 días|7;61|1 cucharada|C/24h|7 días|30;83|1 cápsula|C/6h|14 días|20
+91,Dr. Cruz Mendoza,MED83949,Infección respiratoria,2026-04-01,2026-12-22,,116|1 cucharada|C/8h|30 días|30
+73,Dr. López Martínez,MED77523,Diabetes tipo 2,2026-04-10,2026-07-17,,46|1 cápsula|C/8h|10 días|14
+16,Dra. Delgado Flores,MED92287,Amigdalitis bacteriana,2026-01-04,2026-08-04,Tomar con alimentos,77|2 tabletas|Cada 8 horas|7 días|30
+50,Dra. Delgado Flores,MED78862,Dislipidemia,2026-02-16,2026-08-04,No suspender tratamiento,40|2 tabletas|C/6h|7 días|20;71|1 inhalación|C/12h|10 días|14
+81,Dr. Cruz Mendoza,MED94157,Diabetes tipo 2,2026-06-26,2026-11-22,Tomar con alimentos,36|2 tabletas|Cada 8 horas|60 días|90
+84,Dr. Morales Reyes,MED86268,Diabetes tipo 2,2026-03-19,2026-11-02,,117|2 tabletas|C/12h|60 días|60;18|1 cápsula|Cada 12 horas|14 días|90
+96,Dra. García Hernández,MED46378,Osteoporosis,2026-06-09,2026-11-20,Evitar alcohol,61|1 inhalación|C/8h|60 días|30
+20,Dr. Cruz Mendoza,MED31152,Artritis reumatoide,2026-06-02,2026-10-17,Tomar con alimentos,9|1 cápsula|C/6h|30 días|90;20|1 aplicación|C/24h|60 días|90
+3,Dra. Delgado Flores,MED27915,EPOC,2026-01-16,2026-09-12,Tomar en ayunas,46|1 inhalación|C/8h|30 días|60
+45,Dr. Cruz Mendoza,MED28484,Hipertensión arterial,2026-01-11,2026-08-27,,45|1 cápsula|C/4h|10 días|20;23|1 inhalación|C/6h|10 días|14
+43,Dr. Cruz Mendoza,MED15049,Infección urinaria,2026-05-04,2026-07-23,,118|1 tableta|Cada 8 horas|10 días|20
+27,Dr. Cruz Mendoza,MED57342,Osteoporosis,2026-01-04,2026-11-21,Evitar alcohol,35|1 aplicación|C/8h|14 días|10;69|1 tableta|C/6h|7 días|7;67|1 aplicación|C/12h|10 días|14
+74,Dra. Delgado Flores,MED33454,Lumbalgia,2026-05-04,2026-07-18,Tomar en ayunas,113|1 cucharada|C/8h|30 días|30;43|1 cucharada|C/12h|10 días|20;22|1 tableta|C/4h|10 días|60
+57,Dra. Sánchez Castillo,MED84657,Gastritis crónica,2026-04-07,2026-10-02,,87|1 cucharada|C/6h|10 días|20
+65,Dr. López Martínez,MED47009,Amigdalitis bacteriana,2026-04-12,2026-11-03,,36|1 inhalación|C/4h|60 días|30;92|1 aplicación|C/6h|10 días|60
+55,Dra. Ramos Ortega,MED80925,Artritis reumatoide,2026-02-27,2026-11-02,Evitar alcohol,23|2 tabletas|C/4h|14 días|90
+80,Dr. Pérez Rodríguez,MED69398,EPOC,2026-05-11,2026-11-18,Tomar con alimentos,55|1 cucharada|C/12h|60 días|60;6|1 cucharada|C/6h|30 días|30;86|1 cápsula|C/6h|60 días|60
+28,Dr. López Martínez,MED15332,Artritis reumatoide,2026-04-21,2026-12-01,Tomar en ayunas,47|1 cucharada|C/4h|7 días|90;68|1 cucharada|Cada 12 horas|7 días|10;108|1 aplicación|C/12h|60 días|90
+82,Dra. García Hernández,MED12146,Rinitis alérgica,2026-01-09,2026-07-22,Tomar con alimentos,91|1 aplicación|C/8h|14 días|14;79|1 aplicación|Cada 12 horas|10 días|14;29|2 tabletas|C/8h|60 días|14
+68,Dr. López Martínez,MED11470,Gastritis crónica,2026-04-19,2026-09-08,Tomar con alimentos,26|1 inhalación|C/8h|30 días|10
+50,Dra. Delgado Flores,MED34559,Artritis reumatoide,2026-06-15,2026-07-19,Evitar alcohol,7|1 cápsula|Cada 12 horas|7 días|90
+96,Dra. García Hernández,MED67585,Insomnio crónico,2026-05-15,2026-12-18,,54|1 cápsula|Cada 8 horas|10 días|90
+51,Dra. Delgado Flores,MED98994,Otitis media,2026-03-20,2026-08-18,,79|1 cucharada|C/4h|30 días|20;105|1 cápsula|C/4h|30 días|14
+60,Dra. Ramos Ortega,MED59351,Rinitis alérgica,2026-05-20,2026-10-22,Evitar alcohol,52|1 tableta|C/8h|10 días|14
+92,Dr. Cruz Mendoza,MED73829,Rinitis alérgica,2026-03-18,2026-10-20,Evitar alcohol,106|1 aplicación|C/6h|60 días|60;39|1 cucharada|C/12h|60 días|7
+52,Dr. Pérez Rodríguez,MED12549,Lumbalgia,2026-05-25,2026-09-11,Tomar en ayunas,119|1 tableta|Cada 12 horas|30 días|60;71|1 tableta|Cada 12 horas|7 días|90
+82,Dra. Sánchez Castillo,MED23631,Hipotiroidismo,2026-06-24,2026-12-08,Tomar con alimentos,89|1 cucharada|Cada 12 horas|60 días|20;41|1 cucharada|C/12h|10 días|90;31|1 inhalación|C/4h|10 días|90
+27,Dr. Cruz Mendoza,MED46652,Insomnio crónico,2026-01-19,2026-10-26,,3|1 inhalación|C/4h|30 días|20;52|1 aplicación|C/24h|60 días|20
+40,Dr. Cruz Mendoza,MED35384,Infección urinaria,2026-03-23,2026-07-24,Tomar en ayunas,13|2 tabletas|Cada 8 horas|14 días|90
+64,Dr. Pérez Rodríguez,MED39605,Infección urinaria,2026-03-22,2026-08-16,,96|1 inhalación|Cada 12 horas|10 días|20;61|1 tableta|C/4h|7 días|14;117|1 cápsula|Cada 12 horas|14 días|14
+61,Dra. Sánchez Castillo,MED64919,Asma bronquial,2026-05-12,2026-10-04,Tomar con alimentos,45|1 tableta|C/4h|10 días|90;101|1 cucharada|C/4h|14 días|90
+38,Dr. López Martínez,MED89056,Osteoporosis,2026-01-17,2026-09-14,Tomar en ayunas,116|1 tableta|C/24h|30 días|10
+70,Dra. García Hernández,MED43612,EPOC,2026-05-26,2026-08-03,,114|2 tabletas|C/4h|60 días|90;49|1 tableta|Cada 12 horas|10 días|30;47|1 inhalación|Cada 12 horas|14 días|14
+91,Dra. Sánchez Castillo,MED56992,Amigdalitis bacteriana,2026-05-08,2026-11-22,,80|1 cucharada|C/4h|7 días|60;5|2 tabletas|C/24h|10 días|7
+29,Dr. Morales Reyes,MED50300,Rinitis alérgica,2026-05-03,2026-07-04,,62|1 cápsula|C/6h|60 días|90
+17,Dra. García Hernández,MED20614,Amigdalitis bacteriana,2026-02-13,2026-09-04,,1|1 tableta|Cada 12 horas|60 días|20;60|1 aplicación|C/8h|60 días|7
+34,Dr. Morales Reyes,MED67888,Lumbalgia,2026-02-10,2026-11-10,Tomar con alimentos,53|1 cucharada|C/24h|10 días|14;28|2 tabletas|C/12h|7 días|30;87|1 cucharada|C/4h|30 días|90
+91,Dr. López Martínez,MED12905,Cefalea tensional,2026-04-13,2026-07-26,Evitar alcohol,2|1 aplicación|C/4h|7 días|14;89|1 cápsula|C/4h|60 días|90;17|1 cucharada|C/12h|60 días|30
+12,Dra. Ramos Ortega,MED80141,Infección urinaria,2026-01-03,2026-11-27,,96|1 aplicación|C/6h|60 días|10;28|2 tabletas|C/8h|10 días|7;34|1 cucharada|Cada 12 horas|7 días|60
+1,Dr. López Martínez,MED19029,Hipertensión arterial,2026-02-19,2026-07-08,,113|1 cucharada|C/12h|10 días|90
+64,Dr. López Martínez,MED36262,Amigdalitis bacteriana,2026-03-20,2026-09-23,,88|1 cápsula|C/4h|10 días|20;10|1 cucharada|C/12h|60 días|60
+12,Dra. Sánchez Castillo,MED32962,Lumbalgia,2026-05-07,2026-09-10,Evitar alcohol,24|1 aplicación|Cada 8 horas|10 días|7;41|1 aplicación|Cada 12 horas|7 días|10;118|1 cápsula|C/12h|7 días|60
+14,Dr. Morales Reyes,MED71179,Hipertensión arterial,2026-05-03,2026-10-19,Tomar con alimentos,86|2 tabletas|C/8h|14 días|20;14|1 inhalación|C/12h|14 días|14
+69,Dr. Pérez Rodríguez,MED85974,Dislipidemia,2026-05-01,2026-12-16,Tomar en ayunas,33|1 inhalación|C/12h|10 días|90;120|1 inhalación|Cada 8 horas|7 días|20
+73,Dr. Morales Reyes,MED78214,Infección urinaria,2026-01-08,2026-07-21,Evitar alcohol,14|1 cápsula|C/8h|30 días|90;50|1 tableta|C/8h|30 días|30;66|1 cápsula|C/12h|7 días|10
+23,Dra. Ramos Ortega,MED46042,Cefalea tensional,2026-01-24,2026-07-06,Evitar alcohol,20|1 cápsula|C/24h|7 días|7;97|1 aplicación|Cada 12 horas|10 días|30;34|2 tabletas|C/8h|30 días|90
+70,Dr. Cruz Mendoza,MED46233,Asma bronquial,2026-02-18,2026-08-02,Tomar en ayunas,69|1 cucharada|C/12h|60 días|90
+99,Dr. Pérez Rodríguez,MED49506,Rinitis alérgica,2026-03-18,2026-08-12,Tomar en ayunas,4|2 tabletas|C/8h|10 días|60;84|1 inhalación|C/12h|7 días|60;118|1 aplicación|C/4h|60 días|14
+61,Dra. Ramos Ortega,MED87709,Amigdalitis bacteriana,2026-01-15,2026-10-14,Tomar en ayunas,31|1 cápsula|C/12h|7 días|60
+58,Dra. García Hernández,MED78575,Artritis reumatoide,2026-03-23,2026-09-07,Tomar en ayunas,100|1 cápsula|C/24h|10 días|90;77|1 cápsula|C/4h|10 días|7;88|1 aplicación|C/8h|60 días|90
+18,Dr. López Martínez,MED48213,Diabetes tipo 2,2026-05-18,2026-12-04,,118|1 cucharada|C/4h|10 días|10
+36,Dra. Delgado Flores,MED18708,Infección respiratoria,2026-03-06,2026-11-25,,42|1 cápsula|C/8h|30 días|90;89|1 tableta|Cada 8 horas|14 días|14
+95,Dra. García Hernández,MED64614,Amigdalitis bacteriana,2026-04-26,2026-08-08,No suspender tratamiento,109|1 cápsula|Cada 12 horas|14 días|60
+4,Dr. Morales Reyes,MED31877,Hipotiroidismo,2026-03-19,2026-11-22,Evitar alcohol,1|1 tableta|C/24h|10 días|14;34|1 cápsula|C/4h|7 días|30
+75,Dra. Ramos Ortega,MED44882,Otitis media,2026-03-25,2026-08-12,,60|1 cápsula|C/4h|60 días|20;117|1 cápsula|C/24h|14 días|10;38|1 cápsula|C/24h|14 días|20
+61,Dra. García Hernández,MED11825,Gastritis crónica,2026-06-09,2026-10-10,,29|2 tabletas|C/4h|7 días|90;27|1 inhalación|Cada 12 horas|14 días|60
+86,Dra. García Hernández,MED70259,Gastritis crónica,2026-02-13,2026-11-09,,1|1 cucharada|C/8h|7 días|20
+17,Dr. López Martínez,MED19743,Infección urinaria,2026-03-10,2026-08-12,Tomar con alimentos,94|1 tableta|C/4h|7 días|60;112|1 tableta|Cada 12 horas|10 días|7;34|1 cápsula|Cada 8 horas|30 días|60
+6,Dr. Pérez Rodríguez,MED41845,Osteoporosis,2026-02-06,2026-09-27,Tomar con alimentos,95|1 cápsula|Cada 8 horas|14 días|60;76|1 cápsula|Cada 8 horas|10 días|20;77|1 inhalación|C/24h|30 días|30
+83,Dra. Delgado Flores,MED91143,Rinitis alérgica,2026-04-27,2026-07-09,,73|2 tabletas|C/4h|14 días|10;34|1 cucharada|C/6h|7 días|30;77|1 cápsula|C/8h|10 días|10
+3,Dr. López Martínez,MED79010,Infección urinaria,2026-01-02,2026-07-12,Evitar alcohol,12|1 aplicación|C/4h|10 días|7;59|1 inhalación|Cada 12 horas|30 días|10;50|1 tableta|C/4h|60 días|7
+65,Dr. López Martínez,MED38515,Cefalea tensional,2026-04-05,2026-08-25,,27|2 tabletas|Cada 12 horas|14 días|7;117|1 tableta|C/24h|30 días|7
+81,Dr. Morales Reyes,MED63065,Osteoporosis,2026-03-13,2026-08-25,,4|1 cucharada|C/24h|14 días|7;16|1 cápsula|C/6h|60 días|30
+67,Dr. Cruz Mendoza,MED29431,Artritis reumatoide,2026-05-07,2026-12-26,Tomar con alimentos,13|1 tableta|Cada 12 horas|7 días|20;120|2 tabletas|C/24h|60 días|60
+2,Dra. Delgado Flores,MED79252,Rinitis alérgica,2026-06-27,2026-12-12,,119|1 tableta|C/6h|14 días|60;35|1 cucharada|Cada 12 horas|30 días|90;56|1 tableta|Cada 12 horas|30 días|7
+62,Dr. López Martínez,MED48752,Asma bronquial,2026-06-02,2026-10-15,Tomar con alimentos,13|1 inhalación|C/6h|30 días|90
+12,Dr. Cruz Mendoza,MED75179,Hipertensión arterial,2026-06-19,2026-12-26,,88|1 cucharada|Cada 12 horas|10 días|14;18|1 cucharada|C/24h|7 días|7;77|1 cápsula|C/6h|10 días|90
+54,Dr. Pérez Rodríguez,MED28895,Otitis media,2026-02-17,2026-10-07,Tomar con alimentos,55|1 aplicación|C/8h|60 días|10;24|1 cucharada|C/24h|10 días|14;22|1 aplicación|Cada 8 horas|30 días|10
+77,Dra. García Hernández,MED53067,Diabetes tipo 2,2026-01-15,2026-08-16,,95|2 tabletas|C/8h|60 días|20
+55,Dra. Sánchez Castillo,MED93580,Cefalea tensional,2026-05-23,2026-12-22,Tomar en ayunas,79|1 aplicación|C/12h|14 días|14;98|1 cucharada|C/12h|7 días|20;8|2 tabletas|C/12h|10 días|60
+93,Dr. Morales Reyes,MED20182,Hipotiroidismo,2026-04-05,2026-07-15,Tomar con alimentos,49|1 tableta|C/24h|60 días|7
+15,Dr. López Martínez,MED36669,Infección urinaria,2026-05-15,2026-10-28,Evitar alcohol,69|1 cucharada|C/24h|14 días|20
+47,Dr. Morales Reyes,MED49505,EPOC,2026-04-16,2026-09-05,,74|1 aplicación|C/12h|30 días|90;67|1 aplicación|C/6h|14 días|60
+94,Dra. Delgado Flores,MED94684,Asma bronquial,2026-03-08,2026-07-15,,101|1 cucharada|C/12h|10 días|7;61|1 tableta|C/8h|10 días|14;40|2 tabletas|Cada 12 horas|10 días|14
+13,Dr. López Martínez,MED83503,EPOC,2026-05-22,2026-10-26,,106|1 aplicación|C/8h|60 días|60;69|1 aplicación|C/12h|10 días|90;69|1 cápsula|Cada 8 horas|30 días|30
+70,Dr. Cruz Mendoza,MED81588,Otitis media,2026-01-21,2026-09-28,Tomar en ayunas,12|1 aplicación|Cada 8 horas|10 días|90;15|1 tableta|C/8h|14 días|20
+94,Dr. López Martínez,MED29144,Gastritis crónica,2026-04-27,2026-12-25,,103|1 aplicación|C/6h|14 días|14
+57,Dr. Morales Reyes,MED72562,Amigdalitis bacteriana,2026-03-13,2026-12-27,Evitar alcohol,52|1 cápsula|C/6h|14 días|90
+94,Dra. Sánchez Castillo,MED23051,Hipertensión arterial,2026-04-24,2026-08-16,Tomar en ayunas,13|1 cucharada|C/24h|60 días|10;101|1 aplicación|C/8h|60 días|90
+67,Dr. Pérez Rodríguez,MED82516,Artritis reumatoide,2026-01-11,2026-09-25,,37|1 tableta|C/8h|10 días|90
+16,Dra. Ramos Ortega,MED89270,Diabetes tipo 2,2026-01-08,2026-07-23,,90|1 tableta|C/4h|30 días|20
+67,Dr. Morales Reyes,MED56725,Lumbalgia,2026-05-02,2026-12-19,Evitar alcohol,104|1 cucharada|C/8h|7 días|14;104|1 cápsula|C/24h|30 días|20;107|1 cápsula|Cada 8 horas|30 días|60
+78,Dr. Cruz Mendoza,MED11759,Hipertensión arterial,2026-01-03,2026-10-13,No suspender tratamiento,33|1 tableta|C/24h|14 días|10;101|1 aplicación|Cada 8 horas|7 días|7;36|1 cápsula|C/12h|30 días|90
+57,Dra. García Hernández,MED34860,Hipotiroidismo,2026-04-17,2026-10-01,,13|1 cápsula|C/6h|60 días|30;84|2 tabletas|C/6h|60 días|10;53|1 aplicación|Cada 8 horas|30 días|60
+48,Dr. López Martínez,MED64012,Hipotiroidismo,2026-06-26,2026-07-24,,67|1 inhalación|C/4h|30 días|90
+83,Dr. Cruz Mendoza,MED81622,Artritis reumatoide,2026-04-24,2026-10-19,Evitar alcohol,42|1 inhalación|Cada 12 horas|7 días|14;52|1 inhalación|C/6h|7 días|20;74|1 cucharada|C/24h|7 días|90
+43,Dr. Morales Reyes,MED33702,Cefalea tensional,2026-03-10,2026-07-03,Tomar con alimentos,28|1 tableta|C/12h|14 días|30;33|1 inhalación|C/4h|7 días|30;89|1 inhalación|C/6h|10 días|90
+88,Dra. Delgado Flores,MED81939,Hipotiroidismo,2026-01-26,2026-10-07,Evitar alcohol,50|1 inhalación|C/4h|14 días|10;39|1 inhalación|C/8h|7 días|20;7|1 tableta|C/12h|30 días|14
+78,Dr. Cruz Mendoza,MED14442,Otitis media,2026-04-21,2026-10-02,,111|1 tableta|C/12h|30 días|90;82|1 cápsula|Cada 12 horas|7 días|10;3|1 inhalación|C/8h|10 días|60
+76,Dr. Morales Reyes,MED90383,Ansiedad generalizada,2026-04-16,2026-08-03,,94|1 aplicación|Cada 12 horas|14 días|20
+96,Dr. Morales Reyes,MED85427,Osteoporosis,2026-06-05,2026-07-13,,84|1 inhalación|C/24h|30 días|60;94|1 cucharada|Cada 12 horas|14 días|7
+83,Dra. Sánchez Castillo,MED20467,Hipotiroidismo,2026-01-17,2026-10-15,No suspender tratamiento,14|1 cucharada|C/8h|60 días|20;118|2 tabletas|Cada 12 horas|60 días|20;78|1 aplicación|C/24h|14 días|7
+29,Dr. López Martínez,MED12773,Hipotiroidismo,2026-06-23,2026-07-05,,27|1 aplicación|C/24h|30 días|60

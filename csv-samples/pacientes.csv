@@ -1,4 +1,121 @@
 customer_id,blood_type,allergies,medical_history
-1,O+,Ninguna,Paciente con hipertension controlada
-2,A-,Penicilina,Paciente diabetico tipo 2
-3,AB+,Sulfa,Asma bronquial cronica
+1,AB-,Penicilina,Alergias estacionales
+2,A+,Penicilina,Asma leve
+3,A-,Látex,Paciente sano
+4,A-,Ninguna,Diabetes tipo 2
+5,AB-,Polen,Diabetes tipo 2
+6,B-,Ninguna,Paciente sano
+7,B+,Ninguna,Paciente sano
+8,B+,Polen,Ansiedad
+9,B-,Penicilina,Obesidad G1
+10,AB-,Ninguna,Hipotiroidismo
+11,O+,Ibuprofeno,Hipotiroidismo
+12,O-,Sulfa,Asma leve
+13,B+,Ninguna,Paciente sano
+14,B+,Aspirina,Obesidad G1
+15,O+,Ninguna,Ansiedad
+16,B+,Sulfa,Obesidad G1
+17,B+,Sulfa,Hipertensión controlada
+18,AB-,Aspirina,Paciente sano
+19,B-,Aspirina,Migraña frecuente
+20,AB+,Ninguna,Diabetes tipo 2
+21,B+,Yodo,Hipotiroidismo
+22,B+,Yodo,Insomnio
+23,AB-,Codeína,Hipertensión controlada
+24,A-,Penicilina,Diabetes tipo 2
+25,O-,Penicilina,Obesidad G1
+26,O+,Sulfa,Hipertensión controlada
+27,B-,Polen,Paciente sano
+28,O+,Ninguna,Paciente sano
+29,O+,Ninguna,Insomnio
+30,B+,Yodo,Artritis
+31,O-,Polen,Obesidad G1
+32,AB+,Polen,Artritis
+33,O+,Aspirina,Paciente sano
+34,A-,Polen,Hipotiroidismo
+35,AB+,Polen,Hipertensión controlada
+36,O-,Sulfa,Hipotiroidismo
+37,B+,Codeína,Artritis
+38,B+,Sulfa,Asma leve
+39,A+,Penicilina,Obesidad G1
+40,B+,Penicilina,Artritis
+41,B-,Penicilina,Alergias estacionales
+42,O+,Aspirina,Migraña frecuente
+43,O+,Yodo,Diabetes tipo 2
+44,O-,Codeína,Paciente sano
+45,B+,Polen,Diabetes tipo 2
+46,AB+,Ninguna,Paciente sano
+47,AB+,Sulfa,Hipotiroidismo
+48,O-,Polen,Hipertensión controlada
+49,A-,Yodo,Obesidad G1
+50,O+,Aspirina,Colesterol elevado
+51,B-,Ibuprofeno,Paciente sano
+52,A+,Codeína,Alergias estacionales
+53,AB+,Sulfa,Hipertensión controlada
+54,B-,Aspirina,Asma leve
+55,A-,Látex,Artritis
+56,AB+,Yodo,Asma leve
+57,AB-,Látex,Paciente sano
+58,AB-,Ninguna,Hipotiroidismo
+59,O-,Polen,Colesterol elevado
+60,B-,Penicilina,Asma leve
+61,O+,Sulfa,Insomnio
+62,O-,Aspirina,Gastritis crónica
+63,O-,Polen,Hipotiroidismo
+64,AB+,Ninguna,Gastritis crónica
+65,A+,Ninguna,Paciente sano
+66,B+,Penicilina,Ansiedad
+67,A+,Polen,Colesterol elevado
+68,O+,Aspirina,Hipertensión controlada
+69,AB-,Sulfa,Gastritis crónica
+70,O+,Ninguna,Hipertensión controlada
+71,B-,Ibuprofeno,Asma leve
+72,O-,Penicilina,Obesidad G1
+73,A-,Penicilina,Ansiedad
+74,B-,Aspirina,Colesterol elevado
+75,A+,Sulfa,Alergias estacionales
+76,A+,Ibuprofeno,Paciente sano
+77,A-,Polen,Alergias estacionales
+78,AB-,Penicilina,Diabetes tipo 2
+79,B-,Sulfa,Hipotiroidismo
+80,A-,Codeína,Diabetes tipo 2
+81,O+,Penicilina,Insomnio
+82,B-,Sulfa,Insomnio
+83,AB-,Ninguna,Artritis
+84,O+,Penicilina,Asma leve
+85,AB-,Sulfa,Obesidad G1
+86,AB+,Aspirina,Alergias estacionales
+87,B-,Ninguna,Obesidad G1
+88,O-,Látex,Paciente sano
+89,AB-,Ninguna,Artritis
+90,B+,Ibuprofeno,Alergias estacionales
+91,B-,Sulfa,Diabetes tipo 2
+92,B-,Ibuprofeno,Migraña frecuente
+93,A+,Polen,Artritis
+94,AB+,Ninguna,Paciente sano
+95,A-,Sulfa,Paciente sano
+96,AB-,Látex,Asma leve
+97,AB-,Yodo,Colesterol elevado
+98,B+,Yodo,Obesidad G1
+99,AB-,Codeína,Migraña frecuente
+100,AB-,Ibuprofeno,Alergias estacionales
+101,O+,Aspirina,Hipotiroidismo
+102,A-,Látex,Paciente sano
+103,A+,Yodo,Hipertensión controlada
+104,B-,Sulfa,Asma leve
+105,A+,Aspirina,Alergias estacionales
+106,AB-,Yodo,Hipotiroidismo
+107,A+,Aspirina,Migraña frecuente
+108,A-,Aspirina,Diabetes tipo 2
+109,O+,Penicilina,Artritis
+110,O-,Penicilina,Migraña frecuente
+111,AB+,Codeína,Ansiedad
+112,AB+,Ninguna,Paciente sano
+113,AB+,Penicilina,Paciente sano
+114,AB-,Codeína,Gastritis crónica
+115,O+,Sulfa,Diabetes tipo 2
+116,A+,Yodo,Paciente sano
+117,O+,Látex,Paciente sano
+118,AB+,Yodo,Alergias estacionales
+119,B-,Polen,Migraña frecuente
+120,A-,Penicilina,Diabetes tipo 2

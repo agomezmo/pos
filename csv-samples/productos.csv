@@ -1,6 +1,121 @@
-code,name,description,category_id,supplier_id,purchase_price,sale_price,stock,min_stock,unit,wholesale_price,expiry_date,requires_prescription,requires_tax
-MED-001,Paracetamol 500mg,Analgesico y antipiretico,1,1,2.50,8.00,200,50,tbl,6.50,2027-06-30,FALSE,TRUE
-MED-002,Amoxicilina 500mg,Antibiotico de amplio espectro,2,1,15.00,35.00,100,20,caps,28.00,2026-12-31,TRUE,TRUE
-MED-003,Ibuprofeno 400mg,Antiinflamatorio no esteroideo,3,2,3.00,10.00,150,30,tbl,8.00,2027-03-15,FALSE,TRUE
-MED-004,Omeprazol 20mg,Inhibidor de bomba de protones,1,1,1.50,6.00,300,50,caps,4.50,2027-09-01,FALSE,TRUE
-MED-005,Losartan 50mg,Antihipertensivo,4,3,8.00,22.00,80,15,tbl,18.00,2026-08-20,TRUE,TRUE
+code,name,category,purchase_price,sale_price,wholesale_price,stock,min_stock,unit,is_active,requires_prescription
+FAR-89002,Pediatrico Azitromicina 500mg,Varios,694.08,1129.90,1016.91,304,15,SOBRE,1,0
+FAR-91779,Adulto Mayor Jarabe para Tos 120ml,Cardiovasculares,727.32,1443.39,1299.05,26,2,ML,1,0
+FAR-98048,Genérico Hidrocortisona Crema 1%,Antibióticos,29.35,40.93,36.84,43,1,FRASCO,1,1
+FAR-69750,Plus Electrolitos Orales Sobre,Varios,638.96,821.34,739.21,26,2,PZA,1,1
+FAR-47083,Marca B Aspirina 100mg,Dermatológicos,755.52,1398.83,1258.95,46,2,ML,1,0
+FAR-35237,Pediatrico Bisacodilo 5mg,Analgésicos,794.98,1326.03,1193.43,33,1,FRASCO,1,0
+FAR-42882,Plus Lactulosa 15ml,Cuidado Personal,289.67,370.16,333.14,2,3,SOBRE,1,0
+FAR-83624,Pediatrico Ketoconazol Champú 2%,Varios,383.43,636.67,573.00,324,15,PZA,1,0
+FAR-19218,Marca A Enapril 10mg,Antibióticos,522.89,976.26,878.63,356,2,CAJA,1,0
+FAR-62352,Premium Ranitidina 300mg,Analgésicos,773.30,1126.10,1013.49,49,1,TUBO,1,0
+FAR-18450,Pediatrico Hidrocortisona Crema 1%,Cardiovasculares,262.22,333.91,300.52,170,3,PZA,1,0
+FAR-36781,Marca A Hidrocortisona Crema 1%,Vitaminas,601.36,1063.21,956.89,281,2,CAJA,1,0
+FAR-61750,Natural Complejo B,Oftálmicos,97.84,187.36,168.62,49,15,FRASCO,1,1
+FAR-28568,Pediatrico Clindamicina 300mg,Dermatológicos,606.72,951.56,856.40,116,3,ML,1,1
+FAR-43224,Pediatrico Lactulosa 15ml,Oftálmicos,642.98,1137.10,1023.39,157,10,ML,1,0
+FAR-81316,Deportivo Diclofenaco 75mg,Cuidado Personal,177.81,305.56,275.00,0,1,SOBRE,1,0
+FAR-48638,Marca B Losartán 50mg,Neurológicos,472.74,891.87,802.68,427,5,SOBRE,1,1
+FAR-36612,Premium Omega 3 1000mg,Dermatológicos,590.00,746.87,672.18,34,15,SOBRE,1,1
+FAR-59637,Natural Paracetamol 500mg,Pediatría,524.11,863.28,776.95,32,2,SOBRE,1,0
+FAR-17791,Económico Aspirina 100mg,Analgésicos,274.17,491.25,442.12,35,15,CAJA,1,1
+FAR-48342,Premium Calcio 600mg + D3,Neurológicos,541.90,695.12,625.61,146,3,PZA,1,0
+FAR-18130,Plus Hierro 150mg,Neurológicos,730.77,1448.93,1304.04,178,3,SOBRE,1,0
+FAR-39111,Deportivo Clindamicina 300mg,Gastrointestinales,467.21,901.55,811.39,426,2,CAJA,1,0
+FAR-38124,Económico Miconazol Polvo,Analgésicos,777.53,1036.25,932.62,27,1,CAJA,1,0
+FAR-50925,Marca B Clotrimazol Crema 1%,Cardiovasculares,154.12,236.39,212.75,5,5,SOBRE,1,0
+FAR-26655,Deportivo Naproxeno 250mg,Varios,154.27,287.39,258.65,0,1,PZA,1,0
+FAR-78102,Premium Clindamicina 300mg,Cuidado Personal,315.97,438.00,394.20,466,15,CAJA,1,1
+FAR-35513,Premium Hierro 150mg,Antibióticos,515.33,902.17,811.95,11,1,PZA,1,0
+FAR-46140,Marca B Jarabe para Tos 120ml,Analgésicos,217.92,363.89,327.50,425,2,FRASCO,1,0
+FAR-64297,Deportivo Atorvastatina 10mg,Cuidado Personal,318.76,584.28,525.85,27,2,CAJA,1,1
+FAR-60047,Plus Ginkgo Biloba 60mg,Gastrointestinales,625.30,1234.33,1110.90,497,10,ML,1,1
+FAR-89427,Marca B Hierro 150mg,Analgésicos,56.97,97.75,87.98,52,15,ML,1,1
+FAR-43571,Adulto Mayor Miconazol Polvo,Analgésicos,647.50,1210.73,1089.66,1,2,TUBO,1,1
+FAR-87361,Económico Carbón Activado 500mg,Dermatológicos,219.27,391.41,352.27,28,5,ML,1,1
+FAR-37317,Natural Vitamina D 1000UI,Gastrointestinales,542.56,709.27,638.34,31,5,CAJA,1,0
+FAR-92904,Plus Aceite de Higado de Bacalao,Cuidado Personal,676.13,941.30,847.17,0,10,TUBO,1,0
+FAR-69288,Adulto Mayor Melatonina 5mg,Cuidado Personal,273.85,380.05,342.05,36,2,SOBRE,0,1
+FAR-56767,Deportivo Loratadina 10mg,Analgésicos,331.42,641.95,577.76,151,1,CAJA,1,0
+FAR-59260,Genérico Complejo B,Vitaminas,308.92,425.25,382.73,316,2,PZA,1,0
+FAR-82533,Económico Vitamina C 1g,Cuidado Personal,571.63,1008.23,907.41,248,10,PZA,1,0
+FAR-84770,Marca B Carbón Activado 500mg,Antibióticos,769.83,1067.59,960.83,19,2,ML,1,0
+FAR-90662,Natural Ketoconazol Champú 2%,Oftálmicos,418.18,818.24,736.42,3,10,TUBO,1,0
+FAR-97026,Plus Jarabe para Tos 120ml,Antibióticos,585.75,1031.31,928.18,467,15,CAJA,1,0
+FAR-54932,Económico Electrolitos Orales Sobre,Respiratorios,578.06,813.48,732.13,110,15,SOBRE,1,0
+FAR-81655,Premium Prednisona 25mg,Analgésicos,633.05,1105.04,994.54,86,2,SOBRE,1,1
+FAR-69738,Deportivo Lactulosa 15ml,Antibióticos,121.74,170.59,153.53,48,5,CAJA,0,0
+FAR-48453,Premium Melatonina 5mg,Pediatría,125.73,195.53,175.98,43,3,FRASCO,1,0
+FAR-67519,Genérico Prednisona 25mg,Respiratorios,37.13,46.84,42.16,87,3,FRASCO,1,0
+FAR-16469,Pediatrico Carbón Activado 500mg,Cardiovasculares,509.92,777.11,699.40,49,3,CAJA,1,0
+FAR-29194,Genérico Cetirizina 10mg,Antibióticos,499.07,956.25,860.62,10,15,SOBRE,1,0
+FAR-83837,Natural Jarabe para Tos 120ml,Neurológicos,746.54,1389.47,1250.52,26,2,TUBO,1,1
+FAR-89071,Económico Ibuprofeno 400mg,Oftálmicos,506.61,792.44,713.20,41,3,SOBRE,1,0
+FAR-29070,Premium Amoxicilina 500mg,Antibióticos,575.77,976.75,879.08,71,3,PZA,0,1
+FAR-13241,Marca B Miconazol Polvo,Antibióticos,755.45,1231.51,1108.36,38,3,ML,1,0
+FAR-67996,Económico Loratadina 10mg,Analgésicos,533.42,977.06,879.35,315,10,PZA,1,0
+FAR-18543,Plus Carbón Activado 500mg,Oftálmicos,673.97,1287.57,1158.81,5,3,TUBO,1,0
+FAR-16416,Pediatrico Hierro 150mg,Cuidado Personal,397.74,778.32,700.49,31,2,FRASCO,1,1
+FAR-22454,Plus Calcio 600mg + D3,Cuidado Personal,382.17,692.39,623.15,31,3,PZA,1,0
+FAR-58096,Natural Hierro 150mg,Neurológicos,105.27,205.85,185.26,35,5,ML,1,1
+FAR-25080,Adulto Mayor Calcio 600mg + D3,Dermatológicos,297.28,442.77,398.49,15,10,CAJA,0,0
+FAR-20289,Marca A Paracetamol 500mg,Neurológicos,162.56,277.47,249.72,252,1,CAJA,1,0
+FAR-14063,Genérico Naproxeno 250mg,Dermatológicos,290.55,485.89,437.30,82,1,PZA,1,0
+FAR-76611,Adulto Mayor Omega 3 1000mg,Analgésicos,172.57,305.33,274.80,10,1,CAJA,0,0
+FAR-11262,Natural Losartán 50mg,Vitaminas,189.63,274.50,247.05,26,5,CAJA,1,0
+FAR-68470,Premium Jarabe para Tos 120ml,Cardiovasculares,75.77,127.02,114.32,17,1,TUBO,1,0
+FAR-72050,Marca A Hierro 150mg,Pediatría,190.88,280.13,252.12,41,1,ML,1,1
+FAR-39913,Natural Calcio 600mg + D3,Gastrointestinales,444.41,853.12,767.81,0,15,PZA,1,0
+FAR-68716,Genérico Miconazol Polvo,Neurológicos,377.61,553.66,498.29,178,10,ML,1,1
+FAR-10002,Natural Cetirizina 10mg,Analgésicos,674.52,1274.61,1147.15,41,2,TUBO,1,1
+FAR-68534,Pediatrico Naproxeno 250mg,Neurológicos,553.33,834.81,751.33,476,15,CAJA,1,1
+FAR-12242,Adulto Mayor Aceite de Higado de Bacalao,Varios,124.35,247.10,222.39,28,10,FRASCO,0,1
+FAR-53872,Pediatrico Omega 3 1000mg,Cardiovasculares,732.41,1178.94,1061.05,28,5,FRASCO,1,0
+FAR-10327,Plus Metformina 850mg,Dermatológicos,791.97,1366.84,1230.16,420,3,PZA,1,0
+FAR-77229,Deportivo Electrolitos Orales Sobre,Gastrointestinales,779.86,1197.47,1077.72,457,3,FRASCO,1,0
+FAR-93981,Adulto Mayor Electrolitos Orales Sobre,Varios,589.31,852.99,767.69,5,5,TUBO,1,1
+FAR-79597,Económico Diclofenaco 75mg,Neurológicos,184.90,322.63,290.37,14,1,TUBO,1,0
+FAR-48777,Deportivo Carbón Activado 500mg,Vitaminas,575.62,754.31,678.88,338,10,PZA,1,0
+FAR-65174,Adulto Mayor Ácido Fólico 5mg,Dermatológicos,609.66,1062.49,956.24,5,1,FRASCO,1,0
+FAR-23694,Marca A Aspirina 100mg,Gastrointestinales,642.97,875.37,787.83,2,3,ML,1,0
+FAR-50796,Genérico Azitromicina 500mg,Antibióticos,133.98,204.72,184.25,212,10,SOBRE,0,0
+FAR-53429,Económico Enapril 10mg,Vitaminas,171.63,279.08,251.17,0,1,FRASCO,1,0
+FAR-53824,Económico Hidrocortisona Crema 1%,Oftálmicos,469.00,623.33,561.00,130,10,PZA,1,1
+FAR-32103,Deportivo Dexametasona 8mg,Gastrointestinales,110.51,191.00,171.90,1,3,SOBRE,1,0
+FAR-76703,Pediatrico Amoxicilina 500mg,Oftálmicos,685.79,1014.99,913.49,21,2,SOBRE,1,1
+FAR-72261,Deportivo Prednisona 25mg,Pediatría,725.87,982.04,883.84,402,5,PZA,1,1
+FAR-52173,Económico Ciprofloxacino 500mg,Varios,599.70,824.11,741.70,72,5,PZA,1,1
+FAR-10254,Marca B Clindamicina 300mg,Oftálmicos,543.22,876.88,789.19,275,10,PZA,1,0
+FAR-64733,Marca A Dexametasona 8mg,Vitaminas,608.46,844.95,760.46,19,3,SOBRE,1,0
+FAR-51538,Genérico Clotrimazol Crema 1%,Pediatría,747.26,1273.84,1146.46,24,10,TUBO,1,0
+FAR-15707,Plus Aspirina 100mg,Antibióticos,716.78,1400.68,1260.61,18,15,TUBO,1,0
+FAR-60612,Pediatrico Ciprofloxacino 500mg,Oftálmicos,463.41,656.08,590.47,202,15,SOBRE,1,0
+FAR-44794,Premium Ginkgo Biloba 60mg,Vitaminas,390.97,610.41,549.37,5,2,PZA,1,0
+FAR-65022,Plus Vitamina D 1000UI,Cuidado Personal,586.47,751.10,675.99,497,5,TUBO,1,0
+FAR-21539,Marca A Diclofenaco 75mg,Pediatría,508.37,865.00,778.50,9,5,CAJA,1,0
+FAR-35630,Pediatrico Vitamina C 1g,Neurológicos,199.05,362.08,325.87,32,5,TUBO,1,0
+FAR-72132,Genérico Glucomanano 500mg,Oftálmicos,81.60,130.05,117.05,4,2,ML,1,0
+FAR-74291,Adulto Mayor Glucomanano 500mg,Pediatría,631.85,861.09,774.98,16,3,ML,0,0
+FAR-49342,Adulto Mayor Metformina 850mg,Vitaminas,165.36,288.73,259.86,19,2,PZA,1,1
+FAR-20531,Deportivo Ciprofloxacino 500mg,Oftálmicos,58.27,78.70,70.83,3,10,CAJA,1,0
+FAR-75856,Plus Clotrimazol Crema 1%,Antibióticos,378.27,724.32,651.89,376,1,PZA,1,0
+FAR-68088,Premium Paracetamol 500mg,Oftálmicos,607.54,852.32,767.09,310,3,SOBRE,1,0
+FAR-37291,Plus Loratadina 10mg,Vitaminas,752.73,950.53,855.48,252,3,TUBO,1,0
+FAR-11939,Deportivo Miconazol Polvo,Respiratorios,646.82,891.72,802.55,27,3,SOBRE,1,1
+FAR-98280,Natural Ginkgo Biloba 60mg,Dermatológicos,679.56,1074.60,967.14,243,1,ML,1,0
+FAR-10942,Pediatrico Ranitidina 300mg,Gastrointestinales,41.98,75.58,68.02,41,3,FRASCO,1,0
+FAR-50570,Económico Ketoconazol Champú 2%,Respiratorios,188.96,266.93,240.24,18,2,SOBRE,1,0
+FAR-39574,Marca B Electrolitos Orales Sobre,Oftálmicos,748.30,1173.84,1056.46,7,10,FRASCO,1,1
+FAR-48727,Marca B Ginkgo Biloba 60mg,Gastrointestinales,771.45,1029.94,926.95,312,5,TUBO,1,0
+FAR-34280,Económico Omega 3 1000mg,Gastrointestinales,434.00,745.81,671.23,38,5,PZA,1,0
+FAR-72673,Deportivo Hidrocortisona Crema 1%,Vitaminas,713.60,1263.88,1137.49,440,15,TUBO,1,1
+FAR-31112,Premium Aceite de Higado de Bacalao,Respiratorios,664.65,980.84,882.76,179,10,TUBO,0,0
+FAR-14314,Marca B Dexametasona 8mg,Neurológicos,396.28,546.70,492.03,48,3,PZA,1,1
+FAR-76613,Económico Cetirizina 10mg,Respiratorios,164.03,269.08,242.17,2,10,SOBRE,1,1
+FAR-95188,Pediatrico Aspirina 100mg,Cuidado Personal,295.02,392.30,353.07,26,2,FRASCO,1,0
+FAR-26929,Genérico Lactulosa 15ml,Cuidado Personal,700.55,1095.43,985.89,75,1,TUBO,1,1
+FAR-56403,Genérico Bisacodilo 5mg,Cuidado Personal,577.30,1112.85,1001.56,21,1,FRASCO,1,1
+FAR-44842,Marca B Complejo B,Vitaminas,207.70,327.17,294.45,15,15,PZA,1,0
+FAR-83524,Premium Enapril 10mg,Oftálmicos,247.17,466.87,420.18,5,2,ML,1,0
+FAR-44823,Natural Amoxicilina 500mg,Respiratorios,616.46,933.58,840.22,446,5,FRASCO,1,0
+FAR-71590,Pediatrico Ácido Fólico 5mg,Vitaminas,561.11,1007.92,907.13,50,5,PZA,1,0
