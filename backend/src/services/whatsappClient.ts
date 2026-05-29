@@ -176,10 +176,11 @@ export async function sendWaMessage(to: string, message: string): Promise<{ succ
       return { success: false, error: `El número ${to} no está registrado en WhatsApp` };
     }
 
-    // waNumberId already has the correct format (e.g., 525632139541@c.us)
-    console.log(`📤 Sending WhatsApp message to ${waNumberId}...`);
-    await c.sendMessage(waNumberId, message);
-    console.log(`✅ WhatsApp message sent to ${waNumberId}`);
+    // waNumberId is a ContactId object with _serialized (e.g., 525583024067@c.us)
+    const chatId = typeof waNumberId === 'string' ? waNumberId : waNumberId._serialized;
+    console.log(`📤 Sending WhatsApp message to ${chatId}...`);
+    await c.sendMessage(chatId, message);
+    console.log(`✅ WhatsApp message sent to ${chatId}`);
     return { success: true };
   } catch (err: any) {
     console.error('Error sending WhatsApp message:', err);
