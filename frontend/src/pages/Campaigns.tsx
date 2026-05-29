@@ -203,7 +203,7 @@ export default function Campaigns() {
       {/* NUEVA CAMPAÑA                                                        */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto"
+        <div className="fixed inset-0 bg-black/30 z-[1000] flex items-start justify-center p-4 pt-8 overflow-y-auto"
           onClick={e => { if (e.target === e.currentTarget) setShowForm(false); }}>
           <div className="bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto"
             onClick={e => e.stopPropagation()}>
@@ -458,7 +458,7 @@ export default function Campaigns() {
       {/* DETALLE DE CAMPAÑA                                                    */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showDetail && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto"
+        <div className="fixed inset-0 bg-black/30 z-[1000] flex items-start justify-center p-4 pt-8 overflow-y-auto"
           onClick={e => { if (e.target === e.currentTarget) setShowDetail(null); }}>
           <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl mx-auto"
             onClick={e => e.stopPropagation()}>
