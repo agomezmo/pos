@@ -200,115 +200,118 @@ export default function Campaigns() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* NUEVA CAMPAÑA                                                        */}
+      {/* NUEVA CAMPAÑA — full-page view integrated into POS module          */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/30 z-[1000] flex items-start justify-center p-4 pt-8 overflow-y-auto"
+        <div className="fixed inset-0 bg-black/40 z-[1000] flex items-start justify-center overflow-y-auto py-6"
           onClick={e => { if (e.target === e.currentTarget) setShowForm(false); }}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto"
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl mx-4"
             onClick={e => e.stopPropagation()}>
 
             {/* header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
-                <h2 className="text-lg font-bold text-gray-800">Nueva campaña</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Completa los datos para crear la promoción</p>
+                <h2 className="text-xl font-bold text-gray-800">Nueva campaña</h2>
+                <p className="text-sm text-gray-500 mt-0.5">Completa los datos para crear la promoción</p>
               </div>
               <button onClick={() => setShowForm(false)}
-                className="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg leading-none">&times;</button>
+                className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
             </div>
 
             <form onSubmit={handleCreate}>
-              <div className="px-6 py-5 space-y-5">
+              <div className="px-6 py-5 space-y-6">
 
-                {/* Basic info */}
-                <div className="grid grid-cols-3 gap-4">
+                {/* ── Basic info row ───────────────────────────────────────── */}
+                <div className="grid grid-cols-3 gap-5">
                   <div className="col-span-2">
-                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Nombre de la campaña *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nombre de la campaña *</label>
                     <input required value={form.name}
                       onChange={e => setForm({ ...form, name: e.target.value })}
                       placeholder="Ej: Ofertas de temporada"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" />
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Tipo de oferta</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tipo de oferta</label>
                     <select value={form.offer_type}
                       onChange={e => setForm({ ...form, offer_type: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none">
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none">
                       {OFFER_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                     </select>
                   </div>
                 </div>
 
-                {/* Offer value + expiry range */}
-                <div className="grid grid-cols-4 gap-4">
+                {/* ── Details row ──────────────────────────────────────────── */}
+                <div className="grid grid-cols-4 gap-5">
                   {form.offer_type !== 'cost_price' && (
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                         {form.offer_type === 'percentage' ? 'Descuento %' : 'Precio fijo ($)'}
                       </label>
                       <input type="number" step="0.01" min="0" value={form.offer_value}
                         onChange={e => setForm({ ...form, offer_value: Number(e.target.value) })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
                     </div>
                   )}
                   <div className={form.offer_type === 'cost_price' ? 'col-span-2' : ''}>
-                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Días para caducar</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Días para caducar</label>
                     <div className="flex items-center gap-2">
                       <input type="number" min="1" value={form.min_expiry_days}
                         onChange={e => setForm({ ...form, min_expiry_days: Number(e.target.value) })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
-                      <span className="text-gray-300 text-sm">—</span>
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                      <span className="text-gray-400 font-medium">—</span>
                       <input type="number" min="1" value={form.max_expiry_days}
                         onChange={e => setForm({ ...form, max_expiry_days: Number(e.target.value) })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Notas</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Notas</label>
                     <input value={form.notes}
                       onChange={e => setForm({ ...form, notes: e.target.value })}
                       placeholder="Opcional"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
                   </div>
                 </div>
 
                 {/* ── Products + Customers side by side ────────────────────── */}
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-2 gap-6">
 
                   {/* ── PRODUCTOS ──────────────────────────────────────────── */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Productos</span>
-                      <span className="text-[11px] text-gray-400">{form.product_ids.length}/{products.length} selec.</span>
+                  <div className="card !p-4 !mb-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold text-gray-700">Productos</span>
+                      <span className="text-xs text-gray-400 font-medium">{form.product_ids.length}/{products.length} seleccionados</span>
                     </div>
-                    <div className="relative mb-2">
-                      <input placeholder="Buscar producto..." value={productSearch}
+
+                    <div className="relative mb-3">
+                      <input placeholder="Buscar producto por nombre..." value={productSearch}
                         onChange={e => { setProductSearch(e.target.value); setActiveCategory(''); }}
-                        className="w-full pl-3 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
                     </div>
-                    <div className="flex flex-wrap gap-1 mb-2">
+
+                    {/* Quick filters */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
                       <button type="button" onClick={selectAllProducts}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100 border border-green-200">Todos</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors">Todos</button>
                       <button type="button" onClick={() => selectExpiringSoon(7)}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100 border border-red-200">7 días</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-colors">Próximos 7 días</button>
                       <button type="button" onClick={() => selectExpiringSoon(15)}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-200">15 días</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-200 transition-colors">15 días</button>
                       <button type="button" onClick={() => selectExpiringSoon(30)}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-yellow-50 text-yellow-600 hover:bg-yellow-100 border border-yellow-200">30 días</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 transition-colors">30 días</button>
                       <button type="button" onClick={deselectAllProducts}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200">Limpiar</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200 transition-colors">Limpiar</button>
                     </div>
 
                     {/* Category pills */}
-                    <div className="flex gap-1 mb-2 overflow-x-auto pb-0.5">
+                    <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
                       <button type="button" onClick={() => setActiveCategory('')}
-                        className={`whitespace-nowrap text-[10px] font-semibold px-2 py-0.5 rounded-full transition-colors ${
+                        className={`whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-full transition-colors ${
                           !activeCategory ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                         }`}>Todas</button>
                       {categories.map(cat => (
                         <button key={cat} type="button" onClick={() => { setActiveCategory(cat); setProductSearch(''); }}
-                          className={`whitespace-nowrap text-[10px] font-semibold px-2 py-0.5 rounded-full transition-colors ${
+                          className={`whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-full transition-colors ${
                             activeCategory === cat ? 'text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                           }`}
                           style={activeCategory === cat ? { backgroundColor: CATEGORY_COLORS[cat] || '#6b7280' } : {}}>
@@ -318,36 +321,36 @@ export default function Campaigns() {
                     </div>
 
                     {/* Product list */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden max-h-64 overflow-y-auto">
+                    <div className="border border-gray-200 rounded-lg overflow-hidden max-h-72 overflow-y-auto">
                       {filteredProducts.length === 0 ? (
-                        <p className="text-center py-6 text-gray-300 text-xs">Sin resultados</p>
+                        <p className="text-center py-8 text-gray-300 text-sm">Sin resultados</p>
                       ) : (
                         filteredProducts.map(p => {
                           const days = p.expiry_date ? Math.ceil((new Date(p.expiry_date).getTime() - Date.now()) / 86400000) : 0;
                           const sel = form.product_ids.includes(p.id);
                           return (
                             <div key={p.id} onClick={() => toggleProduct(p.id)}
-                              className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer border-b border-gray-100 last:border-0 text-xs transition-colors ${
+                              className={`flex items-center gap-3 px-3.5 py-2.5 cursor-pointer border-b border-gray-100 last:border-0 text-sm transition-colors ${
                                 sel ? 'bg-green-50' : 'hover:bg-gray-50'
                               }`}>
                               <input type="checkbox" checked={sel} readOnly
-                                className="accent-green-600 w-3.5 h-3.5 pointer-events-none shrink-0" />
+                                className="accent-green-600 w-4 h-4 pointer-events-none shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <span className={`block truncate ${sel ? 'font-semibold text-gray-800' : 'text-gray-700'}`}>{p.name}</span>
-                                <span className="text-[10px] text-gray-400 font-mono">{p.code}</span>
+                                <span className="text-xs text-gray-400 font-mono">{p.code}</span>
                               </div>
-                              <div className="flex items-center gap-1.5 shrink-0">
+                              <div className="flex items-center gap-2 shrink-0">
                                 {days > 0 ? (
-                                  <span className={`text-[10px] font-bold px-1 rounded ${
+                                  <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
                                     days <= 7 ? 'bg-red-50 text-red-600' :
                                     days <= 15 ? 'bg-orange-50 text-orange-600' :
-                                    'bg-yellow-50 text-yellow-600'
+                                    'bg-amber-50 text-amber-600'
                                   }`}>{days}d</span>
                                 ) : (
-                                  <span className="text-[10px] text-red-400">Vencido</span>
+                                  <span className="text-xs font-medium text-red-400">Vencido</span>
                                 )}
-                                <span className="text-[10px] text-gray-400 line-through">${Number(p.saleprice).toFixed(2)}</span>
-                                <span className="text-[10px] font-bold text-green-600">${Number(p.purchaseprice).toFixed(2)}</span>
+                                <span className="text-xs text-gray-400 line-through">${Number(p.saleprice).toFixed(2)}</span>
+                                <span className="text-xs font-bold text-green-600">${Number(p.purchaseprice).toFixed(2)}</span>
                               </div>
                             </div>
                           );
@@ -357,68 +360,69 @@ export default function Campaigns() {
                   </div>
 
                   {/* ── CLIENTES ───────────────────────────────────────────── */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Clientes</span>
-                      <span className="text-[11px] text-gray-400">{form.customer_ids.length}/{customers.length} selec.</span>
+                  <div className="card !p-4 !mb-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold text-gray-700">Clientes</span>
+                      <span className="text-xs text-gray-400 font-medium">{form.customer_ids.length}/{customers.length} seleccionados</span>
                     </div>
-                    <div className="relative mb-2">
-                      <input placeholder="Buscar cliente..." value={customerSearch}
+
+                    <div className="relative mb-3">
+                      <input placeholder="Buscar cliente por nombre..." value={customerSearch}
                         onChange={e => setCustomerSearch(e.target.value)}
-                        className="w-full pl-3 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
                     </div>
 
                     {/* Stats + quick buttons */}
-                    <div className="flex gap-1 mb-2">
-                      <div className="flex-1 bg-gray-50 rounded-lg px-2 py-1 text-center border border-gray-100">
-                        <p className="text-xs font-bold text-blue-600">{customers.filter(c => c.email).length}</p>
-                        <p className="text-[9px] text-gray-400">Email</p>
+                    <div className="flex gap-2 mb-3">
+                      <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center border border-gray-100">
+                        <p className="text-sm font-bold text-blue-600">{customers.filter(c => c.email).length}</p>
+                        <p className="text-xs text-gray-400 font-medium">Con email</p>
                       </div>
-                      <div className="flex-1 bg-gray-50 rounded-lg px-2 py-1 text-center border border-gray-100">
-                        <p className="text-xs font-bold text-emerald-600">{customers.filter(c => c.phone).length}</p>
-                        <p className="text-[9px] text-gray-400">Teléfono</p>
+                      <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center border border-gray-100">
+                        <p className="text-sm font-bold text-emerald-600">{customers.filter(c => c.phone).length}</p>
+                        <p className="text-xs text-gray-400 font-medium">Con teléfono</p>
                       </div>
-                      <div className="flex-1 bg-gray-50 rounded-lg px-2 py-1 text-center border border-gray-100">
-                        <p className="text-xs font-bold text-purple-600">{customers.length}</p>
-                        <p className="text-[9px] text-gray-400">Total</p>
+                      <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center border border-gray-100">
+                        <p className="text-sm font-bold text-purple-600">{customers.length}</p>
+                        <p className="text-xs text-gray-400 font-medium">Total</p>
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-1 mb-2">
+                    <div className="flex flex-wrap gap-1.5 mb-3">
                       <button type="button" onClick={selectAllCustomers}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100 border border-green-200">Todos</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors">Todos</button>
                       <button type="button" onClick={selectWithEmail}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200">Con email</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 transition-colors">Con email</button>
                       <button type="button" onClick={selectWithPhone}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200">Con teléfono</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 transition-colors">Con teléfono</button>
                       <button type="button" onClick={deselectAllCustomers}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200">Limpiar</button>
+                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200 transition-colors">Limpiar</button>
                     </div>
 
                     {/* Customer list */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden max-h-64 overflow-y-auto">
+                    <div className="border border-gray-200 rounded-lg overflow-hidden max-h-72 overflow-y-auto">
                       {filteredCustomers.length === 0 ? (
-                        <p className="text-center py-6 text-gray-300 text-xs">Sin resultados</p>
+                        <p className="text-center py-8 text-gray-300 text-sm">Sin resultados</p>
                       ) : (
                         filteredCustomers.map(c => {
                           const sel = form.customer_ids.includes(c.id);
                           return (
                             <div key={c.id} onClick={() => toggleCustomer(c.id)}
-                              className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer border-b border-gray-100 last:border-0 text-xs transition-colors ${
+                              className={`flex items-center gap-3 px-3.5 py-2.5 cursor-pointer border-b border-gray-100 last:border-0 text-sm transition-colors ${
                                 sel ? 'bg-blue-50' : 'hover:bg-gray-50'
                               }`}>
                               <input type="checkbox" checked={sel} readOnly
-                                className="accent-blue-600 w-3.5 h-3.5 pointer-events-none shrink-0" />
+                                className="accent-blue-600 w-4 h-4 pointer-events-none shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <span className={`block truncate ${sel ? 'font-semibold text-gray-800' : 'text-gray-700'}`}>{c.fullname}</span>
                               </div>
-                              <div className="flex items-center gap-1 shrink-0">
+                              <div className="flex items-center gap-1.5 shrink-0">
                                 {c.email && (
-                                  <span className="text-[10px] bg-blue-50 text-blue-600 px-1 py-0.5 rounded font-medium">
-                                    {c.email.length > 16 ? c.email.substring(0, 14) + '…' : c.email}
+                                  <span className="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-medium">
+                                    {c.email.length > 20 ? c.email.substring(0, 18) + '…' : c.email}
                                   </span>
                                 )}
                                 {c.phone && (
-                                  <span className="text-[10px] bg-emerald-50 text-emerald-600 px-1 py-0.5 rounded font-medium">
+                                  <span className="text-xs bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded font-medium">
                                     {c.phone}
                                   </span>
                                 )}
@@ -433,18 +437,18 @@ export default function Campaigns() {
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50/50">
-                <span className="text-xs text-gray-400">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <span className="text-sm text-gray-400">
                   {form.name && form.product_ids.length > 0 && form.customer_ids.length > 0
-                    ? 'Completo — puedes crear la campaña'
+                    ? '✓ Completo — puedes crear la campaña'
                     : 'Faltan campos por llenar'}
                 </span>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button type="button" onClick={() => setShowForm(false)}
-                    className="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
+                    className="px-5 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
                   <button type="submit"
                     disabled={!form.name || form.product_ids.length === 0 || form.customer_ids.length === 0}
-                    className="px-5 py-2 text-xs font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                    className="px-6 py-2.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
                     Crear campaña
                   </button>
                 </div>
@@ -458,76 +462,76 @@ export default function Campaigns() {
       {/* DETALLE DE CAMPAÑA                                                    */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showDetail && (
-        <div className="fixed inset-0 bg-black/30 z-[1000] flex items-start justify-center p-4 pt-8 overflow-y-auto"
+        <div className="fixed inset-0 bg-black/40 z-[1000] flex items-start justify-center overflow-y-auto py-6"
           onClick={e => { if (e.target === e.currentTarget) setShowDetail(null); }}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl mx-auto"
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-4"
             onClick={e => e.stopPropagation()}>
 
             {/* header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
-                <h2 className="text-lg font-bold text-gray-800">{detailData.name}</h2>
-                <p className="text-xs text-gray-500 mt-0.5">{detailData.description || 'Sin descripción'}</p>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-800">{detailData.name}</h2>
+                  {badge(detailData.status)}
+                </div>
+                <p className="text-sm text-gray-500 mt-0.5">{detailData.description || 'Sin descripción'}</p>
               </div>
-              <div className="flex items-center gap-2">
-                {badge(detailData.status)}
-                <button onClick={() => setShowDetail(null)}
-                  className="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg leading-none">&times;</button>
-              </div>
+              <button onClick={() => setShowDetail(null)}
+                className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
             </div>
 
-            <div className="px-6 py-4 space-y-5">
+            <div className="px-6 py-5 space-y-6">
 
               {/* Info cards */}
-              <div className="grid grid-cols-4 gap-3">
-                <div className="bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100">
-                  <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Tipo</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-0.5">{OFFER_TYPES.find(t => t.value === detailData.offer_type)?.label || detailData.offer_type}</p>
+              <div className="grid grid-cols-4 gap-4">
+                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tipo</p>
+                  <p className="text-sm font-semibold text-gray-800 mt-1">{OFFER_TYPES.find(t => t.value === detailData.offer_type)?.label || detailData.offer_type}</p>
                 </div>
                 {detailData.offer_value > 0 && (
-                  <div className="bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100">
-                    <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Valor</p>
-                    <p className="text-sm font-semibold text-gray-800 mt-0.5">{detailData.offer_type === 'percentage' ? `${detailData.offer_value}%` : `$${detailData.offer_value}`}</p>
+                  <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Valor</p>
+                    <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.offer_type === 'percentage' ? `${detailData.offer_value}%` : `$${detailData.offer_value}`}</p>
                   </div>
                 )}
-                <div className="bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100">
-                  <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Vencimiento</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-0.5">{detailData.min_expiry_days}–{detailData.max_expiry_days} días</p>
+                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Vencimiento</p>
+                  <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.min_expiry_days}–{detailData.max_expiry_days} días</p>
                 </div>
-                <div className="bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100">
-                  <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Creada por</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-0.5">{detailData.created_by_name}</p>
-                  <p className="text-[10px] text-gray-400">{fDate(detailData.created_at)}</p>
+                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Creada por</p>
+                  <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.created_by_name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{fDate(detailData.created_at)}</p>
                 </div>
               </div>
 
               {detailData.notes && (
-                <div className="bg-gray-50 rounded-lg px-3 py-2.5">
-                  <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mb-1">Notas</p>
+                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Notas</p>
                   <p className="text-sm text-gray-700">{detailData.notes}</p>
                 </div>
               )}
 
               {/* Products */}
               <div>
-                <h3 className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Productos ({detailData.products?.length || 0})</h3>
+                <h3 className="text-sm font-bold text-gray-700 mb-3">Productos ({detailData.products?.length || 0})</h3>
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="text-left py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Producto</th>
-                        <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Precio</th>
-                        <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Oferta</th>
-                        <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Caduca</th>
+                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Producto</th>
+                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Precio</th>
+                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Oferta</th>
+                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Caduca</th>
                       </tr>
                     </thead>
                     <tbody>
                       {detailData.products?.map((p: any) => (
                         <tr key={p.id} className="border-b border-gray-100 last:border-0">
-                          <td className="py-2 px-3 text-gray-700 text-xs">{p.product_name}</td>
-                          <td className="py-2 px-3 text-center text-gray-400 line-through text-xs">{fCur(p.original_price)}</td>
-                          <td className="py-2 px-3 text-center text-green-600 font-bold text-xs">{fCur(p.offer_price)}</td>
-                          <td className="py-2 px-3 text-center text-gray-500 text-xs">{p.expiry_date ? fDate(p.expiry_date) : '—'}</td>
+                          <td className="py-2.5 px-4 text-gray-700 text-sm">{p.product_name}</td>
+                          <td className="py-2.5 px-4 text-center text-gray-400 line-through text-sm">{fCur(p.original_price)}</td>
+                          <td className="py-2.5 px-4 text-center text-green-600 font-bold text-sm">{fCur(p.offer_price)}</td>
+                          <td className="py-2.5 px-4 text-center text-gray-500 text-sm">{p.expiry_date ? fDate(p.expiry_date) : '—'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -537,22 +541,22 @@ export default function Campaigns() {
 
               {/* Customers */}
               <div>
-                <h3 className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Clientes ({detailData.customers?.length || 0})</h3>
+                <h3 className="text-sm font-bold text-gray-700 mb-3">Clientes ({detailData.customers?.length || 0})</h3>
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="text-left py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Nombre</th>
-                        <th className="text-left py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Email</th>
-                        <th className="text-left py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Teléfono</th>
+                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Nombre</th>
+                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Email</th>
+                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Teléfono</th>
                       </tr>
                     </thead>
                     <tbody>
                       {detailData.customers?.map((c: any) => (
                         <tr key={c.id} className="border-b border-gray-100 last:border-0">
-                          <td className="py-2 px-3 text-gray-700 text-xs">{c.customer_name}</td>
-                          <td className="py-2 px-3 text-blue-600 text-xs">{c.contact_email || '—'}</td>
-                          <td className="py-2 px-3 text-emerald-600 text-xs">{c.contact_phone || '—'}</td>
+                          <td className="py-2.5 px-4 text-gray-700 text-sm">{c.customer_name}</td>
+                          <td className="py-2.5 px-4 text-blue-600 text-sm">{c.contact_email || '—'}</td>
+                          <td className="py-2.5 px-4 text-emerald-600 text-sm">{c.contact_phone || '—'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -563,34 +567,34 @@ export default function Campaigns() {
               {/* Logs */}
               {detailData.logs?.length > 0 && (
                 <div>
-                  <h3 className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Bitácora ({detailData.logs.length})</h3>
+                  <h3 className="text-sm font-bold text-gray-700 mb-3">Bitácora de envíos ({detailData.logs.length})</h3>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="bg-gray-50 border-b border-gray-200">
-                          <th className="text-left py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Cliente</th>
-                          <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Canal</th>
-                          <th className="text-left py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Destino</th>
-                          <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Estado</th>
-                          <th className="text-center py-2 px-3 text-gray-500 font-semibold text-xs uppercase">Fecha</th>
+                          <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Cliente</th>
+                          <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Canal</th>
+                          <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Destino</th>
+                          <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Estado</th>
+                          <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Fecha</th>
                         </tr>
                       </thead>
                       <tbody>
                         {detailData.logs?.map((l: any) => (
-                          <tr key={l.id} className="border-b border-gray-100 last:border-0 text-xs">
-                            <td className="py-2 px-3 text-gray-700">{l.customer_name || '—'}</td>
-                            <td className="py-2 px-3 text-center">
-                              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                          <tr key={l.id} className="border-b border-gray-100 last:border-0 text-sm">
+                            <td className="py-2.5 px-4 text-gray-700">{l.customer_name || '—'}</td>
+                            <td className="py-2.5 px-4 text-center">
+                              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                                 l.channel === 'email' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
                               }`}>{l.channel === 'email' ? 'Email' : 'WhatsApp'}</span>
                             </td>
-                            <td className="py-2 px-3 text-gray-500">{l.recipient}</td>
-                            <td className="py-2 px-3 text-center">
-                              {l.status === 'sent' ? <span className="text-green-600 font-semibold">Enviado</span> :
-                               l.status === 'failed' ? <span className="text-red-500 font-semibold" title={l.error_message || ''}>Falló</span> :
-                               <span className="text-gray-400">Pendiente</span>}
+                            <td className="py-2.5 px-4 text-gray-500 text-sm">{l.recipient}</td>
+                            <td className="py-2.5 px-4 text-center">
+                              {l.status === 'sent' ? <span className="text-green-600 font-semibold text-sm">✓ Enviado</span> :
+                               l.status === 'failed' ? <span className="text-red-500 font-semibold text-sm" title={l.error_message || ''}>✗ Falló</span> :
+                               <span className="text-gray-400 text-sm">— Pendiente</span>}
                             </td>
-                            <td className="py-2 px-3 text-center text-gray-500">{l.sent_at ? fDate(l.sent_at) : '—'}</td>
+                            <td className="py-2.5 px-4 text-center text-gray-500 text-sm">{l.sent_at ? fDate(l.sent_at) : '—'}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -600,30 +604,30 @@ export default function Campaigns() {
               )}
 
               {/* Actions */}
-              <div className="flex gap-2 pt-3 border-t border-gray-200">
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
                 {detailData.status === 'draft' && (
                   <>
                     <button onClick={() => handleSend(detailData.id, ['email'])} disabled={sending}
-                      className="flex-1 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-40">
-                      {sending ? 'Enviando...' : 'Enviar por Email'}
+                      className="flex-1 min-w-[140px] px-5 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-40 shadow-sm">
+                      {sending ? 'Enviando...' : '📧 Enviar por Email'}
                     </button>
                     <button onClick={() => handleSend(detailData.id, ['whatsapp'])} disabled={sending}
-                      className="flex-1 px-4 py-2 text-xs font-bold text-white rounded-lg transition-colors disabled:opacity-40"
+                      className="flex-1 min-w-[140px] px-5 py-2.5 text-sm font-bold text-white rounded-lg transition-colors disabled:opacity-40 shadow-sm"
                       style={{ background: '#25D366' }}>
-                      {sending ? 'Enviando...' : 'Enviar por WhatsApp'}
+                      {sending ? 'Enviando...' : '💬 Enviar por WhatsApp'}
                     </button>
                     <button onClick={() => handleSend(detailData.id, ['email', 'whatsapp'])} disabled={sending}
-                      className="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                      Ambos
+                      className="flex-1 min-w-[140px] px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                      📨 Ambos
                     </button>
                     <button onClick={() => handleDelete(detailData.id)}
-                      className="px-3 py-2 text-xs font-semibold text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                      className="px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                       Eliminar
                     </button>
                   </>
                 )}
                 <button onClick={() => setShowDetail(null)}
-                  className="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  className="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                   Cerrar
                 </button>
               </div>

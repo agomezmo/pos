@@ -36,6 +36,7 @@ function getChromePath(): string | undefined {
 
 export async function getClient(): Promise<Client | null> {
   if (client && isReady) return client;
+  if (client) return null; // already initialized but not ready (e.g. waiting for QR scan)
   if (initializing) return null;
 
   initializing = true;
@@ -135,6 +136,7 @@ export async function getClient(): Promise<Client | null> {
     }
     clearTimeout(timeout);
 
+    initializing = false;
     return client;
   } catch (err: any) {
     console.error('❌ WhatsApp client initialization error:', err.message);
@@ -157,17 +159,27 @@ export async function sendWaMessage(to: string, message: string): Promise<{ succ
 
     // Format phone: remove any non-digit chars, ensure country code
     let cleanPhone = to.replace(/\D/g, '');
-    // If it's a 10-digit Mexican number, add 52
     if (cleanPhone.length === 10) {
       cleanPhone = '52' + cleanPhone;
     }
-    // If it's a 10-digit with +52 prefix already
-    if (cleanPhone.length === 12 && cleanPhone.startsWith('52')) {
-      // good
+
+    // First check if the number exists on WhatsApp
+    let waNumberId: any;
+    try {
+      waNumberId = await c.getNumberId(cleanPhone);
+    } catch (checkErr: any) {
+      console.error(`Error checking number ${cleanPhone}:`, checkErr.message);
     }
 
-    const waId = `${cleanPhone}@c.us`;
-    await c.sendMessage(waId, message);
+    if (!waNumberId) {
+      console.warn(`⚠️ Number ${cleanPhone} does not appear to be registered on WhatsApp`);
+      return { success: false, error: `El número ${to} no está registrado en WhatsApp` };
+    }
+
+    // waNumberId already has the correct format (e.g., 525632139541@c.us)
+    console.log(`📤 Sending WhatsApp message to ${waNumberId}...`);
+    await c.sendMessage(waNumberId, message);
+    console.log(`✅ WhatsApp message sent to ${waNumberId}`);
     return { success: true };
   } catch (err: any) {
     console.error('Error sending WhatsApp message:', err);
