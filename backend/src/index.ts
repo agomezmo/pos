@@ -21,6 +21,8 @@ import { patientsRouter } from './routes/patients';
 import { prescriptionsRouter } from './routes/prescriptions';
 import { alertsRouter } from './routes/alerts';
 import { appointmentsRouter } from './routes/appointments';
+import { campaignsRouter } from './routes/campaigns';
+import { whatsappRouter } from './routes/whatsapp';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -55,6 +57,8 @@ app.use('/api/patients', patientsRouter);
 app.use('/api/prescriptions', prescriptionsRouter);
 app.use('/api/alerts', alertsRouter);
 app.use('/api/appointments', appointmentsRouter);
+app.use('/api/campaigns', campaignsRouter);
+app.use('/api/whatsapp', whatsappRouter);
 
 app.use(errorHandler);
 

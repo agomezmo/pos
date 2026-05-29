@@ -37,8 +37,18 @@ services:
       JWT_EXPIRES_IN: "24h"
       PORT: 4000
       NODE_ENV: production
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Farmacia}
+      WHATSAPP_API_URL: ${WHATSAPP_API_URL:-}
+      WHATSAPP_API_TOKEN: ${WHATSAPP_API_TOKEN:-}
     ports:
       - "4000:4000"
+    volumes:
+      - wa_auth:/app/whatsapp-auth
     depends_on:
       db:
         condition: service_healthy
@@ -58,3 +68,4 @@ services:
 
 volumes:
   pos_data:
+  wa_auth:

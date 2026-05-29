@@ -77,7 +77,7 @@ facturasRouter.post('/generate', authenticate, async (req: Request, res: Respons
       [
         saleId, folio, serie,
         c.rfc, c.name, c.regimenfiscalcode || '601', c.codigopostal,
-        s.customer_rfc || 'XAXX010101000', s.razonsocial || s.customer_name, s.usocfdiid || 'G01', s.customer_cp,
+        s.customer_rfc || 'XAXX010101000', s.razonsocial || s.customer_name || 'Consumidor Final', s.usocfdiid || 'G01', s.customer_cp,
         s.subtotal, s.discount, s.tax, s.total,
         s.paymentmethod === 'Efectivo' ? '01' : '99',
         'PUE', c.codigopostal, req.user!.userId

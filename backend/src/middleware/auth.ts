@@ -40,7 +40,8 @@ export function authorize(...roles: string[]) {
     if (!req.user) {
       return next(new AppError('Authentication required', 401, 'AUTH_REQUIRED'));
     }
-    if (roles.length > 0 && !roles.includes(req.user.role)) {
+    const userRole = req.user.role.toLowerCase();
+    if (roles.length > 0 && !roles.some(r => r.toLowerCase() === userRole)) {
       return next(new AppError('Insufficient permissions', 403, 'FORBIDDEN'));
     }
     next();
