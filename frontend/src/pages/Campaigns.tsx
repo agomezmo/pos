@@ -218,258 +218,170 @@ export default function Campaigns() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* NUEVA CAMPAÑA — full-page view integrated into POS module          */}
+      {/* NUEVA CAMPAÑA — Elegant modal like User creation                    */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 z-[1000] flex items-start justify-center overflow-y-auto py-6"
-          onClick={e => { if (e.target === e.currentTarget) setShowForm(false); }}>
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl mx-4"
-            onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowForm(false); }}>
+          <div className="modal modal-xl" onClick={e => e.stopPropagation()}>
 
-            {/* header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <div>
-                <h2 className="text-xl font-bold text-gray-800">Nueva campaña</h2>
-                <p className="text-sm text-gray-500 mt-0.5">Completa los datos para crear la promoción</p>
-              </div>
-              <button onClick={() => setShowForm(false)}
-                className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
-            </div>
+            <h2>Nueva campaña</h2>
+            <p className="subtitle">Completa los datos para crear la promoción</p>
 
             <form onSubmit={handleCreate}>
-              <div className="px-6 py-5 space-y-6">
+              <div className="form-row">
+                <div className="form-group" style={{ flex: 2 }}>
+                  <label>Nombre de la campaña *</label>
+                  <input required value={form.name}
+                    onChange={e => setForm({ ...form, name: e.target.value })}
+                    placeholder="Ej: Ofertas de temporada" />
+                </div>
+                <div className="form-group">
+                  <label>Tipo de oferta</label>
+                  <select value={form.offer_type}
+                    onChange={e => setForm({ ...form, offer_type: e.target.value })}>
+                    {OFFER_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+              </div>
 
-                {/* ── Basic info row ───────────────────────────────────────── */}
-                <div className="grid grid-cols-3 gap-5">
-                  <div className="col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nombre de la campaña *</label>
-                    <input required value={form.name}
-                      onChange={e => setForm({ ...form, name: e.target.value })}
-                      placeholder="Ej: Ofertas de temporada"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" />
+              <div className="form-row">
+                {form.offer_type !== 'cost_price' && (
+                  <div className="form-group">
+                    <label>{form.offer_type === 'percentage' ? 'Descuento %' : 'Precio fijo ($)'}</label>
+                    <input type="number" step="0.01" min="0" value={form.offer_value}
+                      onChange={e => setForm({ ...form, offer_value: Number(e.target.value) })} />
                   </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tipo de oferta</label>
-                    <select value={form.offer_type}
-                      onChange={e => setForm({ ...form, offer_type: e.target.value })}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none">
-                      {OFFER_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                    </select>
+                )}
+                <div className="form-group" style={form.offer_type === 'cost_price' ? { flex: 2 } : {}}>
+                  <label>Días para caducar</label>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <input type="number" min="1" value={form.min_expiry_days}
+                      onChange={e => setForm({ ...form, min_expiry_days: Number(e.target.value) })} />
+                    <span style={{ color: '#9ca3af', fontWeight: 500 }}>—</span>
+                    <input type="number" min="1" value={form.max_expiry_days}
+                      onChange={e => setForm({ ...form, max_expiry_days: Number(e.target.value) })} />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Notas</label>
+                  <input value={form.notes}
+                    onChange={e => setForm({ ...form, notes: e.target.value })}
+                    placeholder="Opcional" />
+                </div>
+              </div>
+
+              {/* Tabs for Products / Customers */}
+              <div style={{ display: 'flex', gap: '0.5rem', margin: '1rem 0 0.5rem' }}>
+                <span style={{ fontWeight: 700, color: '#374151', fontSize: '0.85rem' }}>Productos</span>
+                <span style={{ color: '#9ca3af' }}>|</span>
+                <span style={{ fontWeight: 700, color: '#374151', fontSize: '0.85rem' }}>Clientes</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                {/* ── PRODUCTOS ──────────────────────────────────────────── */}
+                <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#374151' }}>Selección</span>
+                    <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{form.product_ids.length}/{products.length}</span>
+                  </div>
+                  <input type="text" placeholder="Buscar producto..."
+                    value={productSearch}
+                    onChange={e => { setProductSearch(e.target.value); setActiveCategory(''); }}
+                    style={{ width: '100%', padding: '0.4rem 0.6rem', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.8rem', marginBottom: '0.5rem', boxSizing: 'border-box' }} />
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginBottom: '0.5rem' }}>
+                    <button type="button" onClick={selectAllProducts} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>Todos</button>
+                    <button type="button" onClick={() => selectExpiringSoon(7)} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', background: '#fef2f2', color: '#dc2626' }}>7d</button>
+                    <button type="button" onClick={() => selectExpiringSoon(15)} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', background: '#fff7ed', color: '#ea580c' }}>15d</button>
+                    <button type="button" onClick={() => selectExpiringSoon(30)} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', background: '#fffbeb', color: '#d97706' }}>30d</button>
+                    <button type="button" onClick={deselectAllProducts} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>Limpiar</button>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                    <button type="button" onClick={() => setActiveCategory('')}
+                      className="btn-sm" style={{ fontSize: '0.65rem', padding: '0.15rem 0.5rem', background: !activeCategory ? '#1f2937' : '#f3f4f6', color: !activeCategory ? '#fff' : '#6b7280' }}>Todas</button>
+                    {categories.map(cat => (
+                      <button key={cat} type="button" onClick={() => { setActiveCategory(cat); setProductSearch(''); }}
+                        className="btn-sm" style={{ fontSize: '0.65rem', padding: '0.15rem 0.5rem', background: activeCategory === cat ? (CATEGORY_COLORS[cat] || '#6b7280') : '#f3f4f6', color: activeCategory === cat ? '#fff' : '#6b7280' }}>
+                        {cat} {categoryCounts[cat] || 0}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
+                    {filteredProducts.length === 0 ? (
+                      <p style={{ textAlign: 'center', padding: '2rem', color: '#d1d5db', fontSize: '0.8rem' }}>Sin resultados</p>
+                    ) : (
+                      filteredProducts.map(p => {
+                        const days = p.expiry_date ? Math.ceil((new Date(p.expiry_date).getTime() - Date.now()) / 86400000) : 0;
+                        const sel = form.product_ids.includes(p.id);
+                        return (
+                          <div key={p.id} onClick={() => toggleProduct(p.id)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.6rem', cursor: 'pointer', borderBottom: '1px solid #f3f4f6', fontSize: '0.8rem', background: sel ? '#f0fdf4' : 'transparent' }}>
+                            <input type="checkbox" checked={sel} readOnly style={{ accentColor: '#16a34a', width: '14px', height: '14px', pointerEvents: 'none' }} />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: sel ? 600 : 400 }}>{p.name}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
+                              {days > 0 && days <= 30 && (
+                                <span style={{ fontSize: '0.65rem', fontWeight: 700, padding: '0.1rem 0.3rem', borderRadius: '4px',
+                                  background: days <= 7 ? '#fef2f2' : days <= 15 ? '#fff7ed' : '#fffbeb',
+                                  color: days <= 7 ? '#dc2626' : days <= 15 ? '#ea580c' : '#d97706' }}>{days}d</span>
+                              )}
+                              <span style={{ fontSize: '0.7rem', color: '#9ca3af', textDecoration: 'line-through' }}>${Number(p.saleprice).toFixed(2)}</span>
+                              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#16a34a' }}>${Number(p.purchaseprice).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </div>
 
-                {/* ── Details row ──────────────────────────────────────────── */}
-                <div className="grid grid-cols-4 gap-5">
-                  {form.offer_type !== 'cost_price' && (
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                        {form.offer_type === 'percentage' ? 'Descuento %' : 'Precio fijo ($)'}
-                      </label>
-                      <input type="number" step="0.01" min="0" value={form.offer_value}
-                        onChange={e => setForm({ ...form, offer_value: Number(e.target.value) })}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
-                    </div>
-                  )}
-                  <div className={form.offer_type === 'cost_price' ? 'col-span-2' : ''}>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Días para caducar</label>
-                    <div className="flex items-center gap-2">
-                      <input type="number" min="1" value={form.min_expiry_days}
-                        onChange={e => setForm({ ...form, min_expiry_days: Number(e.target.value) })}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
-                      <span className="text-gray-400 font-medium">—</span>
-                      <input type="number" min="1" value={form.max_expiry_days}
-                        onChange={e => setForm({ ...form, max_expiry_days: Number(e.target.value) })}
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
-                    </div>
+                {/* ── CLIENTES ───────────────────────────────────────────── */}
+                <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#374151' }}>Selección</span>
+                    <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{form.customer_ids.length}/{customers.length}</span>
                   </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Notas</label>
-                    <input value={form.notes}
-                      onChange={e => setForm({ ...form, notes: e.target.value })}
-                      placeholder="Opcional"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
+                  <input type="text" placeholder="Buscar cliente..."
+                    value={customerSearch}
+                    onChange={e => setCustomerSearch(e.target.value)}
+                    style={{ width: '100%', padding: '0.4rem 0.6rem', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '0.8rem', marginBottom: '0.5rem', boxSizing: 'border-box' }} />
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginBottom: '0.5rem' }}>
+                    <button type="button" onClick={selectAllCustomers} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>Todos</button>
+                    <button type="button" onClick={selectWithEmail} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', background: '#eff6ff', color: '#2563eb' }}>Email</button>
+                    <button type="button" onClick={selectWithPhone} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem', background: '#ecfdf5', color: '#059669' }}>Tel</button>
+                    <button type="button" onClick={deselectAllCustomers} className="btn-sm" style={{ fontSize: '0.7rem', padding: '0.2rem 0.6rem' }}>Limpiar</button>
                   </div>
-                </div>
-
-                {/* ── Products + Customers side by side ────────────────────── */}
-                <div className="grid grid-cols-2 gap-6">
-
-                  {/* ── PRODUCTOS ──────────────────────────────────────────── */}
-                  <div className="card !p-4 !mb-0">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-bold text-gray-700">Productos</span>
-                      <span className="text-xs text-gray-400 font-medium">{form.product_ids.length}/{products.length} seleccionados</span>
-                    </div>
-
-                    <div className="relative mb-3">
-                      <input placeholder="Buscar producto por nombre..." value={productSearch}
-                        onChange={e => { setProductSearch(e.target.value); setActiveCategory(''); }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
-                    </div>
-
-                    {/* Quick filters */}
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      <button type="button" onClick={selectAllProducts}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors">Todos</button>
-                      <button type="button" onClick={() => selectExpiringSoon(7)}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-colors">Próximos 7 días</button>
-                      <button type="button" onClick={() => selectExpiringSoon(15)}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 border border-orange-200 transition-colors">15 días</button>
-                      <button type="button" onClick={() => selectExpiringSoon(30)}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 transition-colors">30 días</button>
-                      <button type="button" onClick={deselectAllProducts}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200 transition-colors">Limpiar</button>
-                    </div>
-
-                    {/* Category pills */}
-                    <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
-                      <button type="button" onClick={() => setActiveCategory('')}
-                        className={`whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-full transition-colors ${
-                          !activeCategory ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                        }`}>Todas</button>
-                      {categories.map(cat => (
-                        <button key={cat} type="button" onClick={() => { setActiveCategory(cat); setProductSearch(''); }}
-                          className={`whitespace-nowrap text-xs font-semibold px-3 py-1 rounded-full transition-colors ${
-                            activeCategory === cat ? 'text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                          }`}
-                          style={activeCategory === cat ? { backgroundColor: CATEGORY_COLORS[cat] || '#6b7280' } : {}}>
-                          {cat} {categoryCounts[cat] || 0}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Product list */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden max-h-72 overflow-y-auto">
-                      {filteredProducts.length === 0 ? (
-                        <p className="text-center py-8 text-gray-300 text-sm">Sin resultados</p>
-                      ) : (
-                        filteredProducts.map(p => {
-                          const days = p.expiry_date ? Math.ceil((new Date(p.expiry_date).getTime() - Date.now()) / 86400000) : 0;
-                          const sel = form.product_ids.includes(p.id);
-                          return (
-                            <div key={p.id} onClick={() => toggleProduct(p.id)}
-                              className={`flex items-center gap-3 px-3.5 py-2.5 cursor-pointer border-b border-gray-100 last:border-0 text-sm transition-colors ${
-                                sel ? 'bg-green-50' : 'hover:bg-gray-50'
-                              }`}>
-                              <input type="checkbox" checked={sel} readOnly
-                                className="accent-green-600 w-4 h-4 pointer-events-none shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <span className={`block truncate ${sel ? 'font-semibold text-gray-800' : 'text-gray-700'}`}>{p.name}</span>
-                                <span className="text-xs text-gray-400 font-mono">{p.code}</span>
-                              </div>
-                              <div className="flex items-center gap-2 shrink-0">
-                                {days > 0 ? (
-                                  <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-                                    days <= 7 ? 'bg-red-50 text-red-600' :
-                                    days <= 15 ? 'bg-orange-50 text-orange-600' :
-                                    'bg-amber-50 text-amber-600'
-                                  }`}>{days}d</span>
-                                ) : (
-                                  <span className="text-xs font-medium text-red-400">Vencido</span>
-                                )}
-                                <span className="text-xs text-gray-400 line-through">${Number(p.saleprice).toFixed(2)}</span>
-                                <span className="text-xs font-bold text-green-600">${Number(p.purchaseprice).toFixed(2)}</span>
-                              </div>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '6px' }}>
+                    {filteredCustomers.length === 0 ? (
+                      <p style={{ textAlign: 'center', padding: '2rem', color: '#d1d5db', fontSize: '0.8rem' }}>Sin resultados</p>
+                    ) : (
+                      filteredCustomers.map(c => {
+                        const sel = form.customer_ids.includes(c.id);
+                        return (
+                          <div key={c.id} onClick={() => toggleCustomer(c.id)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.6rem', cursor: 'pointer', borderBottom: '1px solid #f3f4f6', fontSize: '0.8rem', background: sel ? '#eff6ff' : 'transparent' }}>
+                            <input type="checkbox" checked={sel} readOnly style={{ accentColor: '#2563eb', width: '14px', height: '14px', pointerEvents: 'none' }} />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: sel ? 600 : 400 }}>{c.fullname}</span>
                             </div>
-                          );
-                        })
-                      )}
-                    </div>
-                  </div>
-
-                  {/* ── CLIENTES ───────────────────────────────────────────── */}
-                  <div className="card !p-4 !mb-0">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-bold text-gray-700">Clientes</span>
-                      <span className="text-xs text-gray-400 font-medium">{form.customer_ids.length}/{customers.length} seleccionados</span>
-                    </div>
-
-                    <div className="relative mb-3">
-                      <input placeholder="Buscar cliente por nombre..." value={customerSearch}
-                        onChange={e => setCustomerSearch(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none" />
-                    </div>
-
-                    {/* Stats + quick buttons */}
-                    <div className="flex gap-2 mb-3">
-                      <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center border border-gray-100">
-                        <p className="text-sm font-bold text-blue-600">{customers.filter(c => c.email).length}</p>
-                        <p className="text-xs text-gray-400 font-medium">Con email</p>
-                      </div>
-                      <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center border border-gray-100">
-                        <p className="text-sm font-bold text-emerald-600">{customers.filter(c => c.phone).length}</p>
-                        <p className="text-xs text-gray-400 font-medium">Con teléfono</p>
-                      </div>
-                      <div className="flex-1 bg-gray-50 rounded-lg px-3 py-2 text-center border border-gray-100">
-                        <p className="text-sm font-bold text-purple-600">{customers.length}</p>
-                        <p className="text-xs text-gray-400 font-medium">Total</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      <button type="button" onClick={selectAllCustomers}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 transition-colors">Todos</button>
-                      <button type="button" onClick={selectWithEmail}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 transition-colors">Con email</button>
-                      <button type="button" onClick={selectWithPhone}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 transition-colors">Con teléfono</button>
-                      <button type="button" onClick={deselectAllCustomers}
-                        className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-200 transition-colors">Limpiar</button>
-                    </div>
-
-                    {/* Customer list */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden max-h-72 overflow-y-auto">
-                      {filteredCustomers.length === 0 ? (
-                        <p className="text-center py-8 text-gray-300 text-sm">Sin resultados</p>
-                      ) : (
-                        filteredCustomers.map(c => {
-                          const sel = form.customer_ids.includes(c.id);
-                          return (
-                            <div key={c.id} onClick={() => toggleCustomer(c.id)}
-                              className={`flex items-center gap-3 px-3.5 py-2.5 cursor-pointer border-b border-gray-100 last:border-0 text-sm transition-colors ${
-                                sel ? 'bg-blue-50' : 'hover:bg-gray-50'
-                              }`}>
-                              <input type="checkbox" checked={sel} readOnly
-                                className="accent-blue-600 w-4 h-4 pointer-events-none shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <span className={`block truncate ${sel ? 'font-semibold text-gray-800' : 'text-gray-700'}`}>{c.fullname}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 shrink-0">
-                                {c.email && (
-                                  <span className="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-medium">
-                                    {c.email.length > 20 ? c.email.substring(0, 18) + '…' : c.email}
-                                  </span>
-                                )}
-                                {c.phone && (
-                                  <span className="text-xs bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded font-medium">
-                                    {c.phone}
-                                  </span>
-                                )}
-                              </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
+                              {c.email && <span style={{ fontSize: '0.65rem', background: '#eff6ff', color: '#2563eb', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>@</span>}
+                              {c.phone && <span style={{ fontSize: '0.65rem', background: '#ecfdf5', color: '#059669', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>📞</span>}
                             </div>
-                          );
-                        })
-                      )}
-                    </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Footer */}
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
-                <span className="text-sm text-gray-400">
-                  {form.name && form.product_ids.length > 0 && form.customer_ids.length > 0
-                    ? '✓ Completo — puedes crear la campaña'
-                    : 'Faltan campos por llenar'}
-                </span>
-                <div className="flex gap-3">
-                  <button type="button" onClick={() => setShowForm(false)}
-                    className="px-5 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
-                  <button type="submit"
-                    disabled={!form.name || form.product_ids.length === 0 || form.customer_ids.length === 0}
-                    className="px-6 py-2.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
-                    Crear campaña
-                  </button>
-                </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setShowForm(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary"
+                  disabled={!form.name || form.product_ids.length === 0 || form.customer_ids.length === 0}>
+                  Crear campaña
+                </button>
               </div>
             </form>
           </div>
