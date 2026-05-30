@@ -28,10 +28,17 @@ export default function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>POS Farmacia</h1>
+        <div className="logo">⚕️</div>
+        <h1>Farmacia</h1>
         <h2>Sistema de Punto de Venta</h2>
+
         <form onSubmit={handleSubmit}>
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="error-message">
+              <span>⚠️</span> {error}
+            </div>
+          )}
+
           <div className="form-group">
             <label htmlFor="username">Usuario</label>
             <input
@@ -41,8 +48,10 @@ export default function Login() {
               onChange={(e) => setUsername(e.target.value)}
               required
               autoFocus
+              placeholder="Ingresa tu usuario"
             />
           </div>
+
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -51,8 +60,10 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder="Ingresa tu contraseña"
             />
           </div>
+
           <button type="submit" disabled={loading} className="btn-primary">
             {loading ? 'Ingresando...' : 'Iniciar Sesión'}
           </button>

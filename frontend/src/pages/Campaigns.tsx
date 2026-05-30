@@ -102,14 +102,29 @@ export default function Campaigns() {
     catch (err) { console.error(err); }
   };
 
-  const handleSend = async (id: number, channels: string[]) => {
-    if (!confirm('Enviar esta campaña?')) return;
+  const [sendChannels, setSendChannels] = useState({ email: false, whatsapp: false });
+  const [showSendModal, setShowSendModal] = useState(false);
+  const [sendCampaignId, setSendCampaignId] = useState<number | null>(null);
+
+  const openSendModal = (id: number, hasEmail: boolean, hasPhone: boolean) => {
+    setSendCampaignId(id);
+    setSendChannels({ email: hasEmail, whatsapp: hasPhone });
+    setShowSendModal(true);
+  };
+
+  const handleSend = async () => {
+    const channels = [];
+    if (sendChannels.email) channels.push('email');
+    if (sendChannels.whatsapp) channels.push('whatsapp');
+    if (channels.length === 0) { alert('Selecciona al menos un canal de envío'); return; }
+    if (!confirm(`Enviar esta campaña por ${channels.map(c => c === 'email' ? 'Email' : 'WhatsApp').join(' y ')}?`)) return;
     setSending(true);
+    setShowSendModal(false);
     try {
-      const r = await api.post(`/campaigns/${id}/send`, { channels });
+      const r = await api.post(`/campaigns/${sendCampaignId}/send`, { channels });
       alert(r.data.message); viewDetail(showDetail!); loadCampaigns();
     } catch (err: any) { alert(err.response?.data?.error?.message || err.response?.data?.error || 'Error al enviar'); }
-    finally { setSending(false); }
+    finally { setSending(false); setSendCampaignId(null); }
   };
 
   const handleDelete = async (id: number) => {
@@ -163,38 +178,41 @@ export default function Campaigns() {
           <p className="text-center py-12 text-gray-400 text-sm">No hay campañas. Crea la primera.</p>
         ) : (
           <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Nombre</th>
-                <th className="text-left py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Estado</th>
-                <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Prod.</th>
-                <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Clientes</th>
-                <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Env.</th>
-                <th className="text-left py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Creada</th>
-                <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {campaigns.map(c => (
-                <tr key={c.id} onClick={() => viewDetail(c)}
-                  className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer last:border-0 transition-colors">
-                  <td className="py-3 px-4 font-medium text-gray-800">{c.name}</td>
-                  <td className="py-3 px-4">{badge(c.status)}</td>
-                  <td className="py-3 px-4 text-center text-gray-700">{c.product_count}</td>
-                  <td className="py-3 px-4 text-center text-gray-700">{c.customer_count}</td>
-                  <td className="py-3 px-4 text-center text-gray-700">{c.sent_count}</td>
-                  <td className="py-3 px-4 text-gray-500 text-sm">{fDate(c.created_at)}</td>
-                  <td className="py-3 px-4 text-center">
-                    {c.status === 'draft' && (
-                      <button onClick={e => { e.stopPropagation(); handleSend(c.id, ['email']); }}
-                        className="text-xs font-semibold text-green-600 bg-green-50 hover:bg-green-100 px-2.5 py-1.5 rounded-lg transition-colors">
-                        Enviar
-                      </button>
-                    )}
-                  </td>
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="text-left py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Nombre</th>
+                  <th className="text-left py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Estado</th>
+                  <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Prod.</th>
+                  <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Clientes</th>
+                  <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Env.</th>
+                  <th className="text-left py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Creada</th>
+                  <th className="text-center py-3 px-4 text-gray-500 font-semibold text-xs uppercase">Envío</th>
                 </tr>
-              ))}
-            </tbody>
+              </thead>
+              <tbody>
+                {campaigns.map(c => (
+                  <tr key={c.id} onClick={() => viewDetail(c)}
+                    className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer last:border-0 transition-colors">
+                    <td className="py-3 px-4 font-medium text-gray-800">{c.name}</td>
+                    <td className="py-3 px-4">{badge(c.status)}</td>
+                    <td className="py-3 px-4 text-center text-gray-700">{c.product_count}</td>
+                    <td className="py-3 px-4 text-center text-gray-700">{c.customer_count}</td>
+                    <td className="py-3 px-4 text-center text-gray-700">{c.sent_count}</td>
+                    <td className="py-3 px-4 text-gray-500 text-sm">{fDate(c.created_at)}</td>
+                    <td className="py-3 px-4 text-center">
+                      {c.status === 'draft' && (
+                        <button onClick={e => { e.stopPropagation(); openSendModal(c.id, true, true); }}
+                          className="text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-colors border border-emerald-200">
+                          Enviar
+                        </button>
+                      )}
+                      {c.status === 'completed' && (
+                        <span className="text-xs text-gray-400">✓ Enviada</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
           </table>
         )}
       </div>
@@ -607,30 +625,72 @@ export default function Campaigns() {
               <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
                 {detailData.status === 'draft' && (
                   <>
-                    <button onClick={() => handleSend(detailData.id, ['email'])} disabled={sending}
-                      className="flex-1 min-w-[140px] px-5 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-40 shadow-sm">
-                      {sending ? 'Enviando...' : '📧 Enviar por Email'}
-                    </button>
-                    <button onClick={() => handleSend(detailData.id, ['whatsapp'])} disabled={sending}
-                      className="flex-1 min-w-[140px] px-5 py-2.5 text-sm font-bold text-white rounded-lg transition-colors disabled:opacity-40 shadow-sm"
-                      style={{ background: '#25D366' }}>
-                      {sending ? 'Enviando...' : '💬 Enviar por WhatsApp'}
-                    </button>
-                    <button onClick={() => handleSend(detailData.id, ['email', 'whatsapp'])} disabled={sending}
-                      className="flex-1 min-w-[140px] px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-                      📨 Ambos
+                    <button onClick={() => { setSendCampaignId(detailData.id); setShowSendModal(true); }} disabled={sending}
+                      className="flex-1 min-w-[160px] px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all disabled:opacity-40 shadow-sm hover:shadow-md">
+                      {sending ? 'Enviando...' : '📨 Enviar Campaña'}
                     </button>
                     <button onClick={() => handleDelete(detailData.id)}
-                      className="px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                      className="px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-xl transition-colors border border-transparent hover:border-red-200">
                       Eliminar
                     </button>
                   </>
                 )}
                 <button onClick={() => setShowDetail(null)}
-                  className="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  className="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors">
                   Cerrar
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* SEND CHANNEL SELECTION MODAL                                         */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {showSendModal && (
+        <div className="fixed inset-0 bg-black/40 z-[1000] flex items-center justify-center p-4"
+          onClick={e => { if (e.target === e.currentTarget) setShowSendModal(false); }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6"
+            onClick={e => e.stopPropagation()}>
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Enviar campaña</h2>
+            <p className="text-sm text-gray-400 mb-5">Selecciona los canales para enviar esta campaña</p>
+
+            <div className="space-y-3 mb-6">
+              <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                sendChannels.email ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input type="checkbox" checked={sendChannels.email}
+                  onChange={e => setSendChannels({ ...sendChannels, email: e.target.checked })}
+                  className="accent-emerald-600 w-5 h-5 shrink-0" />
+                <div className="flex-1">
+                  <span className="block font-semibold text-gray-800 text-sm">📧 Email</span>
+                  <span className="block text-xs text-gray-400 mt-0.5">Los clientes con correo electrónico recibirán una plantilla HTML</span>
+                </div>
+              </label>
+
+              <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                sendChannels.whatsapp ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input type="checkbox" checked={sendChannels.whatsapp}
+                  onChange={e => setSendChannels({ ...sendChannels, whatsapp: e.target.checked })}
+                  className="accent-emerald-600 w-5 h-5 shrink-0" />
+                <div className="flex-1">
+                  <span className="block font-semibold text-gray-800 text-sm">💬 WhatsApp</span>
+                  <span className="block text-xs text-gray-400 mt-0.5">Los clientes con teléfono recibirán un mensaje de texto</span>
+                </div>
+              </label>
+            </div>
+
+            <div className="flex gap-3">
+              <button onClick={() => setShowSendModal(false)}
+                className="flex-1 px-5 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                Cancelar
+              </button>
+              <button onClick={handleSend} disabled={!sendChannels.email && !sendChannels.whatsapp}
+                className="flex-1 px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all disabled:opacity-40 shadow-sm">
+                Enviar ahora
+              </button>
             </div>
           </div>
         </div>
