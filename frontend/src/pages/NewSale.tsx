@@ -10,6 +10,7 @@ interface CartItem {
   unitprice: number;
   subtotal: number;
   requiresprescription: boolean;
+  requires_tax: boolean;
 }
 
 interface Customer { id: number; fullname: string; rfc: string; }
@@ -41,7 +42,7 @@ export default function NewSale() {
   const [barcode, setBarcode] = useState('');
 
   const subtotal = cart.reduce((sum, item) => sum + item.subtotal, 0);
-  const tax = cart.reduce((sum, item) => sum + (item.subtotal * 0.16), 0);
+  const tax = cart.reduce((sum, item) => sum + (item.requires_tax ? item.subtotal * 0.16 : 0), 0);
   const total = subtotal + tax - discount;
   const receivedNum = parseFloat(amountReceived) || 0;
   const change = Math.max(0, receivedNum - total);
@@ -105,6 +106,7 @@ export default function NewSale() {
         );
       }
       const price = Number(product.saleprice);
+      const taxable = product.requires_tax === true || product.requires_tax === 'true';
       return [...prev, {
         productid: product.id,
         code: product.code,
@@ -113,6 +115,7 @@ export default function NewSale() {
         unitprice: price,
         subtotal: price,
         requiresprescription: product.requiresprescription,
+        requires_tax: taxable,
       }];
     });
     setSearch('');
