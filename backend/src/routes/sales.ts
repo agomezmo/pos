@@ -15,8 +15,8 @@ salesRouter.get('/', authenticate, async (req: Request, res: Response, next: Nex
     const params: any[] = [];
     let idx = 1;
 
-    if (startdate) { query += ` AND s.createdat >= $${idx++}`; params.push(startdate); }
-    if (enddate) { query += ` AND s.createdat <= $${idx++}`; params.push(enddate); }
+    if (startdate) { query += ` AND s.createdat >= $${idx++}::date`; params.push(startdate); }
+    if (enddate) { query += ` AND s.createdat < ($${idx++}::date + '1 day'::interval)`; params.push(enddate); }
 
     query += ` ORDER BY s.createdat DESC LIMIT $${idx++} OFFSET $${idx++}`;
     params.push(parseInt(limit as string), offset);
