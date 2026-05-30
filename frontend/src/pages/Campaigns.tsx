@@ -389,169 +389,159 @@ export default function Campaigns() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* DETALLE DE CAMPAÑA                                                    */}
+      {/* DETALLE DE CAMPAÑA — Elegant modal                                  */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showDetail && (
-        <div className="fixed inset-0 bg-black/40 z-[1000] flex items-start justify-center overflow-y-auto py-6"
-          onClick={e => { if (e.target === e.currentTarget) setShowDetail(null); }}>
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-4"
-            onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowDetail(null); }}>
+          <div className="modal modal-xl" onClick={e => e.stopPropagation()}>
 
-            {/* header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-bold text-gray-800">{detailData.name}</h2>
-                  {badge(detailData.status)}
-                </div>
-                <p className="text-sm text-gray-500 mt-0.5">{detailData.description || 'Sin descripción'}</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <h2 style={{ margin: 0 }}>{detailData.name}</h2>
+                {badge(detailData.status)}
               </div>
               <button onClick={() => setShowDetail(null)}
                 className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
             </div>
+            <p className="subtitle">{detailData.description || 'Sin descripción'}</p>
 
-            <div className="px-6 py-5 space-y-6">
-
-              {/* Info cards */}
-              <div className="grid grid-cols-4 gap-4">
-                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tipo</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-1">{OFFER_TYPES.find(t => t.value === detailData.offer_type)?.label || detailData.offer_type}</p>
-                </div>
-                {detailData.offer_value > 0 && (
-                  <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
-                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Valor</p>
-                    <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.offer_type === 'percentage' ? `${detailData.offer_value}%` : `$${detailData.offer_value}`}</p>
-                  </div>
-                )}
-                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Vencimiento</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.min_expiry_days}–{detailData.max_expiry_days} días</p>
-                </div>
-                <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Creada por</p>
-                  <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.created_by_name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{fDate(detailData.created_at)}</p>
-                </div>
+            {/* Info cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: detailData.offer_value > 0 ? '1fr 1fr 1fr 1fr' : '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Tipo</p>
+                <p className="text-sm font-semibold text-gray-800 mt-1">{OFFER_TYPES.find(t => t.value === detailData.offer_type)?.label || detailData.offer_type}</p>
               </div>
-
-              {detailData.notes && (
+              {detailData.offer_value > 0 && (
                 <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Notas</p>
-                  <p className="text-sm text-gray-700">{detailData.notes}</p>
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Valor</p>
+                  <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.offer_type === 'percentage' ? `${detailData.offer_value}%` : `$${detailData.offer_value}`}</p>
                 </div>
               )}
+              <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Vencimiento</p>
+                <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.min_expiry_days}–{detailData.max_expiry_days} días</p>
+              </div>
+              <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100">
+                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Creada por</p>
+                <p className="text-sm font-semibold text-gray-800 mt-1">{detailData.created_by_name}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{fDate(detailData.created_at)}</p>
+              </div>
+            </div>
 
-              {/* Products */}
-              <div>
-                <h3 className="text-sm font-bold text-gray-700 mb-3">Productos ({detailData.products?.length || 0})</h3>
+            {detailData.notes && (
+              <div className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-100" style={{ marginBottom: '1.25rem' }}>
+                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Notas</p>
+                <p className="text-sm text-gray-700">{detailData.notes}</p>
+              </div>
+            )}
+
+            {/* Products */}
+            <div style={{ marginBottom: '1.25rem' }}>
+              <h3 className="text-sm font-bold text-gray-700 mb-3">Productos ({detailData.products?.length || 0})</h3>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Producto</th>
+                      <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Precio</th>
+                      <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Oferta</th>
+                      <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Caduca</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {detailData.products?.map((p: any) => (
+                      <tr key={p.id} className="border-b border-gray-100 last:border-0">
+                        <td className="py-2.5 px-4 text-gray-700 text-sm">{p.product_name}</td>
+                        <td className="py-2.5 px-4 text-center text-gray-400 line-through text-sm">{fCur(p.original_price)}</td>
+                        <td className="py-2.5 px-4 text-center text-green-600 font-bold text-sm">{fCur(p.offer_price)}</td>
+                        <td className="py-2.5 px-4 text-center text-gray-500 text-sm">{p.expiry_date ? fDate(p.expiry_date) : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Customers */}
+            <div style={{ marginBottom: '1.25rem' }}>
+              <h3 className="text-sm font-bold text-gray-700 mb-3">Clientes ({detailData.customers?.length || 0})</h3>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Nombre</th>
+                      <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Email</th>
+                      <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Teléfono</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {detailData.customers?.map((c: any) => (
+                      <tr key={c.id} className="border-b border-gray-100 last:border-0">
+                        <td className="py-2.5 px-4 text-gray-700 text-sm">{c.customer_name}</td>
+                        <td className="py-2.5 px-4 text-blue-600 text-sm">{c.contact_email || '—'}</td>
+                        <td className="py-2.5 px-4 text-emerald-600 text-sm">{c.contact_phone || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Logs */}
+            {detailData.logs?.length > 0 && (
+              <div style={{ marginBottom: '1.25rem' }}>
+                <h3 className="text-sm font-bold text-gray-700 mb-3">Bitácora de envíos ({detailData.logs.length})</h3>
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Producto</th>
-                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Precio</th>
-                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Oferta</th>
-                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Caduca</th>
+                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Cliente</th>
+                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Canal</th>
+                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Destino</th>
+                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Estado</th>
+                        <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Fecha</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {detailData.products?.map((p: any) => (
-                        <tr key={p.id} className="border-b border-gray-100 last:border-0">
-                          <td className="py-2.5 px-4 text-gray-700 text-sm">{p.product_name}</td>
-                          <td className="py-2.5 px-4 text-center text-gray-400 line-through text-sm">{fCur(p.original_price)}</td>
-                          <td className="py-2.5 px-4 text-center text-green-600 font-bold text-sm">{fCur(p.offer_price)}</td>
-                          <td className="py-2.5 px-4 text-center text-gray-500 text-sm">{p.expiry_date ? fDate(p.expiry_date) : '—'}</td>
+                      {detailData.logs?.map((l: any) => (
+                        <tr key={l.id} className="border-b border-gray-100 last:border-0 text-sm">
+                          <td className="py-2.5 px-4 text-gray-700">{l.customer_name || '—'}</td>
+                          <td className="py-2.5 px-4 text-center">
+                            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                              l.channel === 'email' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
+                            }`}>{l.channel === 'email' ? 'Email' : 'WhatsApp'}</span>
+                          </td>
+                          <td className="py-2.5 px-4 text-gray-500 text-sm">{l.recipient}</td>
+                          <td className="py-2.5 px-4 text-center">
+                            {l.status === 'sent' ? <span className="text-green-600 font-semibold text-sm">✓ Enviado</span> :
+                             l.status === 'failed' ? <span className="text-red-500 font-semibold text-sm" title={l.error_message || ''}>✗ Falló</span> :
+                             <span className="text-gray-400 text-sm">— Pendiente</span>}
+                          </td>
+                          <td className="py-2.5 px-4 text-center text-gray-500 text-sm">{l.sent_at ? fDate(l.sent_at) : '—'}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               </div>
+            )}
 
-              {/* Customers */}
-              <div>
-                <h3 className="text-sm font-bold text-gray-700 mb-3">Clientes ({detailData.customers?.length || 0})</h3>
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Nombre</th>
-                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Email</th>
-                        <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Teléfono</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {detailData.customers?.map((c: any) => (
-                        <tr key={c.id} className="border-b border-gray-100 last:border-0">
-                          <td className="py-2.5 px-4 text-gray-700 text-sm">{c.customer_name}</td>
-                          <td className="py-2.5 px-4 text-blue-600 text-sm">{c.contact_email || '—'}</td>
-                          <td className="py-2.5 px-4 text-emerald-600 text-sm">{c.contact_phone || '—'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Logs */}
-              {detailData.logs?.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-bold text-gray-700 mb-3">Bitácora de envíos ({detailData.logs.length})</h3>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-gray-50 border-b border-gray-200">
-                          <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Cliente</th>
-                          <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Canal</th>
-                          <th className="text-left py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Destino</th>
-                          <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Estado</th>
-                          <th className="text-center py-2.5 px-4 text-gray-500 font-semibold text-xs uppercase">Fecha</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {detailData.logs?.map((l: any) => (
-                          <tr key={l.id} className="border-b border-gray-100 last:border-0 text-sm">
-                            <td className="py-2.5 px-4 text-gray-700">{l.customer_name || '—'}</td>
-                            <td className="py-2.5 px-4 text-center">
-                              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                                l.channel === 'email' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600'
-                              }`}>{l.channel === 'email' ? 'Email' : 'WhatsApp'}</span>
-                            </td>
-                            <td className="py-2.5 px-4 text-gray-500 text-sm">{l.recipient}</td>
-                            <td className="py-2.5 px-4 text-center">
-                              {l.status === 'sent' ? <span className="text-green-600 font-semibold text-sm">✓ Enviado</span> :
-                               l.status === 'failed' ? <span className="text-red-500 font-semibold text-sm" title={l.error_message || ''}>✗ Falló</span> :
-                               <span className="text-gray-400 text-sm">— Pendiente</span>}
-                            </td>
-                            <td className="py-2.5 px-4 text-center text-gray-500 text-sm">{l.sent_at ? fDate(l.sent_at) : '—'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+            <div className="modal-actions">
+              {detailData.status === 'draft' && (
+                <>
+                  <button onClick={() => handleDelete(detailData.id)}
+                    className="btn-secondary" style={{ color: 'var(--danger)', borderColor: 'transparent' }}>
+                    Eliminar
+                  </button>
+                  <button onClick={() => { setSendCampaignId(detailData.id); setShowSendModal(true); }} disabled={sending}
+                    className="btn-primary">
+                    {sending ? 'Enviando...' : 'Enviar Campaña'}
+                  </button>
+                </>
               )}
-
-              {/* Actions */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
-                {detailData.status === 'draft' && (
-                  <>
-                    <button onClick={() => { setSendCampaignId(detailData.id); setShowSendModal(true); }} disabled={sending}
-                      className="flex-1 min-w-[160px] px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all disabled:opacity-40 shadow-sm hover:shadow-md">
-                      {sending ? 'Enviando...' : '📨 Enviar Campaña'}
-                    </button>
-                    <button onClick={() => handleDelete(detailData.id)}
-                      className="px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-xl transition-colors border border-transparent hover:border-red-200">
-                      Eliminar
-                    </button>
-                  </>
-                )}
-                <button onClick={() => setShowDetail(null)}
-                  className="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors">
-                  Cerrar
-                </button>
-              </div>
+              <button onClick={() => setShowDetail(null)} className="btn-secondary">
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
