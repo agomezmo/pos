@@ -1,4 +1,6 @@
 import { Client, LocalAuth } from 'whatsapp-web.js';
+import * as fs from 'fs';
+import * as path from 'path';
 
 let client: Client | null = null;
 let isReady = false;
@@ -17,6 +19,22 @@ const STATUS = {
 let status = STATUS.UNINITIALIZED;
 let errorMessage: string | null = null;
 
+function cleanupStaleLocks(): void {
+  const sessionDir = '/app/whatsapp-auth/session';
+  try {
+    if (!fs.existsSync(sessionDir)) return;
+    const files = fs.readdirSync(sessionDir);
+    for (const file of files) {
+      if (file.startsWith('Singleton') || file.startsWith('LOCK')) {
+        try {
+          fs.unlinkSync(path.join(sessionDir, file));
+          console.log(`🧹 Removed stale Chromium lock: ${file}`);
+        } catch { /* file may already be gone */ }
+      }
+    }
+  } catch { /* session dir may not exist yet */ }
+}
+
 function getChromePath(): string | undefined {
   const possible = [
     '/usr/bin/chromium-browser',
@@ -26,7 +44,6 @@ function getChromePath(): string | undefined {
     '/snap/bin/chromium',
   ];
   try {
-    const fs = require('fs');
     for (const p of possible) {
       if (fs.existsSync(p)) return p;
     }
@@ -42,6 +59,9 @@ export async function getClient(): Promise<Client | null> {
   initializing = true;
   status = STATUS.INITIALIZING;
   errorMessage = null;
+
+  // Remove stale Chromium locks so the profile is never "in use"
+  cleanupStaleLocks();
 
   try {
     const chromePath = getChromePath();
@@ -100,6 +120,14 @@ export async function getClient(): Promise<Client | null> {
       console.log('⚠️ WhatsApp disconnected:', reason);
       client = null;
       initializing = false;
+
+      // Auto-reconnect after a few seconds
+      setTimeout(() => {
+        if (!client && !initializing) {
+          console.log('🔄 Auto-reconnecting WhatsApp...');
+          getClient().catch(() => {});
+        }
+      }, 5000);
     });
 
     client.on('auth_failure', (msg: string) => {
@@ -140,6 +168,19 @@ export async function getClient(): Promise<Client | null> {
     return client;
   } catch (err: any) {
     console.error('❌ WhatsApp client initialization error:', err.message);
+
+    // If it's a lock error, clean up and retry once
+    if (err.message && err.message.includes('profile appears to be in use')) {
+      console.log('🔄 Cleaning Chromium locks and retrying initialization...');
+      cleanupStaleLocks();
+      initializing = false; // allow retry
+      client = null;
+
+      // Wait a moment then retry
+      await new Promise(r => setTimeout(r, 2000));
+      return getClient();
+    }
+
     status = STATUS.ERROR;
     errorMessage = err.message;
     initializing = false;

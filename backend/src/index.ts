@@ -24,6 +24,7 @@ import { appointmentsRouter } from './routes/appointments';
 import { campaignsRouter } from './routes/campaigns';
 import { whatsappRouter } from './routes/whatsapp';
 import { errorHandler } from './middleware/errorHandler';
+import { getClient } from './services/whatsappClient';
 
 dotenv.config();
 
@@ -64,6 +65,8 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  // Auto-initialize WhatsApp client so it's ready immediately
+  getClient().catch(() => {});
 });
 
 export default app;
