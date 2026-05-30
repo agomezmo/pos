@@ -476,8 +476,17 @@ body {
   text-decoration: none;
 }
 
-.btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2); }
-.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #059669);
+  color: white;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover), #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.35);
+}
 
 .btn-secondary { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
 .btn-secondary:hover { background: var(--gray-200); }

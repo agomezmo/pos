@@ -167,8 +167,9 @@ export default function Campaigns() {
           <p className="text-sm text-gray-500 mt-0.5">Crea y envía ofertas a tus clientes</p>
         </div>
         <button onClick={openCreate}
-          className="btn-primary flex items-center gap-1.5 text-sm font-semibold px-4 py-2">
-          + Nueva Campaña
+          className="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nueva Campaña
         </button>
       </div>
 
@@ -558,49 +559,50 @@ export default function Campaigns() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* SEND CHANNEL SELECTION MODAL                                         */}
+      {/* SEND CAMPAIGN MODAL — Elegant modal like campaign creation           */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       {showSendModal && (
-        <div className="fixed inset-0 bg-black/40 z-[1000] flex items-center justify-center p-4"
-          onClick={e => { if (e.target === e.currentTarget) setShowSendModal(false); }}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6"
-            onClick={e => e.stopPropagation()}>
-            <h2 className="text-lg font-bold text-gray-900 mb-1">Enviar campaña</h2>
-            <p className="text-sm text-gray-400 mb-5">Selecciona los canales para enviar esta campaña</p>
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowSendModal(false); }}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '480px' }}>
 
-            <div className="space-y-3 mb-6">
-              <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                sendChannels.email ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
-              }`}>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Enviar campaña
+            </h2>
+            <p className="subtitle">Selecciona los canales para enviar esta campaña</p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              <label className={`btn ${sendChannels.email ? 'btn-primary' : 'btn-outline'}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.85rem 1rem', cursor: 'pointer', borderRadius: '12px', justifyContent: 'flex-start', fontSize: '0.85rem' }}>
                 <input type="checkbox" checked={sendChannels.email}
                   onChange={e => setSendChannels({ ...sendChannels, email: e.target.checked })}
-                  className="accent-emerald-600 w-5 h-5 shrink-0" />
-                <div className="flex-1">
-                  <span className="block font-semibold text-gray-800 text-sm">📧 Email</span>
-                  <span className="block text-xs text-gray-400 mt-0.5">Los clientes con correo electrónico recibirán una plantilla HTML</span>
+                  style={{ accentColor: 'var(--primary)', width: '18px', height: '18px' }} />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontWeight: 600 }}>Email</span>
+                  <span style={{ display: 'block', fontSize: '0.75rem', opacity: 0.7 }}>Clientes con correo reciben plantilla HTML</span>
                 </div>
               </label>
 
-              <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                sendChannels.whatsapp ? 'border-emerald-500 bg-emerald-50' : 'border-gray-200 hover:border-gray-300'
-              }`}>
+              <label className={`btn ${sendChannels.whatsapp ? 'btn-primary' : 'btn-outline'}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.85rem 1rem', cursor: 'pointer', borderRadius: '12px', justifyContent: 'flex-start', fontSize: '0.85rem' }}>
                 <input type="checkbox" checked={sendChannels.whatsapp}
                   onChange={e => setSendChannels({ ...sendChannels, whatsapp: e.target.checked })}
-                  className="accent-emerald-600 w-5 h-5 shrink-0" />
-                <div className="flex-1">
-                  <span className="block font-semibold text-gray-800 text-sm">💬 WhatsApp</span>
-                  <span className="block text-xs text-gray-400 mt-0.5">Los clientes con teléfono recibirán un mensaje de texto</span>
+                  style={{ accentColor: 'var(--primary)', width: '18px', height: '18px' }} />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontWeight: 600 }}>WhatsApp</span>
+                  <span style={{ display: 'block', fontSize: '0.75rem', opacity: 0.7 }}>Clientes con teléfono reciben mensaje de texto</span>
                 </div>
               </label>
             </div>
 
-            <div className="flex gap-3">
-              <button onClick={() => setShowSendModal(false)}
-                className="flex-1 px-5 py-2.5 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-                Cancelar
-              </button>
-              <button onClick={handleSend} disabled={!sendChannels.email && !sendChannels.whatsapp}
-                className="flex-1 px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all disabled:opacity-40 shadow-sm">
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => setShowSendModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={handleSend}
+                disabled={!sendChannels.email && !sendChannels.whatsapp}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 Enviar ahora
               </button>
             </div>
