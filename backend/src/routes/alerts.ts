@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 
 export const alertsRouter = Router();
 
@@ -37,7 +37,7 @@ alertsRouter.get('/', authenticate, async (req: Request, res: Response, next: Ne
   }
 });
 
-alertsRouter.patch('/:id/read', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+alertsRouter.patch('/:id/read', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query(
@@ -53,7 +53,7 @@ alertsRouter.patch('/:id/read', authenticate, async (req: Request, res: Response
   }
 });
 
-alertsRouter.patch('/read-all', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+alertsRouter.patch('/read-all', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await pool.query(
       'UPDATE alerts SET isread = true WHERE isread = false RETURNING *'

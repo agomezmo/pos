@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const patientsRouter = Router();
@@ -49,7 +49,7 @@ patientsRouter.post('/', authenticate, async (req: Request, res: Response, next:
   } catch (err) { next(err); }
 });
 
-patientsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+patientsRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { medicalhistory, allergies, bloodtype } = req.body;
     const result = await pool.query(
@@ -62,7 +62,7 @@ patientsRouter.put('/:id', authenticate, async (req: Request, res: Response, nex
   } catch (err) { next(err); }
 });
 
-patientsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+patientsRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM patients WHERE id = $1 RETURNING id', [id]);

@@ -44,6 +44,7 @@ export const productsApi = {
   getLowStock: (threshold?: number) => api.get('/products/low-stock', { params: { threshold } }),
   getByCategory: (categoryId: number) => api.get(`/products/category/${categoryId}`),
   getExpiringSoon: (days?: number) => api.get('/products/expiring-soon', { params: { days } }),
+  importBulk: (products: any[]) => api.post('/products/import', { products }),
   toggleActive: (id: number) => api.patch(`/products/${id}/toggle-active`),
 };
 

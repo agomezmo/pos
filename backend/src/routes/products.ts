@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const productsRouter = Router();
@@ -107,7 +107,50 @@ productsRouter.get('/:id', authenticate, async (req: Request, res: Response, nex
   }
 });
 
-productsRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+// Bulk import from CSV with duplicate handling (ON CONFLICT)
+productsRouter.post('/import', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { products } = req.body;
+    if (!Array.isArray(products) || products.length === 0) {
+      throw new AppError('Se requiere un arreglo de productos', 400, 'VALIDATION_ERROR');
+    }
+    const results = { created: 0, skipped: 0, errors: [] as { row: number; message: string }[] };
+
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      try {
+        if (!p.code || !p.name) {
+          results.errors.push({ row: i + 1, message: 'Código y nombre son requeridos' });
+          continue;
+        }
+        // Check if code already exists
+        const existing = await pool.query('SELECT id FROM products WHERE code = $1', [p.code]);
+        if (existing.rows.length > 0) {
+          results.skipped++;
+          continue;
+        }
+        await pool.query(
+          `INSERT INTO products (code, barcode, name, description, categoryid, supplierid,
+            purchaseprice, saleprice, stock, minstock, unit, requiresprescription,
+            wholesale_price, expiry_date, requires_tax)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)`,
+          [p.code, p.barcode || '', p.name, p.description || '', p.categoryid || null,
+           p.supplierid || null, p.purchaseprice || 0, p.saleprice || 0, p.stock || 0,
+           p.minstock || 0, p.unit || 'pza', p.requiresprescription || false,
+           p.wholesale_price || 0, p.expiry_date || null, p.requires_tax !== false]
+        );
+        results.created++;
+      } catch (err: any) {
+        results.errors.push({ row: i + 1, message: err.message || 'Error desconocido' });
+      }
+    }
+    res.json(results);
+  } catch (err) {
+    next(err);
+  }
+});
+
+productsRouter.post('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { code, barcode, name, description, categoryid, supplierid, purchaseprice, saleprice, stock, minstock, unit, requiresprescription, wholesale_price, expiry_date, requires_tax } = req.body;
     if (!code || !name || !categoryid) throw new AppError('Code, name, and category are required', 400, 'VALIDATION_ERROR');
@@ -123,7 +166,7 @@ productsRouter.post('/', authenticate, async (req: Request, res: Response, next:
   }
 });
 
-productsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+productsRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const fields = ['code', 'barcode', 'name', 'description', 'categoryid', 'supplierid', 'purchaseprice', 'saleprice', 'stock', 'minstock', 'unit', 'isactive', 'requiresprescription', 'wholesale_price', 'expiry_date', 'requires_tax'];
@@ -156,7 +199,7 @@ productsRouter.put('/:id', authenticate, async (req: Request, res: Response, nex
   }
 });
 
-productsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+productsRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query('UPDATE products SET isactive = false WHERE id = $1 RETURNING *', [id]);

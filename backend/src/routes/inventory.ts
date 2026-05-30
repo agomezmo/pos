@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const inventoryRouter = Router();
@@ -36,7 +36,7 @@ inventoryRouter.get('/', authenticate, async (req: Request, res: Response, next:
   }
 });
 
-inventoryRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+inventoryRouter.post('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { productId, type, quantity, reason, reference } = req.body;
     if (!productId || !type || !quantity) {

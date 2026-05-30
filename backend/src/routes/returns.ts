@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const returnsRouter = Router();
@@ -83,7 +83,7 @@ returnsRouter.post('/', authenticate, async (req: Request, res: Response, next: 
   }
 });
 
-returnsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+returnsRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { reason } = req.body;
@@ -97,7 +97,7 @@ returnsRouter.put('/:id', authenticate, async (req: Request, res: Response, next
   } catch (err) { next(err); }
 });
 
-returnsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+returnsRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   const client = await pool.connect();
   try {
     const { id } = req.params;

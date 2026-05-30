@@ -7,7 +7,7 @@ import { sendEmail, sendWhatsApp, buildCampaignEmailHtml, buildWhatsAppMessage }
 export const campaignsRouter = Router();
 
 // ─── List campaigns ────────────────────────────────────────────────────────────
-campaignsRouter.get('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+campaignsRouter.get('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { status } = req.query;
     let sql = `
@@ -34,7 +34,7 @@ campaignsRouter.get('/', authenticate, async (req: Request, res: Response, next:
 });
 
 // ─── Get single campaign ───────────────────────────────────────────────────────
-campaignsRouter.get('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+campaignsRouter.get('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const campaign = await pool.query(`
@@ -84,7 +84,7 @@ campaignsRouter.get('/:id', authenticate, async (req: Request, res: Response, ne
 });
 
 // ─── Create campaign ───────────────────────────────────────────────────────────
-campaignsRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+campaignsRouter.post('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       name, description, offer_type, offer_value,
@@ -315,7 +315,7 @@ campaignsRouter.post('/:id/send', authenticate, authorize('admin'), async (req: 
 });
 
 // ─── Get customers with email/phone (for selection UI) ─────────────────────────
-campaignsRouter.get('/available-customers/list', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+campaignsRouter.get('/available-customers/list', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await pool.query(
       `SELECT id, fullname, email, phone, documentnumber
@@ -331,7 +331,7 @@ campaignsRouter.get('/available-customers/list', authenticate, async (req: Reque
 });
 
 // ─── Get expiring products (for selection UI) ──────────────────────────────────
-campaignsRouter.get('/expiring-products/list', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+campaignsRouter.get('/expiring-products/list', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { days } = req.query;
     const maxDays = parseInt(String(days || '90'));

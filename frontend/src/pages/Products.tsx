@@ -25,29 +25,26 @@ export default function Products() {
   const [showImport, setShowImport] = useState(false);
 
   const handleCsvImport = async (rows: Record<string, string>[]) => {
-    let success = 0;
-    const errors: { row: number; message: string }[] = [];
-    for (let i = 0; i < rows.length; i++) {
-      const r = rows[i];
-      try {
-        await productsApi.create({
-          code: r.code, barcode: r.barcode || '', name: r.name,
-          description: r.description || '', categoryid: r.category_id || r.categoryid || null,
-          supplierid: r.supplier_id || r.supplierid || null,
-          purchaseprice: parseFloat(r.purchase_price || r.purchaseprice) || 0,
-          saleprice: parseFloat(r.sale_price || r.saleprice) || 0,
-          stock: parseInt(r.stock) || 0, minstock: parseInt(r.min_stock || r.minstock) || 0,
-          unit: r.unit || 'pza', wholesale_price: parseFloat(r.wholesale_price || '0') || 0,
-          expiry_date: r.expiry_date || r.expirydate || '',
-          requiresprescription: (r.requires_prescription || '').toUpperCase() === 'TRUE',
-          requires_tax: (r.requires_tax || '').toUpperCase() !== 'FALSE',
-        });
-        success++;
-      } catch (err: any) {
-        errors.push({ row: i + 2, message: err.response?.data?.error?.message || err.message || 'Error' });
-      }
+    const products = rows.map(r => ({
+      code: r.code, barcode: r.barcode || '', name: r.name,
+      description: r.description || '', categoryid: r.category_id || r.categoryid || null,
+      supplierid: r.supplier_id || r.supplierid || null,
+      purchaseprice: parseFloat(r.purchase_price || r.purchaseprice) || 0,
+      saleprice: parseFloat(r.sale_price || r.saleprice) || 0,
+      stock: parseInt(r.stock) || 0, minstock: parseInt(r.min_stock || r.minstock) || 0,
+      unit: r.unit || 'pza', wholesale_price: parseFloat(r.wholesale_price || '0') || 0,
+      expiry_date: r.expiry_date || r.expirydate || '',
+      requiresprescription: (r.requires_prescription || '').toUpperCase() === 'TRUE',
+      requires_tax: (r.requires_tax || '').toUpperCase() !== 'FALSE',
+    }));
+    try {
+      const res = await productsApi.importBulk(products);
+      const data = res.data;
+      return { success: data.created, errors: data.errors || [] };
+    } catch (err: any) {
+      const message = err.response?.data?.error?.message || err.message || 'Error al importar';
+      return { success: 0, errors: [{ row: 0, message }] };
     }
-    return { success, errors };
   };
 
   const fetchProducts = async () => {

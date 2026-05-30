@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const suppliersRouter = Router();
@@ -25,7 +25,7 @@ suppliersRouter.get('/:id', authenticate, async (req: Request, res: Response, ne
   }
 });
 
-suppliersRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+suppliersRouter.post('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, contactname, phone, email, address } = req.body;
     if (!name) throw new AppError('Name is required', 400, 'VALIDATION_ERROR');
@@ -40,7 +40,7 @@ suppliersRouter.post('/', authenticate, async (req: Request, res: Response, next
   }
 });
 
-suppliersRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+suppliersRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { name, contactname, phone, email, address } = req.body;
@@ -57,7 +57,7 @@ suppliersRouter.put('/:id', authenticate, async (req: Request, res: Response, ne
   }
 });
 
-suppliersRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+suppliersRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM suppliers WHERE id = $1 RETURNING id', [id]);

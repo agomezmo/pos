@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const expensesRouter = Router();
@@ -29,7 +29,7 @@ expensesRouter.get('/:id', authenticate, async (req: Request, res: Response, nex
   } catch (err) { next(err); }
 });
 
-expensesRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+expensesRouter.post('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { description, amount, category, paymentmethod, reference, notes } = req.body;
     if (!description || amount == null) throw new AppError('description and amount are required', 400);
@@ -42,7 +42,7 @@ expensesRouter.post('/', authenticate, async (req: Request, res: Response, next:
   } catch (err) { next(err); }
 });
 
-expensesRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+expensesRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { description, amount, category, paymentmethod, reference, notes } = req.body;
@@ -56,7 +56,7 @@ expensesRouter.put('/:id', authenticate, async (req: Request, res: Response, nex
   } catch (err) { next(err); }
 });
 
-expensesRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+expensesRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM expenses WHERE id = $1 RETURNING id', [id]);

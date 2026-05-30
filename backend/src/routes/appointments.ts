@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const appointmentsRouter = Router();
@@ -67,7 +67,7 @@ appointmentsRouter.get('/:id', authenticate, async (req: Request, res: Response,
   }
 });
 
-appointmentsRouter.post('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+appointmentsRouter.post('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { patientid, userid, appointmentdate, status, notes } = req.body;
     if (!patientid || !appointmentdate) {
@@ -85,7 +85,7 @@ appointmentsRouter.post('/', authenticate, async (req: Request, res: Response, n
   }
 });
 
-appointmentsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+appointmentsRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const fields = ['patientid', 'userid', 'appointmentdate', 'status', 'notes'];
@@ -114,7 +114,7 @@ appointmentsRouter.put('/:id', authenticate, async (req: Request, res: Response,
   }
 });
 
-appointmentsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+appointmentsRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM appointments WHERE id = $1 RETURNING *', [id]);

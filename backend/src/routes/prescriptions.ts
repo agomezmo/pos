@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const prescriptionsRouter = Router();
@@ -76,7 +76,7 @@ prescriptionsRouter.post('/', authenticate, async (req: Request, res: Response, 
   }
 });
 
-prescriptionsRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+prescriptionsRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   const client = await pool.connect();
   try {
     const { id } = req.params;
@@ -120,7 +120,7 @@ prescriptionsRouter.put('/:id', authenticate, async (req: Request, res: Response
   }
 });
 
-prescriptionsRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+prescriptionsRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   const client = await pool.connect();
   try {
     const { id } = req.params;

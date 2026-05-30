@@ -1,10 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 
 export const reportsRouter = Router();
 
-reportsRouter.get('/daily-summary', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/daily-summary', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { date, startDate, endDate } = req.query;
     if (startDate && endDate) {
@@ -27,7 +27,7 @@ reportsRouter.get('/daily-summary', authenticate, async (req: Request, res: Resp
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/top-products', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/top-products', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate, limit = '10' } = req.query;
     const result = await pool.query(`
@@ -45,7 +45,7 @@ reportsRouter.get('/top-products', authenticate, async (req: Request, res: Respo
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/monthly-sales', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/monthly-sales', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const months = parseInt(req.query.months as string) || 6;
     const result = await pool.query(`
@@ -60,7 +60,7 @@ reportsRouter.get('/monthly-sales', authenticate, async (req: Request, res: Resp
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/monthly-expenses', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/monthly-expenses', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const months = parseInt(req.query.months as string) || 6;
     const result = await pool.query(`
@@ -74,7 +74,7 @@ reportsRouter.get('/monthly-expenses', authenticate, async (req: Request, res: R
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/inventory-status', authenticate, async (_req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/inventory-status', authenticate, authorize('admin'), async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await pool.query(`
       SELECT COUNT(*)::int as total_products,
@@ -89,7 +89,7 @@ reportsRouter.get('/inventory-status', authenticate, async (_req: Request, res: 
 
 /* ── Nuevos endpoints de estadísticas ── */
 
-reportsRouter.get('/sales-by-category', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/sales-by-category', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate } = req.query;
     const result = await pool.query(`
@@ -110,7 +110,7 @@ reportsRouter.get('/sales-by-category', authenticate, async (req: Request, res: 
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/hourly-sales', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/hourly-sales', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate } = req.query;
     const result = await pool.query(`
@@ -127,7 +127,7 @@ reportsRouter.get('/hourly-sales', authenticate, async (req: Request, res: Respo
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/monthly-comparison', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/monthly-comparison', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const months = parseInt(req.query.months as string) || 12;
     const result = await pool.query(`
@@ -142,7 +142,7 @@ reportsRouter.get('/monthly-comparison', authenticate, async (req: Request, res:
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/payment-methods', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/payment-methods', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate } = req.query;
     const result = await pool.query(`
@@ -158,7 +158,7 @@ reportsRouter.get('/payment-methods', authenticate, async (req: Request, res: Re
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/top-customers', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/top-customers', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate, limit = '5' } = req.query;
     const result = await pool.query(`
@@ -175,7 +175,7 @@ reportsRouter.get('/top-customers', authenticate, async (req: Request, res: Resp
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/profit-margin', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/profit-margin', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate, limit = '10' } = req.query;
     const result = await pool.query(`
@@ -200,7 +200,7 @@ reportsRouter.get('/profit-margin', authenticate, async (req: Request, res: Resp
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/return-rate', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/return-rate', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const months = parseInt(req.query.months as string) || 6;
     const result = await pool.query(`
@@ -221,7 +221,7 @@ reportsRouter.get('/return-rate', authenticate, async (req: Request, res: Respon
   } catch (err) { next(err); }
 });
 
-reportsRouter.get('/day-of-week', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+reportsRouter.get('/day-of-week', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startDate, endDate } = req.query;
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];

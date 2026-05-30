@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const salesRouter = Router();
@@ -135,7 +135,7 @@ salesRouter.post('/', authenticate, async (req: Request, res: Response, next: Ne
   }
 });
 
-salesRouter.post('/:id/cancel', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+salesRouter.post('/:id/cancel', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   const client = await pool.connect();
   try {
     const { id } = req.params;

@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const customersRouter = Router();
@@ -57,7 +57,7 @@ customersRouter.post('/', authenticate, async (req: Request, res: Response, next
   }
 });
 
-customersRouter.put('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+customersRouter.put('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const fields = ['documenttype', 'documentnumber', 'fullname', 'phone', 'email', 'address', 'rfc', 'razonsocial', 'codigopostal', 'regimenfiscalid', 'usocfdiid'];
@@ -83,7 +83,7 @@ customersRouter.put('/:id', authenticate, async (req: Request, res: Response, ne
   }
 });
 
-customersRouter.delete('/:id', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+customersRouter.delete('/:id', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const result = await pool.query('DELETE FROM customers WHERE id = $1 RETURNING id', [id]);

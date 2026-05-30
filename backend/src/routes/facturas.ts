@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 export const facturasRouter = Router();
@@ -34,7 +34,7 @@ facturasRouter.get('/:id', authenticate, async (req: Request, res: Response, nex
   } catch (err) { next(err); }
 });
 
-facturasRouter.post('/generate', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+facturasRouter.post('/generate', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   const client = await pool.connect();
   try {
     const { saleId } = req.body;
@@ -96,7 +96,7 @@ facturasRouter.post('/generate', authenticate, async (req: Request, res: Respons
   }
 });
 
-facturasRouter.post('/:id/cancel', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+facturasRouter.post('/:id/cancel', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { motivo } = req.body;

@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
 
 export const companyRouter = Router();
 
@@ -24,7 +24,7 @@ companyRouter.get('/', authenticate, async (_req: Request, res: Response, next: 
   }
 });
 
-companyRouter.put('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
+companyRouter.put('/', authenticate, authorize('admin'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, rfc, address, phone, email, codigopostal, logo_url, receiptfooter } = req.body;
     const existing = await pool.query('SELECT id FROM companyinfo LIMIT 1');

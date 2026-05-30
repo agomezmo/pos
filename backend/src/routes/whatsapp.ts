@@ -5,7 +5,7 @@ import { getStatus, getQr, reconnect } from '../services/whatsappClient';
 export const whatsappRouter = Router();
 
 // GET /api/whatsapp/status
-whatsappRouter.get('/status', authenticate, async (_req: Request, res: Response) => {
+whatsappRouter.get('/status', authenticate, authorize('admin'), async (_req: Request, res: Response) => {
   const status = getStatus();
   res.json(status);
 });
