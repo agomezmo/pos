@@ -461,32 +461,29 @@ body {
 .checkbox-row input[type="checkbox"] { width: auto; }
 
 /* ========== BUTTONS ========== */
-.btn {
+.btn-primary, .btn-secondary, .btn-danger, .btn-success, .btn-sm {
   padding: 0.55rem 1.1rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.15s, transform 0.1s;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   white-space: nowrap;
-  text-decoration: none;
 }
-
-.btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(5, 150, 105, 0.2); }
-.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
-
-.btn-secondary { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
-.btn-secondary:hover { background: var(--gray-200); }
-
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--gray-200); color: var(--gray-700); }
+.btn-secondary:hover { background: var(--gray-300); }
 .btn-danger { background: var(--danger); color: white; }
 .btn-danger:hover { background: var(--danger-hover); }
-
 .btn-success { background: var(--success); color: white; }
 .btn-success:hover { background: var(--success-hover); }
+.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-outline {
   background: transparent;
@@ -495,11 +492,9 @@ body {
 }
 .btn-outline:hover { background: var(--gray-50); border-color: var(--gray-300); }
 
-.btn-sm { padding: 0.35rem 0.7rem; font-size: 0.8rem; border-radius: 8px; }
 .btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 12px; }
 .btn-icon { padding: 0.5rem; border-radius: 8px; min-width: 36px; justify-content: center; }
-
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ========== TABLES ========== */
 .table-container {
