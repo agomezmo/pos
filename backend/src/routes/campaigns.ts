@@ -270,7 +270,7 @@ campaignsRouter.post('/:id/send', authenticate, authorize('admin'), async (req: 
         await pool.query(
           `INSERT INTO promo_campaign_log (campaign_id, customer_id, channel, recipient, subject, message, status, error_message)
            VALUES ($1, $2, 'email', $3, $4, $5, $6, $7)`,
-          [id, cust.id, cust.email, subject, html,
+          [id, cust.customer_id, cust.email, subject, html,
            emailResult.success ? 'sent' : 'failed', emailResult.error || null]
         );
 
@@ -290,7 +290,7 @@ campaignsRouter.post('/:id/send', authenticate, authorize('admin'), async (req: 
         await pool.query(
           `INSERT INTO promo_campaign_log (campaign_id, customer_id, channel, recipient, message, status, error_message)
            VALUES ($1, $2, 'whatsapp', $3, $4, $5, $6)`,
-          [id, cust.id, cust.phone, msg,
+          [id, cust.customer_id, cust.phone, msg,
            waResult.success ? 'sent' : 'failed', waResult.error || null]
         );
 
