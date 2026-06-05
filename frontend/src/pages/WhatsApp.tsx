@@ -22,6 +22,7 @@ export default function WhatsApp() {
   const [qrImage, setQrImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [reconnecting, setReconnecting] = useState(false);
+  const [disconnecting, setDisconnecting] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -61,16 +62,39 @@ export default function WhatsApp() {
     }
   };
 
+  const handleDisconnect = async () => {
+    if (!confirm('¿Desvincular la cuenta de WhatsApp? Se eliminará la sesión guardada y deberás escanear el QR nuevamente para conectar.')) return;
+    setDisconnecting(true);
+    try {
+      await api.post('/whatsapp/logout');
+      setQrImage(null);
+      alert('Sesión de WhatsApp eliminada. La página se actualizará para mostrar el nuevo QR.');
+      fetchStatus();
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Error al desvincular');
+    } finally {
+      setDisconnecting(false);
+    }
+  };
+
   const st = status ? STATUS_LABELS[status.status] || STATUS_LABELS.uninitialized : STATUS_LABELS.uninitialized;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-800">WhatsApp</h1>
-        <button onClick={handleReconnect} disabled={reconnecting}
-          className="btn-primary flex items-center gap-2">
-          {reconnecting ? 'Reconectando...' : '🔄 Reconectar'}
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {status?.ready && (
+            <button onClick={handleDisconnect} disabled={disconnecting}
+              className="btn-secondary" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>
+              {disconnecting ? 'Desvinculando...' : 'Desvincular cuenta'}
+            </button>
+          )}
+          <button onClick={handleReconnect} disabled={reconnecting}
+            className="btn-primary">
+            {reconnecting ? 'Reconectando...' : 'Reconectar'}
+          </button>
+        </div>
       </div>
 
       {/* Status Card */}

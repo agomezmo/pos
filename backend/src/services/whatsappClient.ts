@@ -259,6 +259,26 @@ export async function disconnect() {
   }
 }
 
+export async function clearAuth(): Promise<void> {
+  await disconnect();
+  // Eliminar todos los datos de sesión guardados
+  const authDir = '/app/whatsapp-auth';
+  try {
+    if (fs.existsSync(authDir)) {
+      const entries = fs.readdirSync(authDir);
+      for (const entry of entries) {
+        const fullPath = path.join(authDir, entry);
+        fs.rmSync(fullPath, { recursive: true, force: true });
+      }
+      console.log('🗑️ WhatsApp session data cleared');
+    }
+  } catch (err: any) {
+    console.error('Error clearing WhatsApp auth:', err.message);
+  }
+  // Reset status so getClient() will reinitialize fresh (new QR)
+  status = STATUS.UNINITIALIZED;
+}
+
 export async function reconnect() {
   await disconnect();
   return getClient();

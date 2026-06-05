@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { authenticate, authorize } from '../middleware/auth';
-import { getStatus, getQr, reconnect } from '../services/whatsappClient';
+import { getStatus, getQr, reconnect, disconnect, clearAuth } from '../services/whatsappClient';
 
 export const whatsappRouter = Router();
 
@@ -33,6 +33,16 @@ whatsappRouter.post('/reconnect', authenticate, authorize('admin'), async (_req:
   try {
     await reconnect();
     res.json({ message: 'Reconectando WhatsApp...' });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/whatsapp/logout — Desvincula la cuenta y elimina la sesión guardada
+whatsappRouter.post('/logout', authenticate, authorize('admin'), async (_req: Request, res: Response) => {
+  try {
+    await clearAuth();
+    res.json({ message: 'Sesión de WhatsApp eliminada. Escanea el QR nuevamente para conectar.' });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }

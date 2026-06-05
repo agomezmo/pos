@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const NAV_ITEMS = [
   { section: 'PUNTO DE VENTA' },
   { to: '/sales/new', icon: '🛒', label: 'Nueva Venta', roles: ['admin', 'cajero'] },
-  { to: '/sales', icon: '📋', label: 'Historial Ventas', roles: ['admin', 'cajero'] },
+  { to: '/sales', icon: '📋', label: 'Historial Ventas', roles: ['admin', 'cajero'], exact: true },
   { to: '/cash-register', icon: '💰', label: 'Caja', roles: ['admin', 'cajero'] },
   { to: '/returns', icon: '↩️', label: 'Devoluciones', roles: ['admin', 'cajero'] },
   { to: '/facturas', icon: '📄', label: 'Facturación CFDI', roles: ['admin'] },
@@ -72,7 +72,7 @@ export default function Layout() {
               return null;
             }
             return (
-              <NavLink key={i} to={item.to!}
+              <NavLink key={i} to={item.to!} end={item.exact}
                 className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
                 onClick={() => setSidebarOpen(false)}>
                 <span className="nav-icon">{item.icon}</span> {item.label}

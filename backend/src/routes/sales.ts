@@ -7,7 +7,7 @@ export const salesRouter = Router();
 
 salesRouter.get('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page = '1', limit = '20', startdate, enddate } = req.query;
+    const { page = '1', limit = '20', startdate, enddate, search } = req.query;
     const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
     let query = `SELECT s.*, u.fullname as user_name, c.fullname as customer_name
                  FROM sales s LEFT JOIN users u ON s.userid = u.id
@@ -15,6 +15,11 @@ salesRouter.get('/', authenticate, async (req: Request, res: Response, next: Nex
     const params: any[] = [];
     let idx = 1;
 
+    if (search) {
+      query += ` AND (s.receiptnumber ILIKE $${idx} OR s.id::text = $${idx})`;
+      params.push(`%${search}%`);
+      idx++;
+    }
     if (startdate) { query += ` AND s.createdat >= $${idx++}::date`; params.push(startdate); }
     if (enddate) { query += ` AND s.createdat < ($${idx++}::date + '1 day'::interval)`; params.push(enddate); }
 

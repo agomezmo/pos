@@ -25,12 +25,24 @@ alertsRouter.get('/', authenticate, async (req: Request, res: Response, next: Ne
     );
     const expiryCount = parseInt(expiryResult.rows[0].count, 10);
 
+    // Products expiring within 90 days
+    const expiringProducts = await pool.query(
+      `SELECT id, name, code, expiry_date, stock, minstock, saleprice
+       FROM products
+       WHERE isactive = true AND expiry_date IS NOT NULL
+         AND expiry_date >= CURRENT_DATE
+         AND expiry_date <= CURRENT_DATE + INTERVAL '90 days'
+       ORDER BY expiry_date ASC
+       LIMIT 100`
+    );
+
     res.json({
       alerts: storedResult.rows,
       counts: {
         low_stock: lowStockCount,
         expiry: expiryCount,
       },
+      expiring_products: expiringProducts.rows,
     });
   } catch (err) {
     next(err);
