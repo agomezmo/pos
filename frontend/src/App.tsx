@@ -36,6 +36,7 @@ export default function App() {
       <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />} />
       <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
         <Route index element={<Navigate to="/sales/new" />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="products" element={<Products />} />
         <Route path="sales" element={<Sales />} />
         <Route path="sales/new" element={<NewSale />} />

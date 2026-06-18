@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ChatBotWidget from './ChatBotWidget';
 
 const NAV_ITEMS = [
   { section: 'PUNTO DE VENTA' },
@@ -59,7 +60,7 @@ export default function Layout() {
         </div>
 
         <div className="sidebar-menu">
-          <NavLink to="/" end className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+          <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
             onClick={() => setSidebarOpen(false)}>
             <span className="nav-icon">📊</span> Dashboard
           </NavLink>
@@ -99,6 +100,8 @@ export default function Layout() {
       <main className="main-content">
         <Outlet />
       </main>
+
+      <ChatBotWidget />
     </div>
   );
 }
