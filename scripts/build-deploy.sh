@@ -94,7 +94,42 @@ step_menu_tests() {
     fi
 }
 
-# ── 5. Verificar endpoints clave ──
+# ── 5. Reconstruir y levantar chatbot ──
+step_chatbot() {
+    log "🤖 Reconstruyendo chatbot..."
+    local CHATBOT_DIR="$PROJECT_DIR/../chatbot"
+
+    if [ ! -f "$CHATBOT_DIR/docker-compose.yml" ]; then
+        warn "Chatbot no encontrado en $CHATBOT_DIR. Despliégalo manualmente."
+        return
+    fi
+
+    cd "$CHATBOT_DIR"
+
+    # Reconstruir imagen del backend con --no-cache para tomar cambios del Dockerfile
+    log "   Reconstruyendo imagen chatbot-backend..."
+    docker compose build chatbot-backend --no-cache 2>&1 | tail -5
+
+    # Levantar servicios
+    log "   Levantando servicios del chatbot..."
+    docker compose up -d chatbot-backend 2>/dev/null || true
+
+    # Esperar a que responda
+    log "   Esperando a que el chatbot responda..."
+    for i in $(seq 1 20); do
+        if curl -sf http://localhost:3090/api/health > /dev/null 2>&1; then
+            ok "Chatbot backend respondiendo en http://localhost:3090"
+            cd "$PROJECT_DIR"
+            return
+        fi
+        sleep 2
+    done
+
+    warn "Chatbot backend no respondió después de 40s. Verifica: cd ~/proyectos/chatbot && docker compose logs"
+    cd "$PROJECT_DIR"
+}
+
+# ── 6. Verificar endpoints clave ──
 step_verify() {
     log "🔍 Verificando endpoints clave..."
 
@@ -167,24 +202,7 @@ step_verify() {
     if curl -sf http://localhost:3090/api/health > /dev/null 2>&1; then
         ok "Chatbot backend respondiendo en http://localhost:3090"
     else
-        log "   Iniciando chatbot..."
-        cd "$PROJECT_DIR/../chatbot"
-        if [ -f "docker-compose.yml" ]; then
-            docker compose up -d 2>/dev/null || true
-            for i in $(seq 1 15); do
-                if curl -sf http://localhost:3090/api/health > /dev/null 2>&1; then
-                    ok "Chatbot backend iniciado en http://localhost:3090"
-                    break
-                fi
-                sleep 1
-            done
-            if ! curl -sf http://localhost:3090/api/health > /dev/null 2>&1; then
-                warn "Chatbot backend no respondió después de iniciarlo. Verifica: cd ~/proyectos/chatbot && docker compose logs"
-            fi
-        else
-            warn "Chatbot no encontrado en $PROJECT_DIR/../chatbot. Despliégalo manualmente: cd ~/proyectos/chatbot && ./chatbot.sh docker"
-        fi
-        cd "$PROJECT_DIR"
+        warn "Chatbot backend no responde. Ejecuta: $0 --chatbot"
     fi
 
     ok "Verificación de endpoints completada"
@@ -242,6 +260,7 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --frontend)   RUN_ALL=false; RUN_STEPS="$RUN_STEPS frontend" ;;
         --docker)     RUN_ALL=false; RUN_STEPS="$RUN_STEPS docker" ;;
+        --chatbot)    RUN_ALL=false; RUN_STEPS="$RUN_STEPS chatbot" ;;
         --tests)      RUN_ALL=false; RUN_STEPS="$RUN_STEPS tests" ;;
         --menu-tests) RUN_ALL=false; RUN_STEPS="$RUN_STEPS menu_tests" ;;
         --verify)     RUN_ALL=false; RUN_STEPS="$RUN_STEPS verify" ;;
@@ -252,6 +271,7 @@ while [[ $# -gt 0 ]]; do
             echo "Opciones:"
             echo "  --frontend     Compilar frontend (npm install + build)"
             echo "  --docker       Reconstruir y levantar contenedores"
+            echo "  --chatbot      Reconstruir y levantar chatbot"
             echo "  --tests        Ejecutar suite de pruebas (test_system.py)"
             echo "  --menu-tests   Ejecutar pruebas de menús (test_comprehensive.py)"
             echo "  --verify       Verificar endpoints clave"
@@ -271,6 +291,7 @@ done
 if [ "$RUN_ALL" = true ]; then
     step_frontend
     step_docker
+    step_chatbot
     step_tests
     step_menu_tests
     step_verify
@@ -279,6 +300,7 @@ else
         case "$step" in
             frontend)   step_frontend ;;
             docker)     step_docker ;;
+            chatbot)    step_chatbot ;;
             tests)      step_tests ;;
             menu_tests) step_menu_tests ;;
             verify)     step_verify ;;
